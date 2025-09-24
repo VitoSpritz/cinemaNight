@@ -1,0 +1,13 @@
+include: package:flutter_lints/flutter.yaml
+
+linter:
+  rules:
+    - prefer_relative_imports
+    - always_specify_types
+    - always_put_control_body_on_new_line
+    - prefer_const_constructors
+    - prefer_const_declarations
+
+analyzer:
+  plugins:
+    - custom_lint

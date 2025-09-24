@@ -1,0 +1,7 @@
+{
+    "conventionalCommits.scopes": [
+        "UI",
+        "Back end",
+        "Chore"
+    ]
+}
