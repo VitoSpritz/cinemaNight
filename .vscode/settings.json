@@ -2,6 +2,7 @@
     "conventionalCommits.scopes": [
         "UI",
         "Back end",
-        "Chore"
+        "Chore",
+        "Build"
     ]
 }
