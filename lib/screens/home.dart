@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'router/router.dart';
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
@@ -8,7 +10,7 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Home",
+          "Home Page",
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.blue.shade700,
@@ -17,7 +19,10 @@ class HomeScreen extends StatelessWidget {
       ),
       body: Container(
         alignment: Alignment.center,
-        child: const Text("Home page"),
+        child: ElevatedButton(
+          onPressed: () => router.push("/home"),
+          child: const Text("Go to home"),
+        ),
       ),
     );
   }
