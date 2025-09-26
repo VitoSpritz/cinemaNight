@@ -5,15 +5,15 @@ import '../home.dart';
 import '../splash_screen.dart';
 
 final GoRouter router = GoRouter(
-  initialLocation: '/splash',
+  initialLocation: const SplashScreen().path,
   routes: <RouteBase>[
     GoRoute(
-      path: '/splash',
+      path: const SplashScreen().path,
       builder: (BuildContext context, GoRouterState state) =>
           const SplashScreen(),
     ),
     GoRoute(
-      path: '/home',
+      path: const HomeScreen().path,
       builder: (BuildContext context, GoRouterState state) =>
           const HomeScreen(),
     ),

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'router/router.dart';
 
 class HomeScreen extends StatelessWidget {
+  final String path = '/home';
+
   const HomeScreen({super.key});
 
   @override

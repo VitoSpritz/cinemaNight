@@ -1,11 +1,13 @@
 import 'dart:async';
-import 'dart:nativewrappers/_internal/vm/lib/developer.dart';
 
 import 'package:flutter/material.dart';
 
+import 'home.dart';
 import 'router/router.dart';
 
 class SplashScreen extends StatefulWidget {
+  final String path = '/splash';
+
   const SplashScreen({super.key});
 
   @override
@@ -20,7 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     _timer = Timer(const Duration(seconds: 3), () {
       if (mounted) {
-        router.go('/home');
+        router.go(const HomeScreen().path);
       }
     });
   }
