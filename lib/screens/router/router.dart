@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../home.dart';
 import '../splash_screen.dart';
+import '../login.dart';
 
 final GoRouter router = GoRouter(
   initialLocation: const SplashScreen().path,
@@ -16,6 +17,11 @@ final GoRouter router = GoRouter(
       path: const HomeScreen().path,
       builder: (BuildContext context, GoRouterState state) =>
           const HomeScreen(),
+    ),
+    GoRoute(
+      path: const LoginScreen().path,
+      builder: (BuildContext context, GoRouterState state) =>
+          const LoginScreen(),
     ),
   ],
 );
