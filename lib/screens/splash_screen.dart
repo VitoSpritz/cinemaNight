@@ -6,7 +6,7 @@ import 'login.dart';
 import 'router/router.dart';
 
 class SplashScreen extends StatefulWidget {
-  final String path = '/splash';
+  static String path = '/splash';
 
   const SplashScreen({super.key});
 
@@ -22,7 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     _timer = Timer(const Duration(seconds: 3), () {
       if (mounted) {
-        router.go(const LoginScreen().path);
+        router.go(LoginScreen.path);
       }
     });
   }
