@@ -4,5 +4,6 @@
         "Back end",
         "Chore",
         "Build"
-    ]
+    ],
+    "dart.hotReloadOnSave": "all",
 }
