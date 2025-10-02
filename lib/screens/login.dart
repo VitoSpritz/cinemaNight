@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'router/router.dart';
@@ -15,42 +16,103 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  String? _emailError;
+  String? _passwordError;
+  bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
-    _emailController.addListener(() {
-      final String text = _emailController.text.toLowerCase();
-      _emailController.value = _emailController.value.copyWith(
-        text: text,
-        selection: TextSelection(
-          baseOffset: text.length,
-          extentOffset: text.length,
-        ),
-        composing: TextRange.empty,
-      );
-    });
-
-    _passwordController.addListener(() {
-      final String text = _passwordController.text.toLowerCase();
-      _passwordController.value = _passwordController.value.copyWith(
-        text: text,
-        selection: TextSelection(
-          baseOffset: text.length,
-          extentOffset: text.length,
-        ),
-        composing: TextRange.empty,
-      );
-    });
+    _emailController.addListener;
+    _passwordController.addListener;
   }
 
   @override
   void dispose() {
     _emailController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
-  @override
+  String? validateEmail() {
+    if (_emailController.text.isEmpty) {
+      return null;
+    }
+    if (_emailController.text.contains('@')) {
+      return null;
+    }
+    return "La email non è formattata nel modo giusto";
+  }
+
+  String? validatePassword() {
+    if (_passwordController.text.length > 8) {
+      return null;
+    }
+    return "La passowrd non è abbastanza lunga";
+  }
+
+  Future<void> onSubmitButtonClick() async {
+    setState(() {
+      _emailError = validateEmail();
+      _passwordError = validatePassword();
+    });
+
+    if (_emailError != null || _passwordError != null) {
+      return;
+    }
+
+    if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Inserisci email e password')),
+      );
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      await _auth.signInWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+      );
+    } on FirebaseAuthException catch (e) {
+      String errorMessage;
+
+      switch (e.code) {
+        case 'user-not-found':
+          errorMessage = 'Nessun utente trovato';
+          break;
+        case 'invalid-credential':
+          errorMessage = 'Credenziali non valide';
+          break;
+        default:
+          errorMessage = 'Errore di autenticazione: ${e.message}';
+      }
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Errore: $e'), backgroundColor: Colors.red),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,42 +130,34 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(height: 16),
             SizedBox(
               width: MediaQuery.of(context).size.width * 0.8,
-              child: TextFormField(
+              child: TextField(
                 controller: _emailController,
-                validator: (String? value) {
-                  return (value != null && value.contains('@'))
-                      ? null
-                      : "Il valore non contiene una @";
-                },
-                decoration: const InputDecoration(
-                  icon: Icon(Icons.email),
-                  border: OutlineInputBorder(
+                decoration: InputDecoration(
+                  icon: const Icon(Icons.email),
+                  border: const OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(10.0)),
                   ),
                   labelText: "Email",
+                  errorText: _emailError,
                 ),
               ),
             ),
             const SizedBox(height: 69),
             SizedBox(
               width: MediaQuery.of(context).size.width * 0.8,
-              child: TextFormField(
+              child: TextField(
                 controller: _passwordController,
                 obscureText: true,
-                validator: (String? value) {
-                  return (value != null && value.length > 7)
-                      ? null
-                      : "La password è troppo corta";
-                },
-                decoration: const InputDecoration(
-                  icon: Icon(Icons.password),
-                  border: OutlineInputBorder(
+                decoration: InputDecoration(
+                  icon: const Icon(Icons.password),
+                  border: const OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(10.0)),
                   ),
-                  label: Text(
+                  label: const Text(
                     'Password',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
+                  errorText: _passwordError,
                 ),
               ),
             ),
@@ -111,7 +165,7 @@ class _LoginScreenState extends State<LoginScreen> {
             FractionallySizedBox(
               widthFactor: 0.85,
               child: FilledButton(
-                onPressed: () => router.push(LoginScreen.path),
+                onPressed: () => onSubmitButtonClick(),
                 style: FilledButton.styleFrom(
                   backgroundColor: Colors.amberAccent,
                   foregroundColor: Colors.black,
@@ -119,7 +173,16 @@ class _LoginScreenState extends State<LoginScreen> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
-                child: const Text("Login"),
+                child: _isLoading
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.black,
+                        ),
+                      )
+                    : const Text("Login"),
               ),
             ),
 
