@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'router/router.dart';
-import 'sign_in.dart';
+import 'sign_up.dart';
 
 class LoginScreen extends StatelessWidget {
   final String path = '/login';
@@ -90,7 +90,7 @@ class LoginScreen extends StatelessWidget {
                   const SizedBox(height: 200),
 
                   TextButton(
-                    onPressed: () => router.push(SignInScreen.path),
+                    onPressed: () => router.push(SignUpScreen.path),
                     style: TextButton.styleFrom(
                       padding: EdgeInsets.zero,
                       minimumSize: const Size(0, 0),
