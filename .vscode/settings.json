@@ -3,7 +3,8 @@
         "UI",
         "Back end",
         "Chore",
-        "Build"
+        "Build",
+        "Authentication"
     ],
     "dart.hotReloadOnSave": "all",
 }

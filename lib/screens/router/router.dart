@@ -30,10 +30,6 @@ final GoRouter router = GoRouter(
       return HomeScreen.path;
     }
 
-    if (!isAuthenticated && currentLocation != LoginScreen.path) {
-      return LoginScreen.path;
-    }
-
     return null;
   },
   routes: <RouteBase>[

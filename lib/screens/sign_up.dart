@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../consts/regex.dart';
 import 'login.dart';
 import 'router/router.dart';
 
@@ -16,47 +18,116 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _ageController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
   String? _emailError;
   String? _ageError;
   String? _passwordError;
   String? _nameError;
+  bool _isLoading = false;
 
   String? nameValidator() {
-    if (_nameController.text.isNotEmpty) {
-      return null;
+    if (_nameController.text.trim().isEmpty) {
+      return "Campo obbligatorio";
     }
-    return "Campo obbligatorio";
+    return null;
   }
 
   String? passwordValidator() {
-    if (_passwordController.text.length > 8) {
+    String password = _passwordController.text.trim();
+
+    if (password.isEmpty) {
+      return 'La password è un campo necessario';
+    }
+    if (Regex.passwordRegex.hasMatch(password)) {
       return null;
     }
-    return "La password deve contenere almeno 9 caratteri";
+    return 'Deve contente 8 caratteri, 1 maiuscola e 1 numero';
   }
 
   String? emailValidator() {
-    if (_emailController.text.contains('@')) {
+    String email = _emailController.text.trim();
+
+    if (email.isEmpty) {
+      return 'La email è un campo necessario';
+    }
+    if (Regex.emailRegex.hasMatch(email)) {
       return null;
     }
     return "Inserire una email valida";
   }
 
   String? ageValidator() {
-    if (int.tryParse(_ageController.text) != null &&
-        int.parse(_ageController.text) > 0) {
+    if (int.tryParse(_ageController.text.trim()) != null &&
+        int.parse(_ageController.text.trim()) > 0) {
       return null;
     }
     return "Inserire un'età valida";
   }
 
-  void onRegisteredButtonClick() {
+  Future<void> onRegisteredButtonClick() async {
     setState(() {
       _nameError = nameValidator();
-      _passwordError = passwordValidator();
-      _emailError = emailValidator();
       _ageError = ageValidator();
+      _emailError = emailValidator();
+      _passwordError = passwordValidator();
     });
+
+    if (_nameError != null ||
+        _passwordError != null ||
+        _emailError != null ||
+        _ageError != null) {
+      _passwordController.clear();
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      await _auth.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+    } on FirebaseAuthException catch (e) {
+      String errorMessage;
+
+      switch (e.code) {
+        case 'email-already-in-use':
+          errorMessage = "Email già in uso";
+          break;
+        case 'invalid-email':
+          errorMessage = 'Email non valida';
+          setState(() {
+            _emailError = errorMessage;
+          });
+          break;
+        case 'weak-password':
+          errorMessage = _passwordError!;
+          break;
+        default:
+          errorMessage = 'Errore di autenticazione: ${e.message}';
+      }
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Errore: $e'), backgroundColor: Colors.red),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
   }
 
   @override
@@ -127,7 +198,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     obscureText: true,
                     decoration: InputDecoration(
                       errorText: _passwordError,
-                      hintText: 'password',
+                      hintText: 'Password',
                       hintStyle: const TextStyle(fontWeight: FontWeight.bold),
                       border: const OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -141,7 +212,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     width: double.infinity,
                     child: FilledButton(
                       onPressed: () => onRegisteredButtonClick(),
-
                       style: FilledButton.styleFrom(
                         backgroundColor: Colors.amberAccent,
                         foregroundColor: Colors.black,
@@ -149,7 +219,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           borderRadius: BorderRadiusGeometry.circular(10),
                         ),
                       ),
-                      child: const Text("Sign Up"),
+                      child: _isLoading
+                          ? const SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.black,
+                              ),
+                            )
+                          : const Text("Sing up"),
                     ),
                   ),
 
@@ -158,14 +237,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   Row(
                     children: <Widget>[
                       const Text(
-                        "already have an account? Press ",
+                        "Already have an account? Press ",
                         style: TextStyle(
                           fontWeight: FontWeight.normal,
                           fontSize: 20,
                         ),
                       ),
                       TextButton(
-                        onPressed: () => router.push(const LoginScreen().path),
+                        onPressed: () => router.go(LoginScreen.path),
                         style: TextButton.styleFrom(
                           padding: EdgeInsets.zero,
                           minimumSize: const Size(0, 0),
