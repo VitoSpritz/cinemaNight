@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../consts/regex.dart';
 import 'router/router.dart';
 import 'sign_up.dart';
 
@@ -36,21 +37,33 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  String? validateEmail() {
-    if (_emailController.text.isEmpty) {
+  String? validatePassword() {
+    String password = _passwordController.text.trim();
+
+    if (password.isEmpty) {
+      return 'La password è un campo necessario';
+    }
+    if (Regex.passwordRegex.hasMatch(password)) {
       return null;
     }
-    if (_emailController.text.contains('@')) {
-      return null;
-    }
-    return "La email non è formattata nel modo giusto";
+    return 'Deve contente 8 caratteri, 1 maiuscola e 1 numero';
   }
 
-  String? validatePassword() {
-    if (_passwordController.text.length > 8) {
+  String? validateEmail() {
+    String email = _emailController.text.trim();
+
+    if (email.isEmpty) {
+      return 'La email è un campo necessario';
+    }
+    if (Regex.emailRegex.hasMatch(email)) {
       return null;
     }
-    return "La passowrd non è abbastanza lunga";
+    return "Inserire una email valida";
+  }
+
+  void clearFieldsOnError() {
+    _emailController.clear();
+    _passwordController.clear();
   }
 
   Future<void> onSubmitButtonClick() async {
@@ -60,13 +73,6 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     if (_emailError != null || _passwordError != null) {
-      return;
-    }
-
-    if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Inserisci email e password')),
-      );
       return;
     }
 
@@ -83,20 +89,21 @@ class _LoginScreenState extends State<LoginScreen> {
       String errorMessage;
 
       switch (e.code) {
-        case 'user-not-found':
-          errorMessage = 'Nessun utente trovato';
-          break;
         case 'invalid-credential':
           errorMessage = 'Credenziali non valide';
           break;
+        case 'invalid-email':
+          errorMessage = 'Email non valida';
+          break;
         default:
-          errorMessage = 'Errore di autenticazione: ${e.message}';
+          errorMessage = 'Errore di autenticazione: ${e.code}';
       }
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
         );
+        clearFieldsOnError();
       }
     } catch (e) {
       if (mounted) {
@@ -203,7 +210,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 200),
 
                   TextButton(
-                    onPressed: () => router.push(SignUpScreen.path),
+                    onPressed: () => router.go(SignUpScreen.path),
                     style: TextButton.styleFrom(
                       padding: EdgeInsets.zero,
                       minimumSize: const Size(0, 0),

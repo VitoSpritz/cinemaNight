@@ -26,6 +26,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
   String? _nameError;
   bool _isLoading = false;
 
+  @override
+  void initState() {
+    super.initState();
+    _emailController.addListener;
+    _passwordController.addListener;
+    _ageController.addListener;
+    _nameController.addListener;
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _ageController.dispose();
+    _nameController.dispose();
+    super.dispose();
+  }
+
   String? nameValidator() {
     if (_nameController.text.trim().isEmpty) {
       return "Campo obbligatorio";

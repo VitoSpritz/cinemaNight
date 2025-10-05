@@ -26,12 +26,21 @@ final GoRouter router = GoRouter(
       return isAuthenticated ? HomeScreen.path : LoginScreen.path;
     }
 
-    if (isAuthenticated && currentLocation == LoginScreen.path) {
+    if (isAuthenticated &&
+        (currentLocation == LoginScreen.path ||
+            currentLocation == SignUpScreen.path)) {
       return HomeScreen.path;
+    }
+
+    if (!isAuthenticated &&
+        currentLocation != LoginScreen.path &&
+        currentLocation != SignUpScreen.path) {
+      return LoginScreen.path;
     }
 
     return null;
   },
+
   routes: <RouteBase>[
     GoRoute(
       path: SplashScreen.path,

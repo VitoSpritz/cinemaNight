@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import 'login.dart';
 import 'router/router.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -23,7 +24,30 @@ class HomeScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () async {
-              await FirebaseAuth.instance.signOut();
+              final bool? isLoggingOut = await showDialog<bool>(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('Conferma logout'),
+                    content: const Text('Sei sicuro di voler uscire?'),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(false),
+                        child: const Text('No'),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(true),
+                        child: const Text('Si'),
+                      ),
+                    ],
+                  );
+                },
+              );
+
+              if (isLoggingOut == true) {
+                await FirebaseAuth.instance.signOut();
+                router.go(LoginScreen.path);
+              }
             },
           ),
         ],
