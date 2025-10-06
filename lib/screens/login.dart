@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../consts/regex.dart';
+import 'logic/validators.dart';
 import 'router/router.dart';
 import 'sign_up.dart';
 
@@ -26,8 +26,6 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    _emailController.addListener;
-    _passwordController.addListener;
   }
 
   @override
@@ -37,30 +35,6 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  String? validatePassword() {
-    String password = _passwordController.text.trim();
-
-    if (password.isEmpty) {
-      return 'La password è un campo necessario';
-    }
-    if (Regex.passwordRegex.hasMatch(password)) {
-      return null;
-    }
-    return 'Deve contente 8 caratteri, 1 maiuscola e 1 numero';
-  }
-
-  String? validateEmail() {
-    String email = _emailController.text.trim();
-
-    if (email.isEmpty) {
-      return 'La email è un campo necessario';
-    }
-    if (Regex.emailRegex.hasMatch(email)) {
-      return null;
-    }
-    return "Inserire una email valida";
-  }
-
   void clearFieldsOnError() {
     _emailController.clear();
     _passwordController.clear();
@@ -68,8 +42,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> onSubmitButtonClick() async {
     setState(() {
-      _emailError = validateEmail();
-      _passwordError = validatePassword();
+      _emailError = Validators.validateEmail(_emailController.text.trim());
+      _passwordError = Validators.validatePassword(
+        _passwordController.text.trim(),
+      );
     });
 
     if (_emailError != null || _passwordError != null) {
@@ -192,10 +168,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     : const Text("Login"),
               ),
             ),
-
             SizedBox(
               width: MediaQuery.of(context).size.width * 0.80,
-
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -206,9 +180,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       fontSize: 24,
                     ),
                   ),
-
                   const SizedBox(height: 200),
-
                   TextButton(
                     onPressed: () => router.go(SignUpScreen.path),
                     style: TextButton.styleFrom(

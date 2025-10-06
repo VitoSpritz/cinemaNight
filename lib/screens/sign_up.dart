@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../consts/regex.dart';
+import 'logic/validators.dart';
 import 'login.dart';
 import 'router/router.dart';
 
@@ -29,10 +29,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   void initState() {
     super.initState();
-    _emailController.addListener;
-    _passwordController.addListener;
-    _ageController.addListener;
-    _nameController.addListener;
   }
 
   @override
@@ -51,30 +47,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return null;
   }
 
-  String? passwordValidator() {
-    String password = _passwordController.text.trim();
-
-    if (password.isEmpty) {
-      return 'La password è un campo necessario';
-    }
-    if (Regex.passwordRegex.hasMatch(password)) {
-      return null;
-    }
-    return 'Deve contente 8 caratteri, 1 maiuscola e 1 numero';
-  }
-
-  String? emailValidator() {
-    String email = _emailController.text.trim();
-
-    if (email.isEmpty) {
-      return 'La email è un campo necessario';
-    }
-    if (Regex.emailRegex.hasMatch(email)) {
-      return null;
-    }
-    return "Inserire una email valida";
-  }
-
   String? ageValidator() {
     if (int.tryParse(_ageController.text.trim()) != null &&
         int.parse(_ageController.text.trim()) > 0) {
@@ -85,17 +57,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Future<void> onRegisteredButtonClick() async {
     setState(() {
-      _nameError = nameValidator();
-      _ageError = ageValidator();
-      _emailError = emailValidator();
-      _passwordError = passwordValidator();
+      _nameError = Validators.validateName(_nameController.text.trim());
+      _ageError = Validators.validateAge(_ageController.text.trim());
+      _emailError = Validators.validateEmail(_emailController.text.trim());
+      _passwordError = Validators.validatePassword(
+        _passwordController.text.trim(),
+      );
     });
 
     if (_nameError != null ||
         _passwordError != null ||
         _emailError != null ||
         _ageError != null) {
-      _passwordController.clear();
       return;
     }
 
@@ -164,9 +137,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     "Sign Up",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 80),
                   ),
-
                   const SizedBox(height: 50),
-
                   TextField(
                     controller: _nameController,
                     decoration: InputDecoration(
@@ -178,9 +149,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ),
                   ),
-
                   const SizedBox(height: 20),
-
                   TextField(
                     controller: _ageController,
                     decoration: InputDecoration(
@@ -193,9 +162,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                     keyboardType: TextInputType.number,
                   ),
-
                   const SizedBox(height: 20),
-
                   TextField(
                     controller: _emailController,
                     obscureText: false,
@@ -208,9 +175,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ),
                   ),
-
                   const SizedBox(height: 20),
-
                   TextField(
                     controller: _passwordController,
                     obscureText: true,
@@ -223,9 +188,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ),
                   ),
-
                   const SizedBox(height: 20),
-
                   SizedBox(
                     width: double.infinity,
                     child: FilledButton(
@@ -249,9 +212,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           : const Text("Sing up"),
                     ),
                   ),
-
                   const SizedBox(height: 20),
-
                   Row(
                     children: <Widget>[
                       const Text(
