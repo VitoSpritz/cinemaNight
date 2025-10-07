@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import 'login.dart';
 import 'router/router.dart';
 
@@ -13,9 +14,9 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Home Page",
-          style: TextStyle(fontWeight: FontWeight.bold),
+        title: Text(
+          AppLocalizations.of(context)!.homePage,
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.blue.shade700,
         foregroundColor: Colors.white,
@@ -28,16 +29,18 @@ class HomeScreen extends StatelessWidget {
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
-                    title: const Text('Conferma logout'),
-                    content: const Text('Sei sicuro di voler uscire?'),
+                    title: Text(AppLocalizations.of(context)!.confirmLogout),
+                    content: Text(
+                      AppLocalizations.of(context)!.areYouSureYouWantToQuit,
+                    ),
                     actions: <Widget>[
                       TextButton(
                         onPressed: () => Navigator.of(context).pop(false),
-                        child: const Text('No'),
+                        child: Text(AppLocalizations.of(context)!.no),
                       ),
                       TextButton(
                         onPressed: () => Navigator.of(context).pop(true),
-                        child: const Text('Si'),
+                        child: Text(AppLocalizations.of(context)!.yes),
                       ),
                     ],
                   );
@@ -56,18 +59,22 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'Welcome!',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            Text(
+              AppLocalizations.of(context)!.welcome,
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 10),
             Text(
-              'User: ${FirebaseAuth.instance.currentUser?.email ?? "Unknown"}',
+              AppLocalizations.of(context)!.currentUserString(
+                FirebaseAuth.instance.currentUser?.email ??
+                    AppLocalizations.of(context)!.unknown,
+              ),
               style: const TextStyle(fontSize: 16),
             ),
+
             ElevatedButton(
               onPressed: () => router.push(HomeScreen.path),
-              child: const Text("Go to home"),
+              child: Text(AppLocalizations.of(context)!.goToHome),
             ),
           ],
         ),

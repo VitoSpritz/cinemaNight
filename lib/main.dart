@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import 'auth/authenticator.dart';
 import 'firebase_options.dart';
+import 'l10n/app_localizations.dart';
 import 'screens/router/router.dart';
 
 void main() async {
@@ -24,6 +25,8 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       routerConfig: router,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       debugShowCheckedModeBanner: false,
     );
   }

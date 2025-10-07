@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import 'logic/validators.dart';
 import 'login.dart';
 import 'router/router.dart';
@@ -42,7 +43,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   String? nameValidator() {
     if (_nameController.text.trim().isEmpty) {
-      return "Campo obbligatorio";
+      return AppLocalizations.of(context)!.requiredField;
     }
     return null;
   }
@@ -52,15 +53,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
         int.parse(_ageController.text.trim()) > 0) {
       return null;
     }
-    return "Inserire un'età valida";
+    return AppLocalizations.of(context)!.insertaValidAge;
   }
 
   Future<void> onRegisteredButtonClick() async {
     setState(() {
-      _nameError = Validators.validateName(_nameController.text.trim());
-      _ageError = Validators.validateAge(_ageController.text.trim());
-      _emailError = Validators.validateEmail(_emailController.text.trim());
+      _nameError = Validators.validateName(
+        context,
+        _nameController.text.trim(),
+      );
+      _ageError = Validators.validateAge(context, _ageController.text.trim());
+      _emailError = Validators.validateEmail(
+        context,
+        _emailController.text.trim(),
+      );
       _passwordError = Validators.validatePassword(
+        context,
         _passwordController.text.trim(),
       );
     });
@@ -76,6 +84,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       _isLoading = true;
     });
 
+    final AppLocalizations loc = AppLocalizations.of(context)!;
+
     try {
       await _auth.createUserWithEmailAndPassword(
         email: _emailController.text.trim(),
@@ -86,10 +96,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
       switch (e.code) {
         case 'email-already-in-use':
-          errorMessage = "Email già in uso";
+          errorMessage = loc.emailAlreadyInUse;
           break;
         case 'invalid-email':
-          errorMessage = 'Email non valida';
+          errorMessage = loc.invalidEmail;
           setState(() {
             _emailError = errorMessage;
           });
@@ -98,7 +108,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
           errorMessage = _passwordError!;
           break;
         default:
-          errorMessage = 'Errore di autenticazione: ${e.message}';
+          errorMessage = AppLocalizations.of(
+            context,
+          )!.authenticationError(e.code);
       }
 
       if (mounted) {
@@ -109,7 +121,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Errore: $e'), backgroundColor: Colors.red),
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.error(e.toString())),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     } finally {
@@ -133,16 +148,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  const Text(
-                    "Sign Up",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 80),
+                  Text(
+                    AppLocalizations.of(context)!.signUp,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 80,
+                    ),
                   ),
                   const SizedBox(height: 50),
                   TextField(
                     controller: _nameController,
                     decoration: InputDecoration(
                       errorText: _nameError,
-                      hintText: 'First and Last Name',
+                      hintText: AppLocalizations.of(context)!.firstAndLastName,
                       hintStyle: const TextStyle(fontWeight: FontWeight.bold),
                       border: const OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -154,7 +172,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     controller: _ageController,
                     decoration: InputDecoration(
                       errorText: _ageError,
-                      hintText: 'Age',
+                      hintText: AppLocalizations.of(context)!.age,
                       hintStyle: const TextStyle(fontWeight: FontWeight.bold),
                       border: const OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -169,7 +187,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     decoration: InputDecoration(
                       errorText: _emailError,
                       hintStyle: const TextStyle(fontWeight: FontWeight.bold),
-                      hintText: 'Email',
+                      hintText: AppLocalizations.of(context)!.email,
                       border: const OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
                       ),
@@ -181,7 +199,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     obscureText: true,
                     decoration: InputDecoration(
                       errorText: _passwordError,
-                      hintText: 'Password',
+                      hintText: AppLocalizations.of(context)!.password,
                       hintStyle: const TextStyle(fontWeight: FontWeight.bold),
                       border: const OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -209,15 +227,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 color: Colors.black,
                               ),
                             )
-                          : const Text("Sing up"),
+                          : Text(AppLocalizations.of(context)!.signUp),
                     ),
                   ),
                   const SizedBox(height: 20),
                   Row(
                     children: <Widget>[
-                      const Text(
-                        "Already have an account? Press ",
-                        style: TextStyle(
+                      Text(
+                        AppLocalizations.of(context)!.alreadyHaveAnAccountPress,
+                        style: const TextStyle(
                           fontWeight: FontWeight.normal,
                           fontSize: 20,
                         ),
@@ -229,12 +247,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           minimumSize: const Size(0, 0),
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
-                        child: const Text(
-                          style: TextStyle(
+                        child: Text(
+                          style: const TextStyle(
                             fontWeight: FontWeight.normal,
                             fontSize: 20,
                           ),
-                          "here",
+                          AppLocalizations.of(context)!.here,
                         ),
                       ),
                     ],

@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import 'logic/validators.dart';
 import 'router/router.dart';
 import 'sign_up.dart';
@@ -42,8 +43,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> onSubmitButtonClick() async {
     setState(() {
-      _emailError = Validators.validateEmail(_emailController.text.trim());
+      _emailError = Validators.validateEmail(
+        context,
+        _emailController.text.trim(),
+      );
       _passwordError = Validators.validatePassword(
+        context,
         _passwordController.text.trim(),
       );
     });
@@ -56,6 +61,8 @@ class _LoginScreenState extends State<LoginScreen> {
       _isLoading = true;
     });
 
+    final AppLocalizations loc = AppLocalizations.of(context)!;
+
     try {
       await _auth.signInWithEmailAndPassword(
         email: _emailController.text.trim(),
@@ -66,13 +73,15 @@ class _LoginScreenState extends State<LoginScreen> {
 
       switch (e.code) {
         case 'invalid-credential':
-          errorMessage = 'Credenziali non valide';
+          errorMessage = loc.invalidCredential;
           break;
         case 'invalid-email':
-          errorMessage = 'Email non valida';
+          errorMessage = loc.invalidEmail;
           break;
         default:
-          errorMessage = 'Errore di autenticazione: ${e.code}';
+          errorMessage = AppLocalizations.of(
+            context,
+          )!.authenticationError(e.code);
       }
 
       if (mounted) {
@@ -84,7 +93,10 @@ class _LoginScreenState extends State<LoginScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Errore: $e'), backgroundColor: Colors.red),
+          SnackBar(
+            content: Text(AppLocalizations.of(context)!.error(e.toString())),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     } finally {
@@ -105,9 +117,12 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(height: 90),
             SizedBox(
               width: MediaQuery.of(context).size.width * 0.8,
-              child: const Text(
-                "Login",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 80),
+              child: Text(
+                AppLocalizations.of(context)!.loginString,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 80,
+                ),
               ),
             ),
             const SizedBox(height: 16),
@@ -120,7 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   border: const OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(10.0)),
                   ),
-                  labelText: "Email",
+                  labelText: AppLocalizations.of(context)!.email,
                   errorText: _emailError,
                 ),
               ),
@@ -136,9 +151,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   border: const OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(10.0)),
                   ),
-                  label: const Text(
-                    'Password',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                  label: Text(
+                    AppLocalizations.of(context)!.password,
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                   errorText: _passwordError,
                 ),
@@ -165,7 +180,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           color: Colors.black,
                         ),
                       )
-                    : const Text("Login"),
+                    : Text(AppLocalizations.of(context)!.loginButton),
               ),
             ),
             SizedBox(
@@ -173,9 +188,9 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  const Text(
-                    "Not registered? Press ",
-                    style: TextStyle(
+                  Text(
+                    AppLocalizations.of(context)!.notRegisteredPress,
+                    style: const TextStyle(
                       fontWeight: FontWeight.normal,
                       fontSize: 24,
                     ),
@@ -188,12 +203,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       minimumSize: const Size(0, 0),
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
-                    child: const Text(
-                      style: TextStyle(
+                    child: Text(
+                      style: const TextStyle(
                         fontWeight: FontWeight.normal,
                         fontSize: 24,
                       ),
-                      "here",
+                      AppLocalizations.of(context)!.here,
                     ),
                   ),
                 ],
