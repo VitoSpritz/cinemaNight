@@ -1,8 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/src/router.dart';
 
-import 'auth/authenticator.dart';
 import 'firebase_options.dart';
 import 'l10n/app_localizations.dart';
 import 'screens/router/router.dart';
@@ -10,19 +10,16 @@ import 'screens/router/router.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(
-    ChangeNotifierProvider(
-      create: (BuildContext context) => Authenticator(),
-      builder: ((BuildContext context, Widget? child) => const MainApp()),
-    ),
-  );
+  runApp(const ProviderScope(child: MainApp()));
 }
 
-class MainApp extends StatelessWidget {
+class MainApp extends ConsumerWidget {
   const MainApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final GoRouter router = ref.watch(routerProvider);
+
     return MaterialApp.router(
       routerConfig: router,
       localizationsDelegates: AppLocalizations.localizationsDelegates,

@@ -1,10 +1,11 @@
 {
     "conventionalCommits.scopes": [
-        "uI",
-        "back end",
+        "ui",
+        "back-end",
         "chore",
         "build",
-        "authentication"
+        "authentication",
+        "dependencies"
     ],
     "dart.hotReloadOnSave": "all",
 }

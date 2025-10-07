@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart' show ChangeNotifierProvider;
 import 'package:go_router/go_router.dart';
 
 import '../../auth/authenticator.dart';
@@ -10,24 +12,30 @@ import '../login.dart';
 import '../sign_up.dart';
 import '../splash_screen.dart';
 
-final Authenticator authenticator = Authenticator();
+final ChangeNotifierProvider<Authenticator> authenticatorProvider =
+    ChangeNotifierProvider<Authenticator>((Ref ref) {
+      return Authenticator();
+    });
 
-final GoRouter router = GoRouter(
-  initialLocation: SplashScreen.path,
-  refreshListenable: authenticator,
+final Provider<GoRouter> routerProvider = Provider<GoRouter>((Ref ref) {
+  final Authenticator authenticator = ref.watch(authenticatorProvider);
 
-  redirect: (BuildContext context, GoRouterState state) {
-    final bool isAuthenticated = authenticator.isAuthenticated;
-    final bool isInitialized = authenticator.isInitialized;
-    final String currentLocation = state.matchedLocation;
+  return GoRouter(
+    initialLocation: SplashScreen.path,
+    refreshListenable: authenticator,
 
-    if (!isInitialized) {
-      return SplashScreen.path;
-    }
+    redirect: (BuildContext context, GoRouterState state) {
+      final bool isAuthenticated = authenticator.isAuthenticated;
+      final bool isInitialized = authenticator.isInitialized;
+      final String currentLocation = state.matchedLocation;
 
-    if (currentLocation == SplashScreen.path) {
-      return isAuthenticated ? HomeScreen.path : LoginScreen.path;
-    }
+      if (!isInitialized) {
+        return SplashScreen.path;
+      }
+
+      if (currentLocation == SplashScreen.path) {
+        return isAuthenticated ? HomeScreen.path : LoginScreen.path;
+      }
 
     if (isAuthenticated &&
         (currentLocation == LoginScreen.path ||
@@ -35,11 +43,11 @@ final GoRouter router = GoRouter(
       return Chats.path;
     }
 
-    if (!isAuthenticated &&
-        currentLocation != LoginScreen.path &&
-        currentLocation != SignUpScreen.path) {
-      return LoginScreen.path;
-    }
+      if (!isAuthenticated &&
+          currentLocation != LoginScreen.path &&
+          currentLocation != SignUpScreen.path) {
+        return LoginScreen.path;
+      }
 
     return null;
   },

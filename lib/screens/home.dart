@@ -1,18 +1,19 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../l10n/app_localizations.dart';
 import '../widget/custom_bottom_bar.dart';
 import 'login.dart';
-import 'router/router.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends ConsumerWidget {
   static String path = '/home';
 
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -48,10 +49,11 @@ class HomeScreen extends StatelessWidget {
                   );
                 },
               );
-
               if (isLoggingOut == true) {
                 await FirebaseAuth.instance.signOut();
-                router.go(LoginScreen.path);
+                if (context.mounted) {
+                  context.go(LoginScreen.path);
+                }
               }
             },
           ),
@@ -75,7 +77,7 @@ class HomeScreen extends StatelessWidget {
             ),
 
             ElevatedButton(
-              onPressed: () => router.push(HomeScreen.path),
+              onPressed: () => context.push(HomeScreen.path),
               child: Text(AppLocalizations.of(context)!.goToHome),
             ),
           ],
