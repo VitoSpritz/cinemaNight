@@ -1,0 +1,56 @@
+{
+"@@locale": "en",
+
+"homePage": "Home Page",
+"confirmLogout": "Confirm logout",
+"areYouSureYouWantToQuit": "Are you sure you want to quit?",
+"yes": "Yes",
+"no": "No",
+"welcome": "Welcome",
+"goToHome": "Go to the home page",
+"currentUserString": "User: {email}",
+"@currentUserString":{
+    "placeholders":{
+        "email": {
+            "type": "String"
+            }
+    }
+},
+"unknown": "unknown",
+"invalidCredential": "Invalid credential",
+"invalidEmail": "Invalid email",
+"authenticationError": "Authentication error: {errorCode}",
+"@authenticationError": {
+    "placeholders": {
+        "errorCode": {
+            "type": "String"
+        }
+    }
+},
+"loginString": "Login",
+"loginButton": "Login",
+"email": "Email",
+"password": "Password",
+"notRegisteredPress": "Not registered yet? Press ",
+"here": "here",
+"requiredField": "Required field",
+"insertaValidAge": "Insert valid age",
+"emailAlreadyInUse": "Email already in use",
+"error": "Error: {errorMessage}",
+"@error":{
+    "placeholders":{
+        "errorMessage": {
+            "type": "String"
+        }
+    }
+},
+"signUp": "Sign up",
+"firstAndLastName": "First and last name",
+"age": "Age",
+"alreadyHaveAnAccountPress": "Already have an account? Press ",
+
+"passwordIsRequired": "Password is required",
+"passwordMinimalRequirements": "Password must contain at least 8 characters, 1 capital letter and 1 number",
+"emailIsRequired": "Email is required",
+"insertaValidEmail": "Insert a valid email"
+}

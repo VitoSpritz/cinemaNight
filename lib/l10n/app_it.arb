@@ -1,0 +1,56 @@
+{
+"@@locale": "it",
+
+"homePage": "Home Page",
+"confirmLogout": "Conferma logout",
+"areYouSureYouWantToQuit": "Sei sicuro di voler uscire?",
+"yes": "Si",
+"no": "No",
+"welcome": "Benvenuto",
+"goToHome": "Vai alla pagina principale",
+"currentUserString": "Utente: {email}",
+"@currentUserString":{
+    "placeholders":{
+        "email": {
+            "type": "String"
+            }
+    }
+},
+"unknown": "sconosciuto",
+"invalidCredential": "Credenziali non valide",
+"invalidEmail": "Email non valida",
+"authenticationError": "Errore di autenticazione: {errorCode}",
+"@authenticationError": {
+    "placeholders": {
+        "errorCode": {
+            "type": "String"
+        }
+    }
+},
+"loginString": "Login",
+"loginButton": "Accedi",
+"email": "Email",
+"password": "Password",
+"notRegisteredPress": "Non hai un account? Premi ",
+"here": "qui",
+"requiredField": "Campo obbligatorio",
+"insertaValidAge": "Inserire un'età valida",
+"emailAlreadyInUse": "Email già in uso",
+"error": "Errore: {errorMessage}",
+"@error":{
+    "placeholders":{
+        "errorMessage": {
+            "type": "String"
+        }
+    }
+},
+"signUp": "Crea un account",
+"firstAndLastName": "Nome e cognome",
+"age": "Età",
+"alreadyHaveAnAccountPress": "Hai già un account? Premi ",
+
+"passwordIsRequired": "La password è necessaria",
+"passwordMinimalRequirements": "La password deve contenere almeno 8 caratteri, 1 lettera maiuscole e 1 numero",
+"emailIsRequired": "L'indirizzo email è necessario",
+"insertaValidEmail": "Inserire una email valida"
+}
