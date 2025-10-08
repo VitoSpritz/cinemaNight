@@ -138,6 +138,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   labelText: AppLocalizations.of(context)!.email,
                   errorText: _emailError,
                 ),
+                keyboardType: TextInputType.emailAddress,
               ),
             ),
             const SizedBox(height: 69),
