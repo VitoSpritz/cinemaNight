@@ -1,10 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/src/router.dart';
+import 'package:go_router/go_router.dart';
 
 import 'firebase_options.dart';
 import 'l10n/app_localizations.dart';
+import 'providers/auth_listener.dart';
 import 'screens/router/router.dart';
 
 void main() async {
@@ -19,6 +20,7 @@ class MainApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final GoRouter router = ref.watch(routerProvider);
+    ref.watch(authListenerProvider);
 
     return MaterialApp.router(
       routerConfig: router,

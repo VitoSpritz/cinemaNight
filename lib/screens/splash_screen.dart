@@ -1,14 +1,17 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../consts/custom_colors.dart';
+import '../providers/auth.dart';
+import 'home.dart';
 import 'login.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
-  static String path = '/splash';
+  static String path = '/';
 
   const SplashScreen({super.key});
 
@@ -22,9 +25,14 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _timer = Timer(const Duration(seconds: 3), () {
+    _timer = Timer(const Duration(seconds: 1), () {
       if (mounted) {
-        context.go(LoginScreen.path);
+        final User? user = ref.read(authProvider);
+        if (user == null) {
+          context.go(LoginScreen.path);
+        } else {
+          context.go(HomeScreen.path);
+        }
       }
     });
   }
