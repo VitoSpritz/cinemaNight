@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../consts/custom_colors.dart';
 import 'login.dart';
 import 'router/router.dart';
 
@@ -36,14 +37,14 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue,
+      backgroundColor: CustomColors.lightBlue,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Image.asset('assets/images/logo.png', width: 200),
             const SizedBox(height: 20),
-            const CircularProgressIndicator(color: Colors.white),
+            CircularProgressIndicator(color: CustomColors.white),
           ],
         ),
       ),

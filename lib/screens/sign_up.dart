@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../consts/custom_colors.dart';
 import '../l10n/app_localizations.dart';
 import 'logic/validators.dart';
 import 'login.dart';
@@ -115,7 +116,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
+          SnackBar(
+            content: Text(errorMessage),
+            backgroundColor: CustomColors.errorMessage,
+          ),
         );
       }
     } catch (e) {
@@ -123,7 +127,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(AppLocalizations.of(context)!.error(e.toString())),
-            backgroundColor: Colors.red,
+            backgroundColor: CustomColors.errorMessage,
           ),
         );
       }
@@ -139,129 +143,159 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          children: <Widget>[
-            const SizedBox(height: 90),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.8,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    AppLocalizations.of(context)!.signUp,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 80,
-                    ),
-                  ),
-                  const SizedBox(height: 50),
-                  TextField(
-                    controller: _nameController,
-                    decoration: InputDecoration(
-                      errorText: _nameError,
-                      hintText: AppLocalizations.of(context)!.firstAndLastName,
-                      hintStyle: const TextStyle(fontWeight: FontWeight.bold),
-                      border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            stops: <double>[0, 0.19, 0.41, 1.0],
+            colors: <Color>[
+              Color(0xFF5264DE),
+              Color(0xFF212C77),
+              Color(0xFF050031),
+              Color(0xFF050031),
+            ],
+          ),
+        ),
+        child: Center(
+          child: Column(
+            children: <Widget>[
+              const SizedBox(height: 90),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.8,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      AppLocalizations.of(context)!.signUp,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 80,
+                        color: CustomColors.mainYellow,
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  TextField(
-                    controller: _ageController,
-                    decoration: InputDecoration(
-                      errorText: _ageError,
-                      hintText: AppLocalizations.of(context)!.age,
-                      hintStyle: const TextStyle(fontWeight: FontWeight.bold),
-                      border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                      ),
-                    ),
-                    keyboardType: TextInputType.number,
-                  ),
-                  const SizedBox(height: 20),
-                  TextField(
-                    controller: _emailController,
-                    obscureText: false,
-                    decoration: InputDecoration(
-                      errorText: _emailError,
-                      hintStyle: const TextStyle(fontWeight: FontWeight.bold),
-                      hintText: AppLocalizations.of(context)!.email,
-                      border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                      ),
-                    ),
-                    keyboardType: TextInputType.emailAddress,
-                  ),
-                  const SizedBox(height: 20),
-                  TextField(
-                    controller: _passwordController,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      errorText: _passwordError,
-                      hintText: AppLocalizations.of(context)!.password,
-                      hintStyle: const TextStyle(fontWeight: FontWeight.bold),
-                      border: const OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  SizedBox(
-                    width: double.infinity,
-                    child: FilledButton(
-                      onPressed: () => onRegisteredButtonClick(),
-                      style: FilledButton.styleFrom(
-                        backgroundColor: Colors.amberAccent,
-                        foregroundColor: Colors.black,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadiusGeometry.circular(10),
+                    const SizedBox(height: 50),
+                    TextField(
+                      controller: _nameController,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: CustomColors.inputFill,
+                        errorText: _nameError,
+                        hintText: AppLocalizations.of(
+                          context,
+                        )!.firstAndLastName,
+                        hintStyle: const TextStyle(fontWeight: FontWeight.bold),
+                        border: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
                         ),
                       ),
-                      child: _isLoading
-                          ? const SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: Colors.black,
-                              ),
-                            )
-                          : Text(AppLocalizations.of(context)!.signUp),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  Row(
-                    children: <Widget>[
-                      Text(
-                        AppLocalizations.of(context)!.alreadyHaveAnAccountPress,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 20,
+                    const SizedBox(height: 20),
+                    TextField(
+                      controller: _ageController,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: CustomColors.inputFill,
+                        errorText: _ageError,
+                        hintText: AppLocalizations.of(context)!.age,
+                        hintStyle: const TextStyle(fontWeight: FontWeight.bold),
+                        border: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
                         ),
                       ),
-                      TextButton(
-                        onPressed: () => router.go(LoginScreen.path),
-                        style: TextButton.styleFrom(
-                          padding: EdgeInsets.zero,
-                          minimumSize: const Size(0, 0),
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      keyboardType: TextInputType.number,
+                    ),
+                    const SizedBox(height: 20),
+                    TextField(
+                      controller: _emailController,
+                      obscureText: false,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: CustomColors.inputFill,
+                        errorText: _emailError,
+                        hintStyle: const TextStyle(fontWeight: FontWeight.bold),
+                        hintText: AppLocalizations.of(context)!.email,
+                        border: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
                         ),
-                        child: Text(
-                          style: const TextStyle(
+                      ),
+                      keyboardType: TextInputType.emailAddress,
+                    ),
+                    const SizedBox(height: 20),
+                    TextField(
+                      controller: _passwordController,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: CustomColors.inputFill,
+                        errorText: _passwordError,
+                        hintText: AppLocalizations.of(context)!.password,
+                        hintStyle: const TextStyle(fontWeight: FontWeight.bold),
+                        border: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    SizedBox(
+                      width: double.infinity,
+                      child: FilledButton(
+                        onPressed: () => onRegisteredButtonClick(),
+                        style: FilledButton.styleFrom(
+                          backgroundColor: CustomColors.mainYellow,
+                          foregroundColor: CustomColors.black,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadiusGeometry.circular(10),
+                          ),
+                        ),
+                        child: _isLoading
+                            ? SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: CustomColors.black,
+                                ),
+                              )
+                            : Text(AppLocalizations.of(context)!.signUp),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          AppLocalizations.of(
+                            context,
+                          )!.alreadyHaveAnAccountPress,
+                          style: TextStyle(
                             fontWeight: FontWeight.normal,
                             fontSize: 20,
+                            color: CustomColors.white,
                           ),
-                          AppLocalizations.of(context)!.here,
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                        TextButton(
+                          onPressed: () => router.go(LoginScreen.path),
+                          style: TextButton.styleFrom(
+                            padding: EdgeInsets.zero,
+                            minimumSize: const Size(0, 0),
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          child: Text(
+                            style: const TextStyle(
+                              fontWeight: FontWeight.normal,
+                              fontSize: 20,
+                            ),
+                            AppLocalizations.of(context)!.here,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../consts/custom_colors.dart';
 import '../l10n/app_localizations.dart';
 import 'logic/validators.dart';
 import 'router/router.dart';
@@ -86,7 +87,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(errorMessage), backgroundColor: Colors.red),
+          SnackBar(
+            content: Text(errorMessage),
+            backgroundColor: CustomColors.errorMessage,
+          ),
         );
         clearFieldsOnError();
       }
@@ -95,7 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(AppLocalizations.of(context)!.error(e.toString())),
-            backgroundColor: Colors.red,
+            backgroundColor: CustomColors.errorMessage,
           ),
         );
       }
@@ -111,111 +115,132 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          children: <Widget>[
-            const SizedBox(height: 90),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.8,
-              child: Text(
-                AppLocalizations.of(context)!.loginString,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 80,
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.8,
-              child: TextField(
-                controller: _emailController,
-                decoration: InputDecoration(
-                  icon: const Icon(Icons.email),
-                  border: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                  ),
-                  labelText: AppLocalizations.of(context)!.email,
-                  errorText: _emailError,
-                ),
-                keyboardType: TextInputType.emailAddress,
-              ),
-            ),
-            const SizedBox(height: 69),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.8,
-              child: TextField(
-                controller: _passwordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  icon: const Icon(Icons.password),
-                  border: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                  ),
-                  label: Text(
-                    AppLocalizations.of(context)!.password,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  errorText: _passwordError,
-                ),
-              ),
-            ),
-            const SizedBox(height: 69),
-            FractionallySizedBox(
-              widthFactor: 0.85,
-              child: FilledButton(
-                onPressed: () => onSubmitButtonClick(),
-                style: FilledButton.styleFrom(
-                  backgroundColor: Colors.amberAccent,
-                  foregroundColor: Colors.black,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+      resizeToAvoidBottomInset: false,
+      backgroundColor: Colors.transparent,
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            stops: <double>[0, 0.19, 0.41, 1.0],
+            colors: <Color>[
+              Color(0xFF5264DE),
+              Color(0xFF212C77),
+              Color(0xFF050031),
+              Color(0xFF050031),
+            ],
+          ),
+        ),
+        child: Center(
+          child: Column(
+            children: <Widget>[
+              const SizedBox(height: 90),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.8,
+                child: Text(
+                  AppLocalizations.of(context)!.loginString,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 80,
+                    color: CustomColors.mainYellow,
                   ),
                 ),
-                child: _isLoading
-                    ? const SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: Colors.black,
-                        ),
-                      )
-                    : Text(AppLocalizations.of(context)!.loginButton),
               ),
-            ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.80,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    AppLocalizations.of(context)!.notRegisteredPress,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.normal,
-                      fontSize: 24,
+              const SizedBox(height: 16),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.8,
+                child: TextField(
+                  controller: _emailController,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: CustomColors.inputFill,
+                    border: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    ),
+                    labelText: AppLocalizations.of(context)!.email,
+                    errorText: _emailError,
+                  ),
+                  keyboardType: TextInputType.emailAddress,
+                ),
+              ),
+              const SizedBox(height: 69),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.8,
+                child: TextField(
+                  controller: _passwordController,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: CustomColors.inputFill,
+                    border: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                    ),
+                    label: Text(
+                      AppLocalizations.of(context)!.password,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    errorText: _passwordError,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 69),
+              FractionallySizedBox(
+                widthFactor: 0.85,
+                child: FilledButton(
+                  onPressed: () => onSubmitButtonClick(),
+                  style: FilledButton.styleFrom(
+                    backgroundColor: CustomColors.mainYellow,
+                    foregroundColor: CustomColors.black,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  const SizedBox(height: 200),
-                  TextButton(
-                    onPressed: () => router.go(SignUpScreen.path),
-                    style: TextButton.styleFrom(
-                      padding: EdgeInsets.zero,
-                      minimumSize: const Size(0, 0),
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    ),
-                    child: Text(
-                      style: const TextStyle(
+                  child: _isLoading
+                      ? SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: CustomColors.black,
+                          ),
+                        )
+                      : Text(AppLocalizations.of(context)!.loginButton),
+                ),
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.80,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      AppLocalizations.of(context)!.notRegisteredPress,
+                      style: TextStyle(
+                        color: CustomColors.white,
                         fontWeight: FontWeight.normal,
                         fontSize: 24,
                       ),
-                      AppLocalizations.of(context)!.here,
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 200),
+                    TextButton(
+                      onPressed: () => router.go(SignUpScreen.path),
+                      style: TextButton.styleFrom(
+                        padding: EdgeInsets.zero,
+                        minimumSize: const Size(0, 0),
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                      child: Text(
+                        style: const TextStyle(
+                          fontWeight: FontWeight.normal,
+                          fontSize: 24,
+                        ),
+                        AppLocalizations.of(context)!.here,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

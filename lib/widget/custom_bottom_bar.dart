@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../consts/custom_colors.dart';
 import '../screens/account.dart';
 import '../screens/chats.dart';
 import '../screens/list.dart';
@@ -35,21 +36,27 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
         children: <Widget>[
           CustomIconButton(
             icon: Icons.account_box_rounded,
-            color: _activePage == "account" ? Colors.white : Colors.black,
+            color: _activePage == "account"
+                ? CustomColors.white
+                : CustomColors.black,
             onTap: () {
               router.go(Account.path);
             },
           ),
           CustomIconButton(
             icon: Icons.list,
-            color: _activePage == "list" ? Colors.white : Colors.black,
+            color: _activePage == "list"
+                ? CustomColors.white
+                : CustomColors.black,
             onTap: () {
               router.go(List.path);
             },
           ),
           CustomIconButton(
             icon: Icons.chat,
-            color: _activePage == "chats" ? Colors.white : Colors.black,
+            color: _activePage == "chats"
+                ? CustomColors.white
+                : CustomColors.black,
             onTap: () {
               router.go(Chats.path);
             },
