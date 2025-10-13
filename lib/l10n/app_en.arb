@@ -48,7 +48,6 @@
 "firstAndLastName": "First and last name",
 "age": "Age",
 "alreadyHaveAnAccountPress": "Already have an account? Press ",
-
 "passwordIsRequired": "Password is required",
 "passwordMinimalRequirements": "Password must contain at least 8 characters, 1 capital letter and 1 number",
 "emailIsRequired": "Email is required",
@@ -57,5 +56,6 @@
 "account": "Account",
 "reviews": "Reviews",
 "home": "Home",
-"chats": "Chats"
+"chats": "Chats",
+"requestApiLanguage": "en-EN"
 }

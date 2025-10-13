@@ -301,6 +301,12 @@ abstract class AppLocalizations {
   /// In it, this message translates to:
   /// **'Gruppi'**
   String get chats;
+
+  /// No description provided for @requestApiLanguage.
+  ///
+  /// In it, this message translates to:
+  /// **'it-ITA'**
+  String get requestApiLanguage;
 }
 
 class _AppLocalizationsDelegate
