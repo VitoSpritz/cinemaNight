@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../consts/custom_colors.dart';
 import '../screens/account.dart';
 import '../screens/chats.dart';
 import '../screens/list.dart';
-import '../screens/router/router.dart';
 import 'custom_icon_button.dart';
 
-class CustomBottomBar extends StatefulWidget {
+class CustomBottomBar extends ConsumerStatefulWidget {
   final String activePage;
 
   const CustomBottomBar({super.key, required this.activePage});
 
   @override
-  State<CustomBottomBar> createState() => _CustomBottomBarState();
+  ConsumerState<CustomBottomBar> createState() => _CustomBottomBarState();
 }
 
-class _CustomBottomBarState extends State<CustomBottomBar> {
+class _CustomBottomBarState extends ConsumerState<CustomBottomBar> {
   late String _activePage;
 
   @override
@@ -40,7 +41,7 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
                 ? CustomColors.white
                 : CustomColors.black,
             onTap: () {
-              router.go(Account.path);
+              context.go(Account.path);
             },
           ),
           CustomIconButton(
@@ -49,7 +50,7 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
                 ? CustomColors.white
                 : CustomColors.black,
             onTap: () {
-              router.go(List.path);
+              context.go(List.path);
             },
           ),
           CustomIconButton(
@@ -58,7 +59,7 @@ class _CustomBottomBarState extends State<CustomBottomBar> {
                 ? CustomColors.white
                 : CustomColors.black,
             onTap: () {
-              router.go(Chats.path);
+              context.go(Chats.path);
             },
           ),
         ],

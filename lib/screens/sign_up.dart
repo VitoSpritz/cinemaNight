@@ -276,7 +276,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                           ),
                         ),
                         TextButton(
-                          onPressed: () => router.go(LoginScreen.path),
+                          onPressed: () => context.go(LoginScreen.path),
                           style: TextButton.styleFrom(
                             padding: EdgeInsets.zero,
                             minimumSize: const Size(0, 0),
