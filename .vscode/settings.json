@@ -6,7 +6,8 @@
     "build",
     "authentication",
     "dependencies",
-    "localization"
+    "localization",
+    "test"
   ],
   "dart.hotReloadOnSave": "all"
 }
