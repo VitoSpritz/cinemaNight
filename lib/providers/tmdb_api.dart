@@ -2,27 +2,62 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-import '../model/movie_model.dart';
+import '../env/env.dart';
+import '../interface/tmdb_storage.dart';
+import '../model/http_status.dart';
+import '../model/movie.dart';
+import '../model/tvShow.dart';
 
-class TmdbApi {
-  static const String baseUrl = 'https://api.themoviedb.org/3/search';
-
-  Future<List<Movie>> getMovieByName(String name) async {
-    const String languageParam = "it-ITA";
+class TmdbApi implements TmdbStorage {
+  @override
+  Future<List<Movie>> getMovieByName({
+    required String name,
+    required String language,
+  }) async {
+    final Map<String, String> queryParams = <String, String>{
+      'query': name,
+      'include_adult': 'true',
+      'language': language,
+      'api_key': Env.apiKey,
+    };
 
     final Uri url = Uri.parse(
-      '$baseUrl/search/movie?query=$name&include_adult=true&language=$languageParam&page=1',
-    );
+      '${Env.baseUrl}/3/search/movie',
+    ).replace(queryParameters: queryParams);
 
     final http.Response response = await http.get(url);
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == HttpStatus.ok.code) {
       final Map<String, dynamic> data = jsonDecode(response.body);
-      final List<dynamic> results = data['results'];
+      final List<dynamic> results = data['results'] ?? <dynamic>[];
 
-      return results.map((json) => Movie.fromJson(json)).toList();
+      return Movie.parseList(results);
     } else {
-      throw Exception('Failed to load movies');
+      throw Exception('Failed to load movies ${response.statusCode}');
+    }
+  }
+
+  @override
+  Future<List<TvShow>> getTvShowByName({required String name}) async {
+    final Map<String, String> queryParams = <String, String>{
+      'query': name,
+      'include_adult': 'true',
+      'api_key': Env.apiKey,
+    };
+
+    final Uri url = Uri.parse(
+      '${Env.baseUrl}/3/search/tv',
+    ).replace(queryParameters: queryParams);
+
+    final http.Response response = await http.get(url);
+
+    if (response.statusCode == HttpStatus.ok.code) {
+      final Map<String, dynamic> data = jsonDecode(response.body);
+      final List<dynamic> results = data['results'] ?? <dynamic>[];
+
+      return TvShow.parseList(results);
+    } else {
+      throw Exception('Failed to load tv shows ${response.statusCode}');
     }
   }
 }
