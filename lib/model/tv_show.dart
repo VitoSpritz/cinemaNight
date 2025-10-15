@@ -1,9 +1,7 @@
-import 'dart:convert';
-
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'tvShow.freezed.dart';
-part 'tvShow.g.dart';
+part 'tv_show.freezed.dart';
+part 'tv_show.g.dart';
 
 @freezed
 abstract class TvShow with _$TvShow {
@@ -34,15 +32,6 @@ abstract class TvShow with _$TvShow {
   }) = _TvShow;
 
   factory TvShow.fromJson(Map<String, dynamic> json) => _$TvShowFromJson(json);
-
-  static TvShow parse(Map<String, dynamic> json) {
-    return TvShow.fromJson(json);
-  }
-
-  static List<TvShow> parseListString(String jsonString) {
-    final List<dynamic> list = jsonDecode(jsonString);
-    return list.map((json) => TvShow.fromJson(json)).toList();
-  }
 
   static List<TvShow> parseList(List<dynamic> jsonList) {
     return jsonList.map((json) => TvShow.fromJson(json)).toList();

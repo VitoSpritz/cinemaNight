@@ -32,10 +32,6 @@ abstract class Movie with _$Movie {
 
   factory Movie.fromJson(Map<String, dynamic> json) => _$MovieFromJson(json);
 
-  static Movie parse(Map<String, dynamic> json) {
-    return Movie.fromJson(json);
-  }
-
   static List<Movie> parseListString(String jsonString) {
     final List<dynamic> list = jsonDecode(jsonString);
     return list.map((json) => Movie.fromJson(json)).toList();
