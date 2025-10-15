@@ -52,5 +52,10 @@
 "passwordIsRequired": "La password è necessaria",
 "passwordMinimalRequirements": "La password deve contenere almeno 8 caratteri, 1 lettera maiuscole e 1 numero",
 "emailIsRequired": "L'indirizzo email è necessario",
-"insertaValidEmail": "Inserire una email valida"
+"insertaValidEmail": "Inserire una email valida",
+
+"account": "Account",
+"reviews": "Recensioni",
+"home": "Home",
+"chats": "Gruppi"
 }

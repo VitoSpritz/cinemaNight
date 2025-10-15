@@ -104,4 +104,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get insertaValidEmail => 'Insert a valid email';
+
+  @override
+  String get account => 'Account';
+
+  @override
+  String get reviews => 'Reviews';
+
+  @override
+  String get home => 'Home';
+
+  @override
+  String get chats => 'Chats';
 }

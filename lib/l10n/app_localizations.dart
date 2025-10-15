@@ -277,6 +277,30 @@ abstract class AppLocalizations {
   /// In it, this message translates to:
   /// **'Inserire una email valida'**
   String get insertaValidEmail;
+
+  /// No description provided for @account.
+  ///
+  /// In it, this message translates to:
+  /// **'Account'**
+  String get account;
+
+  /// No description provided for @reviews.
+  ///
+  /// In it, this message translates to:
+  /// **'Recensioni'**
+  String get reviews;
+
+  /// No description provided for @home.
+  ///
+  /// In it, this message translates to:
+  /// **'Home'**
+  String get home;
+
+  /// No description provided for @chats.
+  ///
+  /// In it, this message translates to:
+  /// **'Gruppi'**
+  String get chats;
 }
 
 class _AppLocalizationsDelegate
