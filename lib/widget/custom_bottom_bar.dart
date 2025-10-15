@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../consts/custom_colors.dart';
+import '../l10n/app_localizations.dart';
 
 class CustomBottomBar extends ConsumerWidget {
   final String? activePage;
@@ -32,13 +33,26 @@ class CustomBottomBar extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
             _buildNavItem(
+              index: 3,
+              icon: Icons.home,
+              label: AppLocalizations.of(context)!.home,
+            ),
+
+            _buildNavItem(
+              index: 1,
+              icon: Icons.list,
+              label: AppLocalizations.of(context)!.reviews,
+            ),
+            _buildNavItem(
+              index: 2,
+              icon: Icons.chat,
+              label: AppLocalizations.of(context)!.chats,
+            ),
+            _buildNavItem(
               index: 0,
               icon: Icons.account_box_rounded,
-              label: "Account",
+              label: AppLocalizations.of(context)!.account,
             ),
-            _buildNavItem(index: 1, icon: Icons.list, label: "Library"),
-            _buildNavItem(index: 2, icon: Icons.chat, label: "Chats"),
-            _buildNavItem(index: 3, icon: Icons.home, label: "Home"),
           ],
         ),
       ),

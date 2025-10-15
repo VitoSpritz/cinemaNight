@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../l10n/app_localizations.dart';
 import '../widget/custom_app_bar.dart';
 
 class Account extends StatelessWidget {
@@ -9,8 +10,11 @@ class Account extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      appBar: CustomAppBar(title: "Account", searchEnabled: false),
+    return Scaffold(
+      appBar: CustomAppBar(
+        title: AppLocalizations.of(context)!.account,
+        searchEnabled: false,
+      ),
     );
   }
 }
