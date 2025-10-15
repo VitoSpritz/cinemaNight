@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../l10n/app_localizations.dart';
-import '../widget/custom_bottom_bar.dart';
 import 'login.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -83,7 +82,6 @@ class HomeScreen extends ConsumerWidget {
           ],
         ),
       ),
-      bottomNavigationBar: const CustomBottomBar(activePage: "chats"),
     );
   }
 }
