@@ -3,64 +3,73 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../consts/custom_colors.dart';
-import '../screens/account.dart';
-import '../screens/chats.dart';
-import '../screens/list.dart';
-import 'custom_icon_button.dart';
 
-class CustomBottomBar extends ConsumerStatefulWidget {
-  final String activePage;
+class CustomBottomBar extends ConsumerWidget {
+  final String? activePage;
+  const CustomBottomBar({
+    Key? key,
+    required this.navigationShell,
+    this.activePage,
+  }) : super(key: key ?? const ValueKey('CustomBottomBar'));
 
-  const CustomBottomBar({super.key, required this.activePage});
+  final StatefulNavigationShell navigationShell;
 
-  @override
-  ConsumerState<CustomBottomBar> createState() => _CustomBottomBarState();
-}
-
-class _CustomBottomBarState extends ConsumerState<CustomBottomBar> {
-  late String _activePage;
-
-  @override
-  void initState() {
-    super.initState();
-    _activePage = widget.activePage;
+  void _goBranch(int index) {
+    navigationShell.goBranch(
+      index,
+      initialLocation: index == navigationShell.currentIndex,
+    );
   }
 
   @override
-  Widget build(BuildContext context) {
-    return BottomAppBar(
-      height: 66,
-      color: const Color(0xFFF7B921),
-      elevation: 8,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Scaffold(
+      body: navigationShell,
+      bottomNavigationBar: Container(
+        height: 66,
+        color: CustomColors.mainYellow,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            _buildNavItem(
+              index: 0,
+              icon: Icons.account_box_rounded,
+              label: "Account",
+            ),
+            _buildNavItem(index: 1, icon: Icons.list, label: "Library"),
+            _buildNavItem(index: 2, icon: Icons.chat, label: "Chats"),
+            _buildNavItem(index: 3, icon: Icons.home, label: "Home"),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNavItem({
+    required int index,
+    required IconData icon,
+    required String label,
+  }) {
+    final bool isActive = navigationShell.currentIndex == index;
+
+    return GestureDetector(
+      onTap: () => _goBranch(index),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          CustomIconButton(
-            icon: Icons.account_box_rounded,
-            color: _activePage == "account"
-                ? CustomColors.white
-                : CustomColors.black,
-            onTap: () {
-              context.go(Account.path);
-            },
+          Icon(
+            icon,
+            color: isActive ? CustomColors.white : CustomColors.black,
+            size: 28,
           ),
-          CustomIconButton(
-            icon: Icons.list,
-            color: _activePage == "list"
-                ? CustomColors.white
-                : CustomColors.black,
-            onTap: () {
-              context.go(List.path);
-            },
-          ),
-          CustomIconButton(
-            icon: Icons.chat,
-            color: _activePage == "chats"
-                ? CustomColors.white
-                : CustomColors.black,
-            onTap: () {
-              context.go(Chats.path);
-            },
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: TextStyle(
+              color: isActive ? CustomColors.white : CustomColors.black,
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ],
       ),
