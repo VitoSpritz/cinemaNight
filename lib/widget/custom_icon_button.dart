@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../consts/custom_colors.dart';
+
 class CustomIconButton extends StatelessWidget implements Icon {
   @override
   final IconData icon;
@@ -13,7 +15,7 @@ class CustomIconButton extends StatelessWidget implements Icon {
     required this.icon,
     this.onTap,
     this.iconSize = 60,
-    this.color = Colors.black,
+    this.color = CustomColors.black,
   });
 
   @override

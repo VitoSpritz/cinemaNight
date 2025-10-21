@@ -27,7 +27,7 @@ class CustomBottomBar extends ConsumerWidget {
     return Scaffold(
       body: navigationShell,
       bottomNavigationBar: Container(
-        height: 66,
+        height: 80,
         color: CustomColors.mainYellow,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,

@@ -9,8 +9,8 @@ import '../../widget/custom_bottom_bar.dart';
 import '../account.dart';
 import '../chats.dart';
 import '../home.dart';
-import '../list.dart';
 import '../login.dart';
+import '../review_list.dart';
 import '../sign_up.dart';
 import '../splash_screen.dart';
 
@@ -31,15 +31,20 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((Ref ref) {
     navigatorKey: GlobalState.navigatorKey,
     routes: <RouteBase>[
       StatefulShellRoute.indexedStack(
-        builder: (context, state, navigationShell) {
-          return CustomBottomBar(navigationShell: navigationShell);
-        },
+        builder:
+            (
+              BuildContext context,
+              GoRouterState state,
+              StatefulNavigationShell navigationShell,
+            ) {
+              return CustomBottomBar(navigationShell: navigationShell);
+            },
         branches: <StatefulShellBranch>[
           StatefulShellBranch(
             navigatorKey: _shellNavigatorAKey,
             routes: <RouteBase>[
               GoRoute(
-                path: '/account',
+                path: Account.path,
                 builder: (BuildContext context, GoRouterState state) =>
                     const Account(),
               ),
@@ -48,9 +53,9 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((Ref ref) {
           StatefulShellBranch(
             routes: <RouteBase>[
               GoRoute(
-                path: '/list',
+                path: ReviewList.path,
                 builder: (BuildContext context, GoRouterState state) =>
-                    const List(),
+                    const ReviewList(),
               ),
             ],
           ),
@@ -58,7 +63,7 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((Ref ref) {
             navigatorKey: _shellNavigatorBKey,
             routes: <RouteBase>[
               GoRoute(
-                path: '/chats',
+                path: Chats.path,
                 builder: (BuildContext context, GoRouterState state) =>
                     const Chats(),
               ),
@@ -111,8 +116,9 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((Ref ref) {
         builder: (BuildContext context, GoRouterState state) => const Account(),
       ),
       GoRoute(
-        path: List.path,
-        builder: (BuildContext context, GoRouterState state) => const List(),
+        path: ReviewList.path,
+        builder: (BuildContext context, GoRouterState state) =>
+            const ReviewList(),
       ),
     ],
   );
