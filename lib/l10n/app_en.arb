@@ -57,5 +57,15 @@
 "reviews": "Reviews",
 "home": "Home",
 "chats": "Chats",
-"requestApiLanguage": "en-EN"
+"requestApiLanguage": "en-EN",
+
+"noReviews": "No reviews available",
+"addReview": "Add a review",
+"title": "Title",
+"search": "Search",
+"results": "Results:",
+"review": "Review",
+"save": "Save",
+"searchAMovie":"Search a movie or a TV show",
+"changeMovie":"Change selected movie"
 }

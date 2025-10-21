@@ -119,4 +119,31 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get requestApiLanguage => 'it-ITA';
+
+  @override
+  String get noReviews => 'Nessuna recensione disponibile';
+
+  @override
+  String get addReview => 'Aggiungi una recensione';
+
+  @override
+  String get title => 'Titolo';
+
+  @override
+  String get search => 'Cerca';
+
+  @override
+  String get results => 'Risultati:';
+
+  @override
+  String get review => 'Recensione';
+
+  @override
+  String get save => 'Salva';
+
+  @override
+  String get searchAMovie => 'Cerca un film o una serie TV';
+
+  @override
+  String get changeMovie => 'Cambia il film selezionato';
 }

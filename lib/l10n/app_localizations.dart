@@ -307,6 +307,60 @@ abstract class AppLocalizations {
   /// In it, this message translates to:
   /// **'it-ITA'**
   String get requestApiLanguage;
+
+  /// No description provided for @noReviews.
+  ///
+  /// In it, this message translates to:
+  /// **'Nessuna recensione disponibile'**
+  String get noReviews;
+
+  /// No description provided for @addReview.
+  ///
+  /// In it, this message translates to:
+  /// **'Aggiungi una recensione'**
+  String get addReview;
+
+  /// No description provided for @title.
+  ///
+  /// In it, this message translates to:
+  /// **'Titolo'**
+  String get title;
+
+  /// No description provided for @search.
+  ///
+  /// In it, this message translates to:
+  /// **'Cerca'**
+  String get search;
+
+  /// No description provided for @results.
+  ///
+  /// In it, this message translates to:
+  /// **'Risultati:'**
+  String get results;
+
+  /// No description provided for @review.
+  ///
+  /// In it, this message translates to:
+  /// **'Recensione'**
+  String get review;
+
+  /// No description provided for @save.
+  ///
+  /// In it, this message translates to:
+  /// **'Salva'**
+  String get save;
+
+  /// No description provided for @searchAMovie.
+  ///
+  /// In it, this message translates to:
+  /// **'Cerca un film o una serie TV'**
+  String get searchAMovie;
+
+  /// No description provided for @changeMovie.
+  ///
+  /// In it, this message translates to:
+  /// **'Cambia il film selezionato'**
+  String get changeMovie;
 }
 
 class _AppLocalizationsDelegate

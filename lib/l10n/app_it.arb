@@ -57,5 +57,15 @@
 "reviews": "Recensioni",
 "home": "Home",
 "chats": "Gruppi",
-"requestApiLanguage": "it-ITA"
+"requestApiLanguage": "it-ITA",
+
+"noReviews": "Nessuna recensione disponibile",
+"addReview": "Aggiungi una recensione",
+"title": "Titolo",
+"search": "Cerca",
+"results": "Risultati:",
+"review": "Recensione",
+"save": "Salva",
+"searchAMovie": "Cerca un film o una serie TV",
+"changeMovie": "Cambia il film selezionato"
 }

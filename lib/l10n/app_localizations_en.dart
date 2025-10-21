@@ -119,4 +119,31 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get requestApiLanguage => 'en-EN';
+
+  @override
+  String get noReviews => 'No reviews available';
+
+  @override
+  String get addReview => 'Add a review';
+
+  @override
+  String get title => 'Title';
+
+  @override
+  String get search => 'Search';
+
+  @override
+  String get results => 'Results:';
+
+  @override
+  String get review => 'Review';
+
+  @override
+  String get save => 'Save';
+
+  @override
+  String get searchAMovie => 'Search a movie or a TV show';
+
+  @override
+  String get changeMovie => 'Change selected movie';
 }
