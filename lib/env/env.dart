@@ -1,4 +1,3 @@
-// lib/env/env.dart
 import 'package:envied/envied.dart';
 
 part 'env.g.dart';
@@ -13,4 +12,7 @@ abstract class Env {
 
   @EnviedField(varName: "BASE_URL", obfuscate: true)
   static final String baseUrl = _Env.baseUrl;
+
+  @EnviedField(varName: "FIRESTORE_URL", obfuscate: true)
+  static final String firestoreUrl = _Env.firestoreUrl;
 }
