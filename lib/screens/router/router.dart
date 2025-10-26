@@ -14,7 +14,6 @@ import '../review_list.dart';
 import '../sign_up.dart';
 import '../splash_screen.dart';
 
-// We need to have access to the previous location of the router. Otherwise, we would start from '/' on rebuild
 GoRouter? _previousRouter;
 final GlobalKey<NavigatorState> _shellNavigatorAKey = GlobalKey<NavigatorState>(
   debugLabel: 'shellA',
@@ -33,7 +32,7 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((Ref ref) {
       StatefulShellRoute.indexedStack(
         builder:
             (
-              BuildContext context,
+              Object? context,
               GoRouterState state,
               StatefulNavigationShell navigationShell,
             ) {

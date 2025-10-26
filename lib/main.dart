@@ -8,10 +8,11 @@ import 'l10n/app_localizations.dart';
 import 'providers/auth_listener.dart';
 import 'screens/router/router.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const ProviderScope(child: MainApp()));
+  return;
 }
 
 class MainApp extends ConsumerWidget {
