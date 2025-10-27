@@ -6,13 +6,7 @@ class ReviewRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<void> createReview(Review review) async {
-    _firestore.collection('reviews').doc(review.reviewId).set(<String, Object?>{
-      'userId': review.userId,
-      'reviewId': review.reviewId,
-      'filmId': review.filmId,
-      'rating': review.rating,
-      'description': review.description,
-    });
+    _firestore.collection('reviews').doc(review.reviewId).set(review.toJson());
   }
 
   Future<Review?> getReviewById(String reviewId) async {

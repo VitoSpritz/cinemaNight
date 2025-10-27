@@ -6,13 +6,7 @@ class UserProfileRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<void> createUser(UserProfile user) async {
-    await _firestore.collection('users').doc(user.userId).set(<String, dynamic>{
-      'userId': user.userId,
-      'firstLastName': user.firstLastName,
-      'age': user.age,
-      'imageUrl': user.imageUrl,
-      'preferredFilm': user.preferredFilm,
-    });
+    await _firestore.collection('users').doc(user.userId).set(user.toJson());
   }
 
   Future<UserProfile?> getUserById(String userId) async {

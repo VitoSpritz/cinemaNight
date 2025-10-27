@@ -34,9 +34,18 @@ class UserProfiles extends _$UserProfiles {
 
   Future<void> updateUserProfile({
     required String userId,
-    required UserProfile update,
+    required String name,
+    int? age,
+    String? imageUrl,
+    String? preferredFilm,
   }) async {
-    await service.udpateUser(userId, update);
+    await service.udpateUser(
+      name: name,
+      userId: userId,
+      age: age,
+      imageUrl: imageUrl,
+      preferredFilm: preferredFilm,
+    );
     ref.invalidateSelf();
   }
 }

@@ -31,7 +31,20 @@ class UserService {
     return gotUser!;
   }
 
-  Future<UserProfile> udpateUser(String userId, UserProfile update) async {
+  Future<UserProfile> udpateUser({
+    required String userId,
+    required String name,
+    int? age,
+    String? imageUrl,
+    String? preferredFilm,
+  }) async {
+    final UserProfile update = UserProfile(
+      userId: userId,
+      age: age,
+      firstLastName: name,
+      imageUrl: imageUrl,
+      preferredFilm: preferredFilm,
+    );
     await _repository.updateUserProfile(userId, update);
 
     return getUserById(userId);
