@@ -37,6 +37,26 @@ class ReviewService {
     return _reviewRepository.listReviews(userId);
   }
 
+  Future<Review> updateReview({
+    required String reviewId,
+    required String userId,
+    required String filmId,
+    double? rating,
+    String? description,
+  }) async {
+    final Review updateReview = Review(
+      reviewId: reviewId,
+      filmId: filmId,
+      userId: userId,
+      description: description,
+      rating: rating,
+    );
+
+    await _reviewRepository.updateReview(reviewId, updateReview);
+
+    return await getReviewById(reviewId);
+  }
+
   Future<void> deleteReveiwById(String reviewId) async {
     await _reviewRepository.deleteReview(reviewId);
   }

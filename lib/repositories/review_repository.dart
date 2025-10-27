@@ -35,6 +35,13 @@ class ReviewRepository {
         .toList();
   }
 
+  Future<void> updateReview(String reviewId, Review review) async {
+    await _firestore
+        .collection('reviews')
+        .doc(reviewId)
+        .update(review.toJson());
+  }
+
   Future<void> deleteReview(String reviewId) async {
     await _firestore.collection('reviews').doc(reviewId).delete();
   }
