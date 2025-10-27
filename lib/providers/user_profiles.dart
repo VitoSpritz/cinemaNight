@@ -14,7 +14,7 @@ class UserProfiles extends _$UserProfiles {
   @override
   Future<UserProfile> build() async {
     final User? user = ref.watch(authProvider);
-    return await service.getUserById(user?.uid);
+    return await service.getUserById(user!.uid);
   }
 
   Future<void> createUserProfile({
@@ -22,12 +22,14 @@ class UserProfiles extends _$UserProfiles {
     required String name,
     int? age,
     String? imageUrl,
+    String? preferredFilm,
   }) async {
     await service.createUserProfile(
       name: name,
       userId: userId,
       age: age,
       imageUrl: imageUrl,
+      preferredFilm: preferredFilm,
     );
     ref.invalidateSelf();
   }
@@ -39,7 +41,7 @@ class UserProfiles extends _$UserProfiles {
     String? imageUrl,
     String? preferredFilm,
   }) async {
-    await service.udpateUser(
+    await service.updateUser(
       name: name,
       userId: userId,
       age: age,
