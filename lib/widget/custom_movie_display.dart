@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../consts/custom_colors.dart';
+import '../consts/sizes.dart';
 
 class CustomMovieDisplay extends ConsumerWidget {
   final Uint8List? imageUrl;
@@ -40,7 +41,11 @@ class CustomMovieDisplay extends ConsumerWidget {
                     width: 100,
                     height: 125,
                     color: CustomColors.grey,
-                    child: Icon(Icons.movie, color: CustomColors.white),
+                    child: Icon(
+                      Icons.movie,
+                      color: CustomColors.white,
+                      size: Sizes.iconSize,
+                    ),
                   ),
           ),
           Expanded(

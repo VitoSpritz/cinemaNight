@@ -250,7 +250,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                           ),
                         ),
                         child: _isLoading
-                            ? SizedBox(
+                            ? const SizedBox(
                                 height: 20,
                                 width: 20,
                                 child: CircularProgressIndicator(

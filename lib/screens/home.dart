@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../consts/sizes.dart';
 import '../l10n/app_localizations.dart';
+import '../model/user_profile.dart';
+import '../providers/user_profiles.dart';
 import 'login.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -13,6 +16,9 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final AsyncValue<UserProfile> userProfileAsync = ref.watch(
+      userProfilesProvider,
+    );
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -25,7 +31,7 @@ class HomeScreen extends ConsumerWidget {
         elevation: 0,
         actions: <Widget>[
           IconButton(
-            icon: const Icon(Icons.logout),
+            icon: const Icon(Icons.logout, size: Sizes.iconSize),
             onPressed: () async {
               final bool? isLoggingOut = await showDialog<bool>(
                 context: context,
@@ -74,7 +80,7 @@ class HomeScreen extends ConsumerWidget {
               ),
               style: const TextStyle(fontSize: 16),
             ),
-
+            Text(userProfileAsync.value?.firstLastName ?? "No name"),
             ElevatedButton(
               onPressed: () => context.push(HomeScreen.path),
               child: Text(AppLocalizations.of(context)!.goToHome),

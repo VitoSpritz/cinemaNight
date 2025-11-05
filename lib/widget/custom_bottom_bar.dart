@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../consts/custom_colors.dart';
+import '../consts/sizes.dart';
 import '../l10n/app_localizations.dart';
 
 class CustomBottomBar extends ConsumerWidget {
@@ -37,7 +38,6 @@ class CustomBottomBar extends ConsumerWidget {
               icon: Icons.home,
               label: AppLocalizations.of(context)!.home,
             ),
-
             _buildNavItem(
               index: 1,
               icon: Icons.list,
@@ -68,13 +68,14 @@ class CustomBottomBar extends ConsumerWidget {
 
     return GestureDetector(
       onTap: () => _goBranch(index),
+      behavior: HitTestBehavior.translucent,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Icon(
             icon,
             color: isActive ? CustomColors.white : CustomColors.black,
-            size: 28,
+            size: Sizes.iconSize,
           ),
           const SizedBox(height: 4),
           Text(
