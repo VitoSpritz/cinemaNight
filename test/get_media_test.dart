@@ -1,9 +1,9 @@
 import 'dart:typed_data';
 
 import 'package:cinenight/l10n/app_localizations_it.dart';
-import 'package:cinenight/model/media_with_poster.dart';
+import 'package:cinenight/model/media.dart';
 import 'package:cinenight/model/movie.dart';
-import 'package:cinenight/model/multi.dart';
+import 'package:cinenight/model/multi_with_poster.dart';
 import 'package:cinenight/model/tv_show.dart';
 import 'package:cinenight/providers/tmdb_api.dart';
 import 'package:flutter/widgets.dart';
@@ -43,13 +43,19 @@ void main() {
   });
 
   test('Should be able to fetch a media given its name', () async {
-    final List<Multi> res = await api.getMultiMediaByName(
+    final List<Media> res = await api.getMultiMediaByName(
       name: 'Django Unchained',
       language: AppLocalizationsIt().requestApiLanguage,
     );
 
-    final Multi media = res.elementAt(0);
-    expect(media.title, 'Django Unchained');
+    final Media media = res.elementAt(0);
+    expect(
+      media.when(
+        movie: (Movie movie) => movie.title,
+        tvSeries: (TvShow tvSeries) => tvSeries.name,
+      ),
+      'Django Unchained',
+    );
 
     debugPrint(media.toString());
   });
@@ -64,13 +70,19 @@ void main() {
   });
 
   test('Should be able to fetch a media with its poster', () async {
-    final List<MediaWithPoster> res = await api.getMultiMediaWithPosters(
+    final List<MultiWithPoster> res = await api.getMultiMediaWithPosters(
       name: 'Django Unchained',
       language: AppLocalizationsIt().requestApiLanguage,
     );
 
-    final MediaWithPoster media = res.elementAt(0);
-    expect(media.media.title, 'Django Unchained');
+    final MultiWithPoster media = res.elementAt(0);
+    expect(
+      media.media.when(
+        movie: (Movie movie) => movie.title,
+        tvSeries: (TvShow tvSeries) => tvSeries.name,
+      ),
+      'Django Unchained',
+    );
     expect(media.posterBytes, isA<Uint8List>());
     debugPrint('Poster fetched successfulyl');
   });

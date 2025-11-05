@@ -1,6 +1,8 @@
 import 'package:cinenight/firebase_options.dart';
+import 'package:cinenight/model/movie.dart';
 import 'package:cinenight/model/review.dart';
 import 'package:cinenight/model/user_profile.dart';
+import 'package:cinenight/providers/tmdb_api.dart';
 import 'package:cinenight/repositories/review_repository.dart';
 import 'package:cinenight/repositories/user_profile_repository.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -43,6 +45,7 @@ void main() {
       final Review newReveiw = Review(
         userId: userId,
         reviewId: reviewId,
+        type: ReviewItemType.movie,
         filmId: "1234",
         description: "Description for test review",
         rating: 4,
@@ -79,6 +82,7 @@ void main() {
         userId: userId,
         reviewId: reviewId,
         filmId: "1234",
+        type: ReviewItemType.movie,
         description: "Description for test review",
         rating: 4,
       );
@@ -91,6 +95,7 @@ void main() {
         userId: userId,
         reviewId: review2Id,
         filmId: "234",
+        type: ReviewItemType.movie,
         description: "Description for test review 2",
         rating: 7,
       );
@@ -108,4 +113,47 @@ void main() {
       await reviewRepository.deleteReview(review2Id);
     });
   });
+
+  testWidgets(
+    'Should be able to fetch a film and its poster given a db review',
+    (WidgetTester tester) async {
+      final String userId = 'test_${idGen.v4()}';
+      final TmdbApi tmdb = TmdbApi();
+
+      final UserProfile newUser = UserProfile(
+        age: 24,
+        firstLastName: 'Andrea Rossi',
+        userId: userId,
+      );
+
+      await userProfileRepository.createUser(newUser);
+
+      final String reviewId = 'test_${idGen.v4()}';
+
+      final Review newReveiw = Review(
+        userId: userId,
+        reviewId: reviewId,
+        filmId: "11631",
+        type: ReviewItemType.movie,
+        description: "Description for test review",
+        rating: 4,
+      );
+
+      await reviewRepository.createReview(newReveiw);
+
+      final Review? createdReview = await reviewRepository.getReviewById(
+        reviewId,
+      );
+
+      final Movie film = await tmdb.getMovieById(
+        id: createdReview!.filmId,
+        language: "it-ITA",
+      );
+
+      expect(film, isNotNull);
+
+      await userProfileRepository.deleteUserProfile(userId);
+      await reviewRepository.deleteReview(reviewId);
+    },
+  );
 }
