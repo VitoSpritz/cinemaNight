@@ -20,12 +20,14 @@ class UserReview extends _$UserReview {
   Future<void> createReview({
     required String userId,
     required String filmId,
+    required ReviewItemType type,
     String? description,
     double? rating,
   }) async {
     await service.createReview(
       userId: userId,
       filmId: filmId,
+      type: type,
       description: description,
       rating: rating,
     );
@@ -33,20 +35,18 @@ class UserReview extends _$UserReview {
     ref.invalidateSelf();
   }
 
-  Future<Review> getReviewById(String reviewId) async {
-    return await service.getReviewById(reviewId);
-  }
-
   Future<void> updateReview({
     required String reviewId,
     required String userId,
     required String filmId,
+    required ReviewItemType type,
     double? rating,
     String? description,
   }) async {
     await service.updateReview(
       reviewId: reviewId,
       userId: userId,
+      type: type,
       filmId: filmId,
       description: description,
       rating: rating,
@@ -58,4 +58,10 @@ class UserReview extends _$UserReview {
   Future<void> deleteReview(String reviewId) async {
     await service.deleteReveiwById(reviewId);
   }
+}
+
+@riverpod
+Future<Review> getReviewById(Ref ref, String reviewId) async {
+  final UserReview userReviewNotifier = ref.read(userReviewProvider.notifier);
+  return await userReviewNotifier.service.getReviewById(reviewId);
 }

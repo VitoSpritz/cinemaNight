@@ -10,6 +10,7 @@ import '../account.dart';
 import '../chats.dart';
 import '../home.dart';
 import '../login.dart';
+import '../review_info.dart';
 import '../review_list.dart';
 import '../sign_up.dart';
 import '../splash_screen.dart';
@@ -79,7 +80,14 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((Ref ref) {
           ),
         ],
       ),
-
+      GoRoute(
+        path: ReviewInfo.path,
+        name: 'reviewInfo',
+        builder: (BuildContext context, GoRouterState state) {
+          final String reviewId = state.pathParameters['reviewId']!;
+          return ReviewInfo(reviewId: reviewId);
+        },
+      ),
       GoRoute(
         path: SplashScreen.path,
         builder: (BuildContext context, GoRouterState state) =>

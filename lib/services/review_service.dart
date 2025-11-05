@@ -9,6 +9,7 @@ class ReviewService {
   Future<Review> createReview({
     required String userId,
     required String filmId,
+    required ReviewItemType type,
     double? rating,
     String? description,
   }) async {
@@ -17,6 +18,7 @@ class ReviewService {
     final Review newReview = Review(
       reviewId: reviewId,
       filmId: filmId,
+      type: type,
       userId: userId,
       description: description,
       rating: rating,
@@ -41,6 +43,7 @@ class ReviewService {
     required String reviewId,
     required String userId,
     required String filmId,
+    required ReviewItemType type,
     double? rating,
     String? description,
   }) async {
@@ -48,6 +51,7 @@ class ReviewService {
       reviewId: reviewId,
       filmId: filmId,
       userId: userId,
+      type: type,
       description: description,
       rating: rating,
     );
