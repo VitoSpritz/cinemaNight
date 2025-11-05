@@ -57,4 +57,5 @@ firebase.json
 
 *-service-account.json
 *.p8
+*_localizations.dart
 *_localizations_*.dart
