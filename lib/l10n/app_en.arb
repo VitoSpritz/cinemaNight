@@ -67,5 +67,6 @@
 "review": "Review",
 "save": "Save",
 "searchAMovie":"Search a movie or a TV show",
-"changeMovie":"Change selected movie"
+"changeMovie":"Change selected movie",
+"updateButton": "Submit update"
 }

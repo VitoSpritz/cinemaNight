@@ -67,5 +67,6 @@
 "review": "Recensione",
 "save": "Salva",
 "searchAMovie": "Cerca un film o una serie TV",
-"changeMovie": "Cambia il film selezionato"
+"changeMovie": "Cambia il film selezionato",
+"updateButton": "Aggiorna"
 }
