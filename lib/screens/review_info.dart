@@ -13,6 +13,7 @@ import '../providers/review_media.dart';
 import '../providers/user_profiles.dart';
 import '../providers/user_review.dart';
 import '../services/review_service.dart';
+import '../widget/custom_rating.dart';
 import '../widget/expandable_text.dart';
 
 class ReviewInfo extends ConsumerStatefulWidget {
@@ -28,10 +29,12 @@ class ReviewInfo extends ConsumerStatefulWidget {
 class _ReviewInfoState extends ConsumerState<ReviewInfo> {
   final ReviewService _reviewService = ReviewService();
   final TextEditingController _textInputControl = TextEditingController();
+  final TextEditingController _ratingController = TextEditingController();
 
   @override
   void dispose() {
     _textInputControl.dispose();
+    _ratingController.dispose();
     super.dispose();
   }
 
@@ -40,6 +43,7 @@ class _ReviewInfoState extends ConsumerState<ReviewInfo> {
     required String userId,
     required int filmId,
     required String type,
+    required double rating,
   }) async {
     await _reviewService.updateReview(
       reviewId: widget.reviewId,
@@ -49,6 +53,7 @@ class _ReviewInfoState extends ConsumerState<ReviewInfo> {
           ? ReviewItemType.movie
           : ReviewItemType.tvSeries,
       description: newReview,
+      rating: rating,
     );
 
     ref.invalidate(userReviewProvider);
@@ -74,6 +79,9 @@ class _ReviewInfoState extends ConsumerState<ReviewInfo> {
         data: (MediaWithPoster mediaWithPoster) {
           final Media media = mediaWithPoster.media;
           _textInputControl.text = review.value!.description ?? "";
+          _ratingController.text = review.value!.rating != null
+              ? review.value!.rating.toString()
+              : "0.0";
 
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),
@@ -110,12 +118,21 @@ class _ReviewInfoState extends ConsumerState<ReviewInfo> {
                           const SizedBox(height: 8),
                           Text(
                             media.when(
-                              movie: (Movie movie) =>
-                                  'Released: ${movie.releaseDate ?? "N/A"}',
-                              tvSeries: (TvShow tvShow) =>
-                                  'First aired: ${tvShow.firstAirDate ?? "N/A"}',
+                              movie: (Movie movie) => AppLocalizations.of(
+                                context,
+                              )!.releasedLabel(movie.releaseDate ?? "N/A"),
+                              tvSeries: (TvShow tvShow) => AppLocalizations.of(
+                                context,
+                              )!.firstAiredLabel(tvShow.firstAirDate ?? "N/A"),
                             ),
                             style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                          const SizedBox(height: 8),
+                          CustomRating(
+                            initialRating: double.parse(_ratingController.text),
+                            onRatingChanged: (double rating) {
+                              _ratingController.text = rating.toString();
+                            },
                           ),
                         ],
                       ),
@@ -132,8 +149,8 @@ class _ReviewInfoState extends ConsumerState<ReviewInfo> {
                     ),
                     child: ExpandableText(
                       text: media.when(
-                        movie: (Movie movie) => movie.overview ?? "N/A",
-                        tvSeries: (TvShow tvShow) => tvShow.overview ?? "N/A",
+                        movie: (Movie movie) => movie.overview,
+                        tvSeries: (TvShow tvShow) => tvShow.overview,
                       ),
                       maxLines: 3,
                       style: Theme.of(context).textTheme.bodyLarge,
@@ -146,8 +163,8 @@ class _ReviewInfoState extends ConsumerState<ReviewInfo> {
                     padding: const EdgeInsets.all(16),
                     child: TextField(
                       controller: _textInputControl,
-                      decoration: const InputDecoration(
-                        labelText: "Insert a review",
+                      decoration: InputDecoration(
+                        labelText: AppLocalizations.of(context)!.insertAReview,
                       ),
                     ),
                   ),
@@ -166,6 +183,7 @@ class _ReviewInfoState extends ConsumerState<ReviewInfo> {
                         movie: (Movie movie) => movie.mediaType,
                         tvSeries: (TvShow tvSeries) => tvSeries.mediaType,
                       ),
+                      rating: double.parse(_ratingController.text),
                     ),
                     child: Text(AppLocalizations.of(context)!.updateButton),
                   ),
@@ -178,10 +196,12 @@ class _ReviewInfoState extends ConsumerState<ReviewInfo> {
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            title: const Text(
-                              "You want to delete this review?",
+                            title: Text(
+                              AppLocalizations.of(context)!.deleteReviewDialog,
                             ),
-                            content: const Text("Delete it"),
+                            content: Text(
+                              AppLocalizations.of(context)!.deleteReviewButton,
+                            ),
                             actions: <Widget>[
                               TextButton(
                                 onPressed: () =>
@@ -210,6 +230,7 @@ class _ReviewInfoState extends ConsumerState<ReviewInfo> {
             ),
           );
         },
+
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (Object error, StackTrace stack) =>
             Center(child: Text('Error: $error')),
