@@ -134,7 +134,7 @@ class TmdbApi implements TmdbStorage {
     required String language,
   }) async {
     final Map<String, String> queryParams = <String, String>{
-      'query': name,
+      'query': name.trim(),
       'include_adult': 'false',
       'language': language,
       'api_key': Env.apiKey,
@@ -144,7 +144,14 @@ class TmdbApi implements TmdbStorage {
       '${Env.baseUrl}/3/search/multi',
     ).replace(queryParameters: queryParams);
 
-    final http.Response response = await http.get(url);
+    final http.Response response = await http
+        .get(url)
+        .timeout(
+          const Duration(seconds: 10),
+          onTimeout: () {
+            throw Exception("API Timeout");
+          },
+        );
 
     if (response.statusCode != HttpStatus.ok.code) {
       throw Exception('Failed to load tv show ${response.statusCode}');
@@ -156,7 +163,16 @@ class TmdbApi implements TmdbStorage {
     }
     final List<dynamic> results = data['results'];
 
-    return results.map((json) => Media.fromJson(json)).toList();
+    final List<Media> res = results
+        .where(
+          (json) =>
+              json is Map<String, dynamic> &&
+              (json['media_type'] == 'movie' || json['media_type'] == 'tv'),
+        )
+        .map((json) => Media.fromJson(json))
+        .toList();
+
+    return res;
   }
 
   @override
@@ -179,6 +195,7 @@ class TmdbApi implements TmdbStorage {
   Future<List<MultiWithPoster>> getMultiMediaWithPosters({
     required String name,
     required String language,
+    required int page,
   }) async {
     final List<Media> mediaList = await getMultiMediaByName(
       name: name,

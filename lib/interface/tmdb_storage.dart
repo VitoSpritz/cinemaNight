@@ -24,5 +24,6 @@ abstract class TmdbStorage {
   Future<List<MultiWithPoster>> getMultiMediaWithPosters({
     required String name,
     required String language,
+    required int page,
   });
 }

@@ -14,6 +14,7 @@ import '../providers/user_profiles.dart';
 import '../providers/user_review.dart';
 import '../services/review_service.dart';
 import 'custom_movie_display.dart';
+import 'custom_rating.dart';
 
 class FilmPickerModal extends ConsumerStatefulWidget {
   const FilmPickerModal({super.key});
@@ -25,18 +26,71 @@ class FilmPickerModal extends ConsumerStatefulWidget {
 class _FilmPickerState extends ConsumerState<FilmPickerModal> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _reviewController = TextEditingController();
+  final TextEditingController _ratingController = TextEditingController();
+
   final TmdbApi _tmdbApi = TmdbApi();
   List<MultiWithPoster> _searchResults = <MultiWithPoster>[];
   bool _isLoading = false;
   bool _isCreatingReview = false;
   MultiWithPoster? _selectedMedia;
   final ReviewService _reviewService = ReviewService();
+  int _currentPage = 1;
+  int _totalPages = 1;
+  late ScrollController _scrollController;
+  bool _isLoadingMore = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+    _scrollController.addListener(_onScroll);
+  }
 
   @override
   void dispose() {
     _titleController.dispose();
+    _scrollController.dispose();
     _reviewController.dispose();
     super.dispose();
+  }
+
+  void _onScroll() {
+    final double maxScroll = _scrollController.position.maxScrollExtent;
+    final double currentScroll = _scrollController.position.pixels;
+
+    if (currentScroll >= maxScroll - 300 && !_isLoadingMore) {
+      _loadNextPage();
+    }
+  }
+
+  Future<void> _loadNextPage() async {
+    if (_currentPage >= _totalPages || _isLoadingMore) {
+      return;
+    }
+
+    setState(() => _isLoadingMore = true);
+
+    try {
+      final List<MultiWithPoster> results = await _tmdbApi
+          .getMultiMediaWithPosters(
+            name: _titleController.text,
+            language: AppLocalizations.of(context)!.requestApiLanguage,
+            page: _currentPage + 1,
+          );
+
+      setState(() {
+        _searchResults.addAll(results);
+        _currentPage++;
+        _isLoadingMore = false;
+      });
+    } catch (e) {
+      setState(() => _isLoadingMore = false);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error loading more: ${e.toString()}')),
+        );
+      }
+    }
   }
 
   Future<void> _createReview({
@@ -99,6 +153,7 @@ class _FilmPickerState extends ConsumerState<FilmPickerModal> {
     setState(() {
       _isLoading = true;
       _searchResults = <MultiWithPoster>[];
+      _currentPage = 1;
     });
 
     try {
@@ -106,14 +161,21 @@ class _FilmPickerState extends ConsumerState<FilmPickerModal> {
           .getMultiMediaWithPosters(
             name: value,
             language: AppLocalizations.of(context)!.requestApiLanguage,
+            page: 1,
           );
 
       setState(() {
-        _searchResults = results.take(5).toList();
+        _searchResults = results;
         _isLoading = false;
+        _totalPages = 10;
       });
     } catch (e) {
       setState(() => _isLoading = false);
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
+      }
     }
   }
 
@@ -174,8 +236,17 @@ class _FilmPickerState extends ConsumerState<FilmPickerModal> {
                     const SizedBox(height: 8),
                     Expanded(
                       child: ListView.builder(
-                        itemCount: _searchResults.length,
+                        controller: _scrollController,
+                        itemCount:
+                            _searchResults.length + (_isLoadingMore ? 1 : 0),
                         itemBuilder: (BuildContext context, int index) {
+                          if (index == _searchResults.length) {
+                            return const Padding(
+                              padding: EdgeInsets.symmetric(vertical: 16.0),
+                              child: Center(child: CircularProgressIndicator()),
+                            );
+                          }
+
                           final MultiWithPoster item = _searchResults[index];
                           return GestureDetector(
                             onTap: () {
@@ -236,6 +307,17 @@ class _FilmPickerState extends ConsumerState<FilmPickerModal> {
                       },
                       child: Text(AppLocalizations.of(context)!.changeMovie),
                     ),
+                    Row(
+                      children: <Widget>[
+                        const Text("Il tuo voto:"),
+                        CustomRating(
+                          onRatingChanged: (double rating) {
+                            _ratingController.text = rating.toString();
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
                     TextField(
                       controller: _reviewController,
                       decoration: InputDecoration(
@@ -260,7 +342,8 @@ class _FilmPickerState extends ConsumerState<FilmPickerModal> {
                                   tvSeries: (TvShow tvSeries) =>
                                       ReviewItemType.tvSeries.name,
                                 ),
-                                review: _reviewController.text ?? "No review",
+                                review: _reviewController.text,
+                                rating: double.parse(_ratingController.text),
                               ),
                               child: Text(AppLocalizations.of(context)!.save),
                             ),
