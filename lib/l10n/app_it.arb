@@ -87,5 +87,8 @@
             }
         }
     },
-    "insertAReview": "Inserisci una recensione"
+    "insertAReview": "Inserisci una nuova recensione",
+    "exitWithoutSavingDialong": "Perderai i cambiamenti se esci",
+    "sureYouWantToQuit": "Sei sicuro di voler uscire?",
+    "reviewInfoPageTitle": "Dettagli recensione"
 }
