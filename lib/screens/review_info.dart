@@ -28,14 +28,35 @@ class ReviewInfo extends ConsumerStatefulWidget {
 
 class _ReviewInfoState extends ConsumerState<ReviewInfo> {
   final ReviewService _reviewService = ReviewService();
-  final TextEditingController _textInputControl = TextEditingController();
+  final TextEditingController _reviewController = TextEditingController();
   final TextEditingController _ratingController = TextEditingController();
+  String _existingReview = '';
+  String _existingRating = '0.0';
+  bool _isInitialized = false;
 
   @override
   void dispose() {
-    _textInputControl.dispose();
+    _reviewController.dispose();
     _ratingController.dispose();
     super.dispose();
+  }
+
+  void _initializeControllers(Review review) {
+    if (_isInitialized) return; // ✅ Only initialize once
+
+    _reviewController.text = review.description ?? "";
+    _ratingController.text = review.rating?.toString() ?? "0.0";
+    _existingRating = review.rating?.toString() ?? "0.0";
+    _existingReview = review.description ?? "";
+
+    _isInitialized = true;
+  }
+
+  bool _checkValuesOnExit({required String rating, required String review}) {
+    if (_existingRating != rating || _existingReview != review) {
+      return true;
+    }
+    return false;
   }
 
   void _updateReview({
@@ -68,172 +89,305 @@ class _ReviewInfoState extends ConsumerState<ReviewInfo> {
     final AsyncValue<MediaWithPoster> mediaAsync = ref.watch(
       reviewMediaProvider(widget.reviewId, language),
     );
-    final AsyncValue<Review> review = ref.watch(
+    final AsyncValue<Review> reviewAsync = ref.watch(
       (getReviewByIdProvider(widget.reviewId)),
     );
-    final AsyncValue<UserProfile> userAuth = ref.read(userProfilesProvider);
+    final AsyncValue<UserProfile> userAuthAsync = ref.watch(
+      userProfilesProvider,
+    );
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Review Details')),
-      body: mediaAsync.when(
-        data: (MediaWithPoster mediaWithPoster) {
-          final Media media = mediaWithPoster.media;
-          _textInputControl.text = review.value!.description ?? "";
-          _ratingController.text = review.value!.rating != null
-              ? review.value!.rating.toString()
-              : "0.0";
-
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      body: Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 24),
+            child: Stack(
+              alignment: Alignment.center,
               children: <Widget>[
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Card(
-                      clipBehavior: Clip.antiAlias,
-                      child: Image.memory(
-                        mediaWithPoster.poster!,
-                        width: 120,
-                        height: 180,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            media.when(
-                              movie: (Movie movie) => movie.title,
-                              tvSeries: (TvShow tvShow) => tvShow.name,
-                            ),
-                            style: Theme.of(context).textTheme.headlineSmall
-                                ?.copyWith(fontWeight: FontWeight.bold),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            media.when(
-                              movie: (Movie movie) => AppLocalizations.of(
-                                context,
-                              )!.releasedLabel(movie.releaseDate ?? "N/A"),
-                              tvSeries: (TvShow tvShow) => AppLocalizations.of(
-                                context,
-                              )!.firstAiredLabel(tvShow.firstAirDate ?? "N/A"),
-                            ),
-                            style: Theme.of(context).textTheme.bodySmall,
-                          ),
-                          const SizedBox(height: 8),
-                          CustomRating(
-                            initialRating: double.parse(_ratingController.text),
-                            onRatingChanged: (double rating) {
-                              _ratingController.text = rating.toString();
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 32),
-                Center(
-                  child: Container(
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[100],
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: ExpandableText(
-                      text: media.when(
-                        movie: (Movie movie) => movie.overview,
-                        tvSeries: (TvShow tvShow) => tvShow.overview,
-                      ),
-                      maxLines: 3,
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
+                Text(
+                  AppLocalizations.of(context)!.reviewInfoPageTitle,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 32),
-                Center(
-                  child: Container(
-                    padding: const EdgeInsets.all(16),
-                    child: TextField(
-                      controller: _textInputControl,
-                      decoration: InputDecoration(
-                        labelText: AppLocalizations.of(context)!.insertAReview,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 32),
-                Center(
-                  child: ElevatedButton(
-                    onPressed: () => _updateReview(
-                      newReview: _textInputControl.text,
-                      userId: userAuth.value!.userId,
-                      filmId: media.when(
-                        movie: (Movie movie) => movie.id,
-                        tvSeries: (TvShow tvSeries) => tvSeries.id,
-                      ),
-                      type: media.when(
-                        movie: (Movie movie) => movie.mediaType,
-                        tvSeries: (TvShow tvSeries) => tvSeries.mediaType,
-                      ),
-                      rating: double.parse(_ratingController.text),
-                    ),
-                    child: Text(AppLocalizations.of(context)!.updateButton),
-                  ),
-                ),
-                const SizedBox(height: 32),
-                Center(
-                  child: ElevatedButton(
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: FilledButton(
                     onPressed: () async {
-                      final bool? deleteReview = await showDialog<bool>(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text(
-                              AppLocalizations.of(context)!.deleteReviewDialog,
-                            ),
-                            content: Text(
-                              AppLocalizations.of(context)!.deleteReviewButton,
-                            ),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () =>
-                                    Navigator.of(context).pop(false),
-                                child: Text(AppLocalizations.of(context)!.no),
-                              ),
-                              TextButton(
-                                onPressed: () =>
-                                    Navigator.of(context).pop(true),
-                                child: Text(AppLocalizations.of(context)!.yes),
-                              ),
-                            ],
-                          );
-                        },
+                      final bool result = _checkValuesOnExit(
+                        rating: _ratingController.text,
+                        review: _reviewController.text,
                       );
-                      if (deleteReview == true) {
-                        _reviewService.deleteReveiwById(widget.reviewId);
-                        ref.invalidate(userReviewProvider);
+                      if (result) {
+                        await showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text(
+                                AppLocalizations.of(
+                                  context,
+                                )!.exitWithoutSavingDialong,
+                              ),
+                              content: Text(
+                                AppLocalizations.of(context)!.sureYouWantToQuit,
+                              ),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.of(context).pop(false),
+                                  child: Text(AppLocalizations.of(context)!.no),
+                                ),
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.of(context).pop(true),
+                                  child: Text(
+                                    AppLocalizations.of(context)!.yes,
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      } else {
                         context.pop();
                       }
                     },
-                    child: const Text("Delete review"),
+                    child: const Icon(Icons.arrow_back),
                   ),
                 ),
               ],
             ),
-          );
-        },
+          ),
+          Expanded(
+            child: reviewAsync.when(
+              data: (Review review) {
+                return mediaAsync.when(
+                  data: (MediaWithPoster mediaWithPoster) {
+                    return userAuthAsync.when(
+                      data: (UserProfile userAuth) {
+                        // Initialize controllers only once
+                        _initializeControllers(review);
 
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (Object error, StackTrace stack) =>
-            Center(child: Text('Error: $error')),
+                        final Media media = mediaWithPoster.media;
+
+                        return SingleChildScrollView(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Card(
+                                    clipBehavior: Clip.antiAlias,
+                                    child: Image.memory(
+                                      mediaWithPoster.poster!,
+                                      width: 120,
+                                      height: 180,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 16),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Text(
+                                          media.when(
+                                            movie: (Movie movie) => movie.title,
+                                            tvSeries: (TvShow tvShow) =>
+                                                tvShow.name,
+                                          ),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headlineSmall
+                                              ?.copyWith(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          media.when(
+                                            movie: (Movie movie) =>
+                                                AppLocalizations.of(
+                                                  context,
+                                                )!.releasedLabel(
+                                                  movie.releaseDate ?? "N/A",
+                                                ),
+                                            tvSeries: (TvShow tvShow) =>
+                                                AppLocalizations.of(
+                                                  context,
+                                                )!.firstAiredLabel(
+                                                  tvShow.firstAirDate ?? "N/A",
+                                                ),
+                                          ),
+                                          style: Theme.of(
+                                            context,
+                                          ).textTheme.bodySmall,
+                                        ),
+                                        const SizedBox(height: 8),
+                                        CustomRating(
+                                          initialRating: review.rating ?? 0.0,
+                                          onRatingChanged: (double rating) {
+                                            _ratingController.text = rating
+                                                .toString();
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 32),
+                              Container(
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFF5F5F5),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: ExpandableText(
+                                  text: media.when(
+                                    movie: (Movie movie) => movie.overview,
+                                    tvSeries: (TvShow tvShow) =>
+                                        tvShow.overview,
+                                  ),
+                                  maxLines: 3,
+                                  style: Theme.of(context).textTheme.bodyLarge,
+                                ),
+                              ),
+                              const SizedBox(height: 32),
+                              Container(
+                                padding: const EdgeInsets.all(16),
+                                child: TextField(
+                                  controller: _reviewController,
+                                  decoration: InputDecoration(
+                                    labelText: AppLocalizations.of(
+                                      context,
+                                    )!.insertAReview,
+                                    border: const OutlineInputBorder(),
+                                  ),
+                                  maxLines: 3,
+                                ),
+                              ),
+                              const SizedBox(height: 32),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  ElevatedButton(
+                                    onPressed: () => _updateReview(
+                                      newReview: _reviewController.text,
+                                      userId: userAuth.userId,
+                                      filmId: media.when(
+                                        movie: (Movie movie) => movie.id,
+                                        tvSeries: (TvShow tvSeries) =>
+                                            tvSeries.id,
+                                      ),
+                                      type: media.when(
+                                        movie: (Movie movie) => movie.mediaType,
+                                        tvSeries: (TvShow tvSeries) =>
+                                            tvSeries.mediaType,
+                                      ),
+                                      rating:
+                                          double.tryParse(
+                                            _ratingController.text,
+                                          ) ??
+                                          0.0,
+                                    ),
+                                    child: Text(
+                                      AppLocalizations.of(
+                                        context,
+                                      )!.updateButton,
+                                    ),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () async {
+                                      final bool? deleteReview =
+                                          await showDialog<bool>(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                title: Text(
+                                                  AppLocalizations.of(
+                                                    context,
+                                                  )!.deleteReviewDialog,
+                                                ),
+                                                content: Text(
+                                                  AppLocalizations.of(
+                                                    context,
+                                                  )!.deleteReviewButton,
+                                                ),
+                                                actions: <Widget>[
+                                                  TextButton(
+                                                    onPressed: () =>
+                                                        Navigator.of(
+                                                          context,
+                                                        ).pop(false),
+                                                    child: Text(
+                                                      AppLocalizations.of(
+                                                        context,
+                                                      )!.no,
+                                                    ),
+                                                  ),
+                                                  TextButton(
+                                                    onPressed: () =>
+                                                        Navigator.of(
+                                                          context,
+                                                        ).pop(true),
+                                                    child: Text(
+                                                      AppLocalizations.of(
+                                                        context,
+                                                      )!.yes,
+                                                    ),
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                      if (deleteReview == true) {
+                                        await _reviewService.deleteReveiwById(
+                                          widget.reviewId,
+                                        );
+                                        ref.invalidate(userReviewProvider);
+                                        if (mounted) {
+                                          context.pop();
+                                        }
+                                      }
+                                    },
+                                    child: Text(
+                                      AppLocalizations.of(
+                                        context,
+                                      )!.deleteReviewButton,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                      loading: () =>
+                          const Center(child: CircularProgressIndicator()),
+                      error: (Object error, StackTrace stack) =>
+                          Center(child: Text('Error: $error')),
+                    );
+                  },
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
+                  error: (Object error, StackTrace stack) =>
+                      Center(child: Text('Error: $error')),
+                );
+              },
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (Object error, StackTrace stack) =>
+                  Center(child: Text('Error: $error')),
+            ),
+          ),
+        ],
       ),
     );
   }

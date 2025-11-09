@@ -6,6 +6,7 @@ class CustomRating extends ConsumerStatefulWidget {
   final int maxRating;
   final Function(double) onRatingChanged;
   final double iconSize;
+  final bool readOnly;
 
   const CustomRating({
     super.key,
@@ -13,6 +14,7 @@ class CustomRating extends ConsumerStatefulWidget {
     this.maxRating = 5,
     required this.onRatingChanged,
     this.iconSize = 24,
+    this.readOnly = false,
   });
 
   @override
@@ -59,7 +61,9 @@ class _CustomRatingState extends ConsumerState<CustomRating> {
 
         return GestureDetector(
           onTapDown: (TapDownDetails details) {
-            _handleTap(index, details.localPosition, widget.iconSize);
+            if (!widget.readOnly) {
+              _handleTap(index, details.localPosition, widget.iconSize);
+            }
           },
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 4.0),

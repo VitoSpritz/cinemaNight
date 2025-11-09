@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../model/media.dart';
 import '../model/media_with_poster.dart';
+import '../model/movie.dart';
 import '../model/review.dart';
+import '../model/tv_show.dart';
 import '../providers/review_media.dart';
+import 'custom_rating.dart';
 
 class ReviewCard extends ConsumerWidget {
   final Review review;
@@ -20,22 +24,55 @@ class ReviewCard extends ConsumerWidget {
 
     return mediaAsync.when(
       data: (MediaWithPoster mediaWithPoster) {
-        return Card(
-          clipBehavior: Clip.antiAlias,
-          child: InkWell(
-            onTap: () {
-              context.pushNamed(
-                'reviewInfo',
-                pathParameters: <String, String>{'reviewId': review.reviewId},
-              );
-            },
-            child: Image.memory(
-              mediaWithPoster.poster!,
-              fit: BoxFit.cover,
-              width: double.infinity,
-              height: double.infinity,
+        return Column(
+          children: <Widget>[
+            Expanded(
+              child: Card(
+                clipBehavior: Clip.antiAlias,
+                child: GestureDetector(
+                  onTap: () {
+                    context.pushNamed(
+                      'reviewInfo',
+                      pathParameters: <String, String>{
+                        'reviewId': review.reviewId,
+                      },
+                    );
+                  },
+                  child: Stack(
+                    children: <Widget>[
+                      Image.memory(
+                        mediaWithPoster.poster!,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        height: double.infinity,
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        child: Container(
+                          color: Colors.black.withValues(alpha: 0.7),
+                          padding: const EdgeInsets.all(8.0),
+                          child: CustomRating(
+                            readOnly: true,
+                            initialRating: review.rating ?? 0.0,
+                            onRatingChanged: (_) {},
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
-          ),
+            Text(
+              mediaWithPoster.media.when(
+                movie: (Movie movie) => movie.title,
+                tvSeries: (TvShow tvSeries) => tvSeries.name,
+              ),
+              maxLines: 1,
+            ),
+          ],
         );
       },
       loading: () =>

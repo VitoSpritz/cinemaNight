@@ -34,7 +34,7 @@ class ReviewList extends ConsumerWidget {
     final AsyncValue<List<Review>> userReviewListAsync = ref.watch(
       userReviewProvider,
     );
-    final String language = AppLocalizations.of(context)!.requiredField;
+    final String language = AppLocalizations.of(context)!.requestApiLanguage;
 
     return Scaffold(
       appBar: CustomAppBar(
