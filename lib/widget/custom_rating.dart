@@ -13,7 +13,7 @@ class CustomRating extends ConsumerStatefulWidget {
     this.initialRating = 0.0,
     this.maxRating = 5,
     required this.onRatingChanged,
-    this.iconSize = 24,
+    this.iconSize = 20,
     this.readOnly = false,
   });
 
@@ -27,7 +27,15 @@ class _CustomRatingState extends ConsumerState<CustomRating> {
   @override
   void initState() {
     super.initState();
-    _currentRating = widget.initialRating.toDouble();
+    _currentRating = widget.initialRating;
+  }
+
+  @override
+  void didUpdateWidget(CustomRating oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.initialRating != widget.initialRating) {
+      _currentRating = widget.initialRating;
+    }
   }
 
   void _handleTap(int index, Offset localPosition, double iconWidth) {
@@ -47,7 +55,6 @@ class _CustomRatingState extends ConsumerState<CustomRating> {
     }
 
     newRating = newRating.clamp(0.0, widget.maxRating.toDouble());
-
     setState(() => _currentRating = newRating);
     widget.onRatingChanged(_currentRating);
   }
@@ -58,7 +65,6 @@ class _CustomRatingState extends ConsumerState<CustomRating> {
       mainAxisSize: MainAxisSize.min,
       children: List.generate(widget.maxRating, (int index) {
         final double fillLevel = _currentRating - index;
-
         return GestureDetector(
           onTapDown: (TapDownDetails details) {
             if (!widget.readOnly) {
@@ -66,12 +72,10 @@ class _CustomRatingState extends ConsumerState<CustomRating> {
             }
           },
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4.0),
+            padding: const EdgeInsets.symmetric(horizontal: 2.0),
             child: Stack(
               children: <Widget>[
-                // Background (empty) icon
                 Icon(Icons.movie, size: widget.iconSize, color: Colors.grey),
-                // Foreground (filled) icon, clipped based on fillLevel
                 if (fillLevel > 0)
                   ClipRect(
                     clipper: _HalfClipper(fillLevel),
