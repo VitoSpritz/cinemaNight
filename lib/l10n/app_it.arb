@@ -90,5 +90,8 @@
     "insertAReview": "Inserisci una nuova recensione",
     "exitWithoutSavingDialong": "Perderai i cambiamenti se esci",
     "sureYouWantToQuit": "Sei sicuro di voler uscire?",
-    "reviewInfoPageTitle": "Dettagli recensione"
+    "reviewInfoPageTitle": "Dettagli recensione",
+    "confirmLabel": "Conferma",
+    "cancelLabel": "Annulla",
+    "attentionLabel": "Attenzione!"
 }

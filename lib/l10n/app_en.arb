@@ -90,5 +90,8 @@
     "insertAReview": "Insert a new review",
     "exitWithoutSavingDialong": "Changes will be lost if you quit",
     "sureYouWantToQuit": "You want to quit?",
-    "reviewInfoPageTitle": "Review Details"
+    "reviewInfoPageTitle": "Review Details",
+    "confirmLabel": "Confirm",
+    "cancelLabel": "Cancel",
+    "attentionLabel": "Attention!"
 }
