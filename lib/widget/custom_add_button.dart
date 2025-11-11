@@ -14,7 +14,11 @@ class CustomAddButton extends ConsumerWidget {
       onPressed: onPressed,
       backgroundColor: CustomColors.mainYellow,
       foregroundColor: CustomColors.black,
-      elevation: 2,
+      elevation: 0,
+      focusElevation: 0,
+      hoverElevation: 0,
+      disabledElevation: 0,
+      highlightElevation: 0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: const Icon(Icons.add, size: 24),
     );

@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 import '../env/env.dart';
+import '../helpers/media_converter.dart';
 import '../interface/tmdb_storage.dart';
 import '../model/http_status.dart';
 import '../model/media.dart';
@@ -207,9 +208,9 @@ class TmdbApi implements TmdbStorage {
     for (final Media media in mediaList) {
       Uint8List? posterBytes;
 
-      final String? poster = media.when(
-        movie: (Movie movie) => movie.posterPath,
-        tvSeries: (TvShow tvSeries) => tvSeries.posterPath,
+      final String? poster = MediaConverter.getValue(
+        media: media,
+        field: MediaField.poster,
       );
 
       if (poster != null && poster.isNotEmpty) {

@@ -5,6 +5,24 @@ import 'tv_show.dart';
 
 part 'media.freezed.dart';
 
+@JsonEnum(valueField: 'MediaField')
+enum MediaField {
+  @JsonValue("title")
+  title,
+  @JsonValue("poster")
+  poster,
+  @JsonValue("releaseDate")
+  releaseDate,
+  @JsonValue("id")
+  id,
+  @JsonValue("overview")
+  overview,
+  @JsonValue("mediaType")
+  mediaType,
+  @JsonValue("rating")
+  rating,
+}
+
 @freezed
 abstract class Media with _$Media {
   const Media._();

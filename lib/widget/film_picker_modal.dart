@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../consts/sizes.dart';
+import '../helpers/media_converter.dart';
 import '../l10n/app_localizations.dart';
 import '../model/media.dart';
-import '../model/movie.dart';
 import '../model/multi_with_poster.dart';
 import '../model/review.dart';
-import '../model/tv_show.dart';
 import '../model/user_profile.dart';
 import '../providers/tmdb_api.dart';
 import '../providers/user_profiles.dart';
@@ -246,7 +245,6 @@ class _FilmPickerState extends ConsumerState<FilmPickerModal> {
                               child: Center(child: CircularProgressIndicator()),
                             );
                           }
-
                           final MultiWithPoster item = _searchResults[index];
                           return GestureDetector(
                             onTap: () {
@@ -256,14 +254,13 @@ class _FilmPickerState extends ConsumerState<FilmPickerModal> {
                               padding: const EdgeInsets.only(bottom: 8.0),
                               child: CustomMovieDisplay(
                                 imageUrl: item.posterBytes,
-                                movieTitle: item.media.when(
-                                  movie: (Movie movie) => movie.title,
-                                  tvSeries: (TvShow tvSeries) => tvSeries.name,
+                                movieTitle: MediaConverter.getValue(
+                                  media: item.media,
+                                  field: MediaField.title,
                                 ),
-                                rating: item.media.when(
-                                  movie: (Movie movie) => movie.voteAverage,
-                                  tvSeries: (TvShow tvSeries) =>
-                                      tvSeries.voteAverage,
+                                rating: MediaConverter.getValue(
+                                  media: item.media,
+                                  field: MediaField.rating,
                                 ),
                               ),
                             ),
@@ -287,13 +284,13 @@ class _FilmPickerState extends ConsumerState<FilmPickerModal> {
                   children: <Widget>[
                     CustomMovieDisplay(
                       imageUrl: _selectedMedia!.posterBytes,
-                      movieTitle: _selectedMedia!.media.when(
-                        movie: (Movie movie) => movie.title,
-                        tvSeries: (TvShow tvSeries) => tvSeries.name,
+                      movieTitle: MediaConverter.getValue(
+                        media: _selectedMedia!.media,
+                        field: MediaField.title,
                       ),
-                      rating: _selectedMedia!.media.when(
-                        movie: (Movie movie) => movie.voteAverage,
-                        tvSeries: (TvShow tvSeries) => tvSeries.voteAverage,
+                      rating: MediaConverter.getValue(
+                        media: _selectedMedia!.media,
+                        field: MediaField.rating,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -330,22 +327,25 @@ class _FilmPickerState extends ConsumerState<FilmPickerModal> {
                       width: double.infinity,
                       child: _isCreatingReview
                           ? const CircularProgressIndicator()
-                          : ElevatedButton(
-                              onPressed: () async => await _createReview(
-                                filmId: _selectedMedia!.media.when(
-                                  movie: (Movie movie) => movie.id,
-                                  tvSeries: (TvShow tvSeries) => tvSeries.id,
-                                ),
-                                type: _selectedMedia!.media.when(
-                                  movie: (Movie movie) =>
-                                      ReviewItemType.movie.name,
-                                  tvSeries: (TvShow tvSeries) =>
-                                      ReviewItemType.tvSeries.name,
-                                ),
-                                review: _reviewController.text,
-                                rating: double.parse(_ratingController.text),
+                          : Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 16.0,
                               ),
-                              child: Text(AppLocalizations.of(context)!.save),
+                              child: ElevatedButton(
+                                onPressed: () async => await _createReview(
+                                  filmId: MediaConverter.getValue(
+                                    media: _selectedMedia!.media,
+                                    field: MediaField.id,
+                                  ),
+                                  type: MediaConverter.getValue(
+                                    media: _selectedMedia!.media,
+                                    field: MediaField.mediaType,
+                                  ),
+                                  review: _reviewController.text,
+                                  rating: double.parse(_ratingController.text),
+                                ),
+                                child: Text(AppLocalizations.of(context)!.save),
+                              ),
                             ),
                     ),
                   ],

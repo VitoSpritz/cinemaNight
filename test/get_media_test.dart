@@ -72,6 +72,7 @@ void main() {
   test('Should be able to fetch a media with its poster', () async {
     final List<MultiWithPoster> res = await api.getMultiMediaWithPosters(
       name: 'Django Unchained',
+      page: 1,
       language: AppLocalizationsIt().requestApiLanguage,
     );
 

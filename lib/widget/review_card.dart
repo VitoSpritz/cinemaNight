@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../helpers/media_converter.dart';
 import '../model/media.dart';
 import '../model/media_with_poster.dart';
-import '../model/movie.dart';
 import '../model/review.dart';
-import '../model/tv_show.dart';
 import '../providers/review_media.dart';
 import 'custom_rating.dart';
 
@@ -66,11 +65,11 @@ class ReviewCard extends ConsumerWidget {
               ),
             ),
             Text(
-              mediaWithPoster.media.when(
-                movie: (Movie movie) => movie.title,
-                tvSeries: (TvShow tvSeries) => tvSeries.name,
+              MediaConverter.getValue(
+                media: mediaWithPoster.media,
+                field: MediaField.title,
               ),
-              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         );

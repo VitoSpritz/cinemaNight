@@ -2,17 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../consts/custom_colors.dart';
+import '../helpers/media_converter.dart';
 import '../l10n/app_localizations.dart';
 import '../model/media.dart';
 import '../model/media_with_poster.dart';
-import '../model/movie.dart';
 import '../model/review.dart';
-import '../model/tv_show.dart';
 import '../model/user_profile.dart';
 import '../providers/review_media.dart';
 import '../providers/user_profiles.dart';
 import '../providers/user_review.dart';
 import '../services/review_service.dart';
+import '../widget/custom_dialog.dart';
 import '../widget/custom_rating.dart';
 import '../widget/expandable_text.dart';
 
@@ -42,7 +43,9 @@ class _ReviewInfoState extends ConsumerState<ReviewInfo> {
   }
 
   void _initializeControllers(Review review) {
-    if (_isInitialized) return; // ✅ Only initialize once
+    if (_isInitialized) {
+      return;
+    }
 
     _reviewController.text = review.description ?? "";
     _ratingController.text = review.rating?.toString() ?? "0.0";
@@ -100,60 +103,52 @@ class _ReviewInfoState extends ConsumerState<ReviewInfo> {
       body: Column(
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 24),
-            child: Stack(
-              alignment: Alignment.center,
+            padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                Text(
-                  AppLocalizations.of(context)!.reviewInfoPageTitle,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                FilledButton(
+                  style: FilledButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                  ),
+                  onPressed: () async {
+                    final bool result = _checkValuesOnExit(
+                      rating: _ratingController.text,
+                      review: _reviewController.text,
+                    );
+                    if (result) {
+                      await CustomDialog.show(
+                        context: context,
+                        title: AppLocalizations.of(
+                          context,
+                        )!.exitWithoutSavingDialong,
+                        subtitle: AppLocalizations.of(
+                          context,
+                        )!.sureYouWantToQuit,
+                        function: () async => Navigator.of(context).pop(),
+                      );
+                    } else {
+                      context.pop();
+                    }
+                  },
+                  child: const Icon(
+                    Icons.arrow_back,
+                    fill: 0,
+                    color: CustomColors.black,
+                    size: 24,
                   ),
                 ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: FilledButton(
-                    onPressed: () async {
-                      final bool result = _checkValuesOnExit(
-                        rating: _ratingController.text,
-                        review: _reviewController.text,
-                      );
-                      if (result) {
-                        await showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text(
-                                AppLocalizations.of(
-                                  context,
-                                )!.exitWithoutSavingDialong,
-                              ),
-                              content: Text(
-                                AppLocalizations.of(context)!.sureYouWantToQuit,
-                              ),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () =>
-                                      Navigator.of(context).pop(false),
-                                  child: Text(AppLocalizations.of(context)!.no),
-                                ),
-                                TextButton(
-                                  onPressed: () =>
-                                      Navigator.of(context).pop(true),
-                                  child: Text(
-                                    AppLocalizations.of(context)!.yes,
-                                  ),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      } else {
-                        context.pop();
-                      }
-                    },
-                    child: const Icon(Icons.arrow_back),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Text(
+                      AppLocalizations.of(context)!.reviewInfoPageTitle,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -166,11 +161,8 @@ class _ReviewInfoState extends ConsumerState<ReviewInfo> {
                   data: (MediaWithPoster mediaWithPoster) {
                     return userAuthAsync.when(
                       data: (UserProfile userAuth) {
-                        // Initialize controllers only once
                         _initializeControllers(review);
-
                         final Media media = mediaWithPoster.media;
-
                         return SingleChildScrollView(
                           padding: const EdgeInsets.all(16.0),
                           child: Column(
@@ -195,10 +187,9 @@ class _ReviewInfoState extends ConsumerState<ReviewInfo> {
                                           CrossAxisAlignment.start,
                                       children: <Widget>[
                                         Text(
-                                          media.when(
-                                            movie: (Movie movie) => movie.title,
-                                            tvSeries: (TvShow tvShow) =>
-                                                tvShow.name,
+                                          MediaConverter.getValue(
+                                            media: media,
+                                            field: MediaField.title,
                                           ),
                                           style: Theme.of(context)
                                               .textTheme
@@ -211,19 +202,13 @@ class _ReviewInfoState extends ConsumerState<ReviewInfo> {
                                         ),
                                         const SizedBox(height: 8),
                                         Text(
-                                          media.when(
-                                            movie: (Movie movie) =>
-                                                AppLocalizations.of(
-                                                  context,
-                                                )!.releasedLabel(
-                                                  movie.releaseDate ?? "N/A",
-                                                ),
-                                            tvSeries: (TvShow tvShow) =>
-                                                AppLocalizations.of(
-                                                  context,
-                                                )!.firstAiredLabel(
-                                                  tvShow.firstAirDate ?? "N/A",
-                                                ),
+                                          AppLocalizations.of(
+                                            context,
+                                          )!.releasedLabel(
+                                            MediaConverter.getValue(
+                                              media: media,
+                                              field: MediaField.releaseDate,
+                                            ),
                                           ),
                                           style: Theme.of(
                                             context,
@@ -246,14 +231,13 @@ class _ReviewInfoState extends ConsumerState<ReviewInfo> {
                               Container(
                                 padding: const EdgeInsets.all(16),
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFFF5F5F5),
+                                  color: CustomColors.white,
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: ExpandableText(
-                                  text: media.when(
-                                    movie: (Movie movie) => movie.overview,
-                                    tvSeries: (TvShow tvShow) =>
-                                        tvShow.overview,
+                                  text: MediaConverter.getValue(
+                                    media: media,
+                                    field: MediaField.overview,
                                   ),
                                   maxLines: 3,
                                   style: Theme.of(context).textTheme.bodyLarge,
@@ -274,94 +258,94 @@ class _ReviewInfoState extends ConsumerState<ReviewInfo> {
                                 ),
                               ),
                               const SizedBox(height: 32),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: <Widget>[
-                                  ElevatedButton(
-                                    onPressed: () => _updateReview(
-                                      newReview: _reviewController.text,
-                                      userId: userAuth.userId,
-                                      filmId: media.when(
-                                        movie: (Movie movie) => movie.id,
-                                        tvSeries: (TvShow tvSeries) =>
-                                            tvSeries.id,
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: FilledButton(
+                                      style: FilledButton.styleFrom(
+                                        backgroundColor: CustomColors.white,
+                                        shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(18),
+                                          ),
+                                          side: BorderSide(
+                                            color: CustomColors.black,
+                                            width: 1,
+                                          ),
+                                        ),
                                       ),
-                                      type: media.when(
-                                        movie: (Movie movie) => movie.mediaType,
-                                        tvSeries: (TvShow tvSeries) =>
-                                            tvSeries.mediaType,
+                                      onPressed: () => _updateReview(
+                                        newReview: _reviewController.text,
+                                        userId: userAuth.userId,
+                                        filmId: MediaConverter.getValue(
+                                          media: media,
+                                          field: MediaField.id,
+                                        ),
+                                        type: MediaConverter.getValue(
+                                          media: media,
+                                          field: MediaField.mediaType,
+                                        ),
+                                        rating: double.parse(
+                                          _ratingController.text,
+                                        ),
                                       ),
-                                      rating:
-                                          double.tryParse(
-                                            _ratingController.text,
-                                          ) ??
-                                          0.0,
-                                    ),
-                                    child: Text(
-                                      AppLocalizations.of(
-                                        context,
-                                      )!.updateButton,
+                                      child: Text(
+                                        style: const TextStyle(
+                                          color: CustomColors.black,
+                                        ),
+                                        AppLocalizations.of(
+                                          context,
+                                        )!.updateButton,
+                                      ),
                                     ),
                                   ),
-                                  ElevatedButton(
-                                    onPressed: () async {
-                                      final bool? deleteReview =
-                                          await showDialog<bool>(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return AlertDialog(
-                                                title: Text(
-                                                  AppLocalizations.of(
-                                                    context,
-                                                  )!.deleteReviewDialog,
-                                                ),
-                                                content: Text(
-                                                  AppLocalizations.of(
-                                                    context,
-                                                  )!.deleteReviewButton,
-                                                ),
-                                                actions: <Widget>[
-                                                  TextButton(
-                                                    onPressed: () =>
-                                                        Navigator.of(
-                                                          context,
-                                                        ).pop(false),
-                                                    child: Text(
-                                                      AppLocalizations.of(
-                                                        context,
-                                                      )!.no,
-                                                    ),
-                                                  ),
-                                                  TextButton(
-                                                    onPressed: () =>
-                                                        Navigator.of(
-                                                          context,
-                                                        ).pop(true),
-                                                    child: Text(
-                                                      AppLocalizations.of(
-                                                        context,
-                                                      )!.yes,
-                                                    ),
-                                                  ),
-                                                ],
-                                              );
-                                            },
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: FilledButton(
+                                      style: FilledButton.styleFrom(
+                                        backgroundColor: CustomColors.white,
+                                        shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(18),
+                                          ),
+                                          side: BorderSide(
+                                            color: CustomColors.black,
+                                            width: 1,
+                                          ),
+                                        ),
+                                      ),
+                                      onPressed: () async {
+                                        final bool? deleteReview =
+                                            await CustomDialog.show(
+                                              title: AppLocalizations.of(
+                                                context,
+                                              )!.attentionLabel,
+                                              subtitle: AppLocalizations.of(
+                                                context,
+                                              )!.deleteReviewDialog,
+                                              context: context,
+                                            );
+                                        if (deleteReview == true) {
+                                          await _reviewService.deleteReveiwById(
+                                            widget.reviewId,
                                           );
-                                      if (deleteReview == true) {
-                                        await _reviewService.deleteReveiwById(
-                                          widget.reviewId,
-                                        );
-                                        ref.invalidate(userReviewProvider);
-                                        if (mounted) {
-                                          context.pop();
+                                          ref.invalidate(userReviewProvider);
+                                          if (mounted) {
+                                            context.pop();
+                                          }
                                         }
-                                      }
-                                    },
-                                    child: Text(
-                                      AppLocalizations.of(
-                                        context,
-                                      )!.deleteReviewButton,
+                                      },
+                                      child: Text(
+                                        style: const TextStyle(
+                                          color: CustomColors.black,
+                                        ),
+                                        AppLocalizations.of(
+                                          context,
+                                        )!.deleteReviewButton,
+                                      ),
                                     ),
                                   ),
                                 ],

@@ -43,8 +43,7 @@ class ReviewList extends ConsumerWidget {
       ),
       body: RefreshIndicator(
         onRefresh: () async {
-          ref.invalidate(userReviewProvider);
-          await ref.read(userReviewProvider.future);
+          await ref.refresh(userReviewProvider.future);
         },
         notificationPredicate: (ScrollNotification notification) {
           return notification.depth == 0;
@@ -69,7 +68,10 @@ class ReviewList extends ConsumerWidget {
               padding: const EdgeInsets.all(8.0),
               itemCount: reviews.length,
               itemBuilder: (BuildContext context, int index) {
-                return ReviewCard(review: reviews[index], language: language);
+                return ReviewCard(
+                  review: reviews.elementAt(index),
+                  language: language,
+                );
               },
             );
           },
