@@ -18,6 +18,7 @@ abstract class Review with _$Review {
     required String filmId,
     required String userId,
     required ReviewItemType type,
+    required String filmName,
     double? rating,
     String? description,
   }) = _Review;
@@ -29,6 +30,7 @@ abstract class Review with _$Review {
     required String filmId,
     required String userId,
     required ReviewItemType type,
+    required String filmName,
     double? rating,
     String? description,
   }) {
@@ -40,6 +42,7 @@ abstract class Review with _$Review {
       userId: userId,
       filmId: filmId,
       rating: rating,
+      filmName: filmName,
       type: type,
       description: description,
     );

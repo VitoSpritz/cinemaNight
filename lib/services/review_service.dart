@@ -10,6 +10,7 @@ class ReviewService {
     required String userId,
     required String filmId,
     required ReviewItemType type,
+    required String filmName,
     double? rating,
     String? description,
   }) async {
@@ -19,6 +20,7 @@ class ReviewService {
       reviewId: reviewId,
       filmId: filmId,
       type: type,
+      filmName: filmName,
       userId: userId,
       description: description,
       rating: rating,
@@ -35,6 +37,12 @@ class ReviewService {
     return review!;
   }
 
+  Future<Review> getReviewByName(String name) async {
+    final Review? review = await _reviewRepository.getReviewByName(name);
+
+    return review!;
+  }
+
   Future<List<Review>> listReviews(String userId) async {
     return _reviewRepository.listReviews(userId);
   }
@@ -44,6 +52,7 @@ class ReviewService {
     required String userId,
     required String filmId,
     required ReviewItemType type,
+    required String filmName,
     double? rating,
     String? description,
   }) async {
@@ -52,6 +61,7 @@ class ReviewService {
       filmId: filmId,
       userId: userId,
       type: type,
+      filmName: filmName,
       description: description,
       rating: rating,
     );

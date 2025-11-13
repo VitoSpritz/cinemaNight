@@ -21,6 +21,7 @@ class UserReview extends _$UserReview {
     required String userId,
     required String filmId,
     required ReviewItemType type,
+    required String filmName,
     String? description,
     double? rating,
   }) async {
@@ -28,6 +29,7 @@ class UserReview extends _$UserReview {
       userId: userId,
       filmId: filmId,
       type: type,
+      filmName: filmName,
       description: description,
       rating: rating,
     );
@@ -40,12 +42,14 @@ class UserReview extends _$UserReview {
     required String userId,
     required String filmId,
     required ReviewItemType type,
+    required String filmName,
     double? rating,
     String? description,
   }) async {
     await service.updateReview(
       reviewId: reviewId,
       userId: userId,
+      filmName: filmName,
       type: type,
       filmId: filmId,
       description: description,
@@ -64,4 +68,10 @@ class UserReview extends _$UserReview {
 Future<Review> getReviewById(Ref ref, String reviewId) async {
   final UserReview userReviewNotifier = ref.read(userReviewProvider.notifier);
   return await userReviewNotifier.service.getReviewById(reviewId);
+}
+
+@riverpod
+Future<Review> getReviewByName(Ref ref, String name) async {
+  final UserReview userReviewNotifier = ref.read(userReviewProvider.notifier);
+  return await userReviewNotifier.service.getReviewByName(name);
 }

@@ -21,10 +21,23 @@ class ReviewRepository {
     return Review.fromJson(result.data()!);
   }
 
+  Future<Review?> getReviewByName(String name) async {
+    final DocumentSnapshot<Map<String, dynamic>> result = await _firestore
+        .collection('reviews')
+        .doc(name)
+        .get();
+
+    if (!result.exists) {
+      return null;
+    }
+    return Review.fromJson(result.data()!);
+  }
+
   Future<List<Review>> listReviews(String userId) async {
     final QuerySnapshot<Map<String, dynamic>> result = await _firestore
         .collection('reviews')
         .where('userId', isEqualTo: userId)
+        .orderBy('rating', descending: true)
         .get();
 
     return result.docs
