@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../consts/custom_colors.dart';
+import '../l10n/app_localizations.dart';
+
 class ExpandableText extends StatefulWidget {
   final String text;
   final int maxLines;
@@ -24,6 +27,18 @@ class _ExpandableTextState extends State<ExpandableText> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Text(
+              AppLocalizations.of(context)!.summary,
+              style: const TextStyle(
+                color: CustomColors.purple,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
         AnimatedSize(
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeInOut,
@@ -35,33 +50,39 @@ class _ExpandableTextState extends State<ExpandableText> {
             overflow: isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
           ),
         ),
-        const SizedBox(height: 8),
-        Center(
-          child: InkWell(
-            onTap: () {
-              setState(() {
-                isExpanded = !isExpanded;
-              });
-            },
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Text(
-                  isExpanded ? 'Show less' : 'Show more',
-                  style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                    fontWeight: FontWeight.bold,
+        Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: Center(
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  isExpanded = !isExpanded;
+                });
+              },
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Text(
+                    isExpanded
+                        ? AppLocalizations.of(context)!.showLess
+                        : AppLocalizations.of(context)!.showMore,
+                    style: const TextStyle(
+                      color: CustomColors.purple,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                const SizedBox(width: 4),
-                Icon(
-                  isExpanded
-                      ? Icons.keyboard_arrow_up
-                      : Icons.keyboard_arrow_down,
-                  color: Theme.of(context).primaryColor,
-                  size: 20,
-                ),
-              ],
+                  Padding(
+                    padding: const EdgeInsets.only(left: 4.0),
+                    child: Icon(
+                      isExpanded
+                          ? Icons.keyboard_arrow_up
+                          : Icons.keyboard_arrow_down,
+                      color: CustomColors.purple,
+                      size: 20,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

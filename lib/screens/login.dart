@@ -140,7 +140,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 width: MediaQuery.of(context).size.width * 0.8,
                 child: Text(
                   AppLocalizations.of(context)!.loginString,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 80,
                     color: CustomColors.mainYellow,
@@ -215,7 +215,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   children: <Widget>[
                     Text(
                       AppLocalizations.of(context)!.notRegisteredPress,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: CustomColors.white,
                         fontWeight: FontWeight.normal,
                         fontSize: 24,

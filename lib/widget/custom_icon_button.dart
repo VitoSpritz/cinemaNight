@@ -2,76 +2,31 @@ import 'package:flutter/material.dart';
 
 import '../consts/custom_colors.dart';
 
-class CustomIconButton extends StatelessWidget implements Icon {
-  @override
+class CustomIconButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback? onTap;
-  final double iconSize;
-  @override
+  final double? iconSize;
   final Color color;
+  final double? padding;
 
   const CustomIconButton({
     super.key,
     required this.icon,
     this.onTap,
-    this.iconSize = 60,
+    this.iconSize = 24,
     this.color = CustomColors.black,
+    this.padding = 16,
   });
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent,
       onTap: onTap,
-      borderRadius: BorderRadius.circular(8),
-      child: SizedBox(
-        width: 60,
-        height: 100,
+      child: Padding(
+        padding: EdgeInsets.all(padding!),
         child: Icon(icon, size: iconSize, color: color),
       ),
     );
   }
-
-  @override
-  // TODO: implement applyTextScaling
-  bool? get applyTextScaling => throw UnimplementedError();
-
-  @override
-  // TODO: implement blendMode
-  BlendMode? get blendMode => throw UnimplementedError();
-
-  @override
-  // TODO: implement fill
-  double? get fill => throw UnimplementedError();
-
-  @override
-  // TODO: implement fontWeight
-  FontWeight? get fontWeight => throw UnimplementedError();
-
-  @override
-  // TODO: implement grade
-  double? get grade => throw UnimplementedError();
-
-  @override
-  // TODO: implement opticalSize
-  double? get opticalSize => throw UnimplementedError();
-
-  @override
-  // TODO: implement semanticLabel
-  String? get semanticLabel => throw UnimplementedError();
-
-  @override
-  // TODO: implement shadows
-  List<Shadow>? get shadows => throw UnimplementedError();
-
-  @override
-  // TODO: implement size
-  double? get size => throw UnimplementedError();
-
-  @override
-  // TODO: implement textDirection
-  TextDirection? get textDirection => throw UnimplementedError();
-
-  @override
-  // TODO: implement weight
-  double? get weight => throw UnimplementedError();
 }

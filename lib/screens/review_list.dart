@@ -1,18 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../consts/custom_colors.dart';
 import '../l10n/app_localizations.dart';
 import '../model/review.dart';
 import '../providers/user_review.dart';
 import '../widget/custom_add_button.dart';
 import '../widget/custom_app_bar.dart';
+import '../widget/custom_icon_button.dart';
 import '../widget/film_picker_modal.dart';
 import '../widget/review_card.dart';
 
-class ReviewList extends ConsumerWidget {
+class ReviewList extends ConsumerStatefulWidget {
   static String path = '/reviewList';
-
   const ReviewList({super.key});
+
+  @override
+  ConsumerState<ReviewList> createState() => _ReviewListState();
+}
+
+class _ReviewListState extends ConsumerState<ReviewList> {
+  String? searchQuery;
 
   void _showModal(BuildContext context) {
     showModalBottomSheet(
@@ -29,8 +37,18 @@ class ReviewList extends ConsumerWidget {
     );
   }
 
+  List<Review> _filterReviews(List<Review> reviews) {
+    if (searchQuery == null || searchQuery!.isEmpty) {
+      return reviews;
+    }
+
+    return reviews.where((Review review) {
+      return review.filmName.toLowerCase().contains(searchQuery!.toLowerCase());
+    }).toList();
+  }
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final AsyncValue<List<Review>> userReviewListAsync = ref.watch(
       userReviewProvider,
     );
@@ -40,6 +58,11 @@ class ReviewList extends ConsumerWidget {
       appBar: CustomAppBar(
         title: AppLocalizations.of(context)!.reviews,
         searchEnabled: true,
+        onSearch: (String? query) {
+          setState(() {
+            searchQuery = query;
+          });
+        },
       ),
       body: RefreshIndicator(
         onRefresh: () async {
@@ -50,29 +73,89 @@ class ReviewList extends ConsumerWidget {
         },
         child: userReviewListAsync.when(
           data: (List<Review> reviews) {
-            if (reviews.isEmpty) {
+            final List<Review> filteredReviews = _filterReviews(reviews);
+            if (filteredReviews.isEmpty) {
               return ListView(
-                children: const <Widget>[
-                  SizedBox(height: 200),
-                  Center(child: Text("There are no reviews")),
+                children: <Widget>[
+                  const SizedBox(height: 200),
+                  Center(
+                    child: Text(
+                      searchQuery != null && searchQuery!.isNotEmpty
+                          ? "No reviews found for '$searchQuery'"
+                          : "There are no reviews",
+                    ),
+                  ),
                 ],
               );
             }
-            return GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 8.0,
-                mainAxisSpacing: 8.0,
-                childAspectRatio: 0.75,
-              ),
-              padding: const EdgeInsets.all(8.0),
-              itemCount: reviews.length,
-              itemBuilder: (BuildContext context, int index) {
-                return ReviewCard(
-                  review: reviews.elementAt(index),
-                  language: language,
-                );
-              },
+            return Column(
+              children: <Widget>[
+                if (searchQuery != null)
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          borderRadius: const BorderRadius.all(
+                            Radius.circular(12),
+                          ),
+                          border: Border.all(
+                            color: CustomColors.black,
+                            width: 1,
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12.0,
+                            vertical: 6.0,
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.only(right: 4.0),
+                                child: Text(
+                                  searchQuery!,
+                                  style: const TextStyle(fontSize: 12),
+                                ),
+                              ),
+                              CustomIconButton(
+                                icon: Icons.cancel,
+                                color: CustomColors.black,
+                                iconSize: 14,
+                                padding: 4,
+                                onTap: () => setState(() {
+                                  searchQuery = null;
+                                }),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                Expanded(
+                  child: GridView.builder(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 8.0,
+                          mainAxisSpacing: 8.0,
+                          childAspectRatio: 0.75,
+                        ),
+                    padding: const EdgeInsets.all(8.0),
+                    itemCount: filteredReviews.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return ReviewCard(
+                        review: filteredReviews.elementAt(index),
+                        language: language,
+                      );
+                    },
+                  ),
+                ),
+              ],
             );
           },
           error: (Object error, StackTrace stack) => ListView(

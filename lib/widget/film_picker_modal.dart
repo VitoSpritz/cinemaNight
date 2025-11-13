@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../consts/custom_colors.dart';
 import '../consts/sizes.dart';
 import '../helpers/media_converter.dart';
 import '../l10n/app_localizations.dart';
@@ -37,6 +38,7 @@ class _FilmPickerState extends ConsumerState<FilmPickerModal> {
   int _totalPages = 1;
   late ScrollController _scrollController;
   bool _isLoadingMore = false;
+  bool _reviewAlreadyExist = false;
 
   @override
   void initState() {
@@ -95,6 +97,7 @@ class _FilmPickerState extends ConsumerState<FilmPickerModal> {
   Future<void> _createReview({
     required int filmId,
     required String type,
+    required String filmName,
     String? review,
     double? rating,
   }) async {
@@ -109,27 +112,32 @@ class _FilmPickerState extends ConsumerState<FilmPickerModal> {
       final AsyncValue<List<Review>> userReview = ref.read(userReviewProvider);
 
       if (userReview.value?.any(
-            (Review element) => element.filmId == filmId.toString(),
+            (Review element) =>
+                (element.filmId == filmId.toString() &&
+                element.type.name == type),
           ) ==
           true) {
         if (mounted) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(const SnackBar(content: Text("Film already exists")));
+          setState(() {
+            _reviewAlreadyExist = true;
+          });
+        }
+      } else {
+        await _reviewService.createReview(
+          userId: userProfile.userId,
+          filmId: filmId.toString(),
+          type: type == "movie"
+              ? ReviewItemType.movie
+              : ReviewItemType.tvSeries,
+          filmName: filmName,
+          description: review,
+          rating: rating,
+        );
+        if (mounted) {
+          Navigator.pop(context);
+          ref.invalidate(userReviewProvider);
         }
       }
-
-      await _reviewService.createReview(
-        userId: userProfile.userId,
-        filmId: filmId.toString(),
-        type: type == "movie" ? ReviewItemType.movie : ReviewItemType.tvSeries,
-        description: review,
-        rating: rating,
-      );
-      if (mounted) {
-        Navigator.pop(context);
-      }
-      ref.invalidate(userReviewProvider);
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(
@@ -248,7 +256,12 @@ class _FilmPickerState extends ConsumerState<FilmPickerModal> {
                           final MultiWithPoster item = _searchResults[index];
                           return GestureDetector(
                             onTap: () {
-                              setState(() => _selectedMedia = item);
+                              setState(
+                                () => (
+                                  _selectedMedia = item,
+                                  _reviewAlreadyExist = false,
+                                ),
+                              );
                             },
                             child: Padding(
                               padding: const EdgeInsets.only(bottom: 8.0),
@@ -323,31 +336,41 @@ class _FilmPickerState extends ConsumerState<FilmPickerModal> {
                       ),
                       maxLines: 3,
                     ),
-                    SizedBox(
-                      width: double.infinity,
-                      child: _isCreatingReview
-                          ? const CircularProgressIndicator()
-                          : Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 16.0,
-                              ),
-                              child: ElevatedButton(
-                                onPressed: () async => await _createReview(
-                                  filmId: MediaConverter.getValue(
-                                    media: _selectedMedia!.media,
-                                    field: MediaField.id,
-                                  ),
-                                  type: MediaConverter.getValue(
-                                    media: _selectedMedia!.media,
-                                    field: MediaField.mediaType,
-                                  ),
-                                  review: _reviewController.text,
-                                  rating: double.parse(_ratingController.text),
+                    const SizedBox(height: 16),
+                    _isCreatingReview
+                        ? const SizedBox(
+                            height: 48,
+                            child: Center(child: CircularProgressIndicator()),
+                          )
+                        : _reviewAlreadyExist == true
+                        ? const Text(
+                            "La recensione è già esistente!",
+                            style: TextStyle(color: CustomColors.errorMessage),
+                          )
+                        : SizedBox(
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: () async => await _createReview(
+                                filmId: MediaConverter.getValue(
+                                  media: _selectedMedia!.media,
+                                  field: MediaField.id,
                                 ),
-                                child: Text(AppLocalizations.of(context)!.save),
+                                type: MediaConverter.getValue(
+                                  media: _selectedMedia!.media,
+                                  field: MediaField.mediaType,
+                                ),
+                                review: _reviewController.text,
+                                rating:
+                                    double.tryParse(_ratingController.text) ??
+                                    0.0,
+                                filmName: MediaConverter.getValue(
+                                  media: _selectedMedia!.media,
+                                  field: MediaField.title,
+                                ),
                               ),
+                              child: Text(AppLocalizations.of(context)!.save),
                             ),
-                    ),
+                          ),
                   ],
                 ),
               ),

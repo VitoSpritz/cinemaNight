@@ -2,54 +2,66 @@ import 'package:flutter/material.dart';
 
 import '../consts/custom_colors.dart';
 import 'custom_icon_button.dart';
+import 'search_modal.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final bool searchEnabled;
+  final Function(String?)? onSearch;
 
   const CustomAppBar({
     super.key,
     required this.title,
     required this.searchEnabled,
+    this.onSearch,
   });
 
   @override
-  Size get preferredSize => const Size.fromHeight(60.0);
+  Size get preferredSize => const Size.fromHeight(40.0);
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      toolbarHeight: 45,
+      toolbarHeight: 40,
       backgroundColor: CustomColors.mainYellow,
       titleSpacing: 0,
-      title: Row(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(left: 12, top: 12, bottom: 12),
-            child: Image.asset('assets/images/namelesslogo.png', width: 40),
-          ),
-          Expanded(
-            child: Center(
-              child: Text(
-                title,
-                style: const TextStyle(
-                  color: Color(0xFF002F4E),
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
+      title: Padding(
+        padding: const EdgeInsets.only(bottom: 8.0),
+        child: Row(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Image.asset('assets/images/namelesslogo.png', width: 24),
+            ),
+            Expanded(
+              child: Center(
+                child: Text(
+                  title,
+                  style: const TextStyle(
+                    color: CustomColors.text,
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
-          ),
-          if (searchEnabled == true)
-            CustomIconButton(
-              icon: Icons.search,
-              onTap: () {},
-              iconSize: 45,
-              color: CustomColors.text,
-            )
-          else
-            const SizedBox(width: 60),
-        ],
+            if (searchEnabled == true)
+              CustomIconButton(
+                icon: Icons.search,
+                onTap: () async {
+                  final String? searchValue = await SearchModal.show(
+                    context: context,
+                  );
+                  if (onSearch != null) {
+                    onSearch!(searchValue);
+                  }
+                },
+                color: CustomColors.text,
+              )
+            else
+              const SizedBox(width: 60),
+          ],
+        ),
       ),
     );
   }
