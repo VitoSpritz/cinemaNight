@@ -93,5 +93,8 @@
     "reviewInfoPageTitle": "Review Details",
     "confirmLabel": "Confirm",
     "cancelLabel": "Cancel",
-    "attentionLabel": "Attention!"
+    "attentionLabel": "Attention!",
+    "showLess": "Show less",
+    "showMore": "Show more",
+    "summary": "Summary"
 }
