@@ -7,14 +7,15 @@ import 'search_modal.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
-  final bool searchEnabled;
+
+  final Widget? actionButton;
   final Function(String?)? onSearch;
 
   const CustomAppBar({
     super.key,
     required this.title,
-    required this.searchEnabled,
     this.onSearch,
+    this.actionButton,
   });
 
   @override
@@ -45,21 +46,19 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
               ),
             ),
-            if (searchEnabled == true)
-              CustomIconButton(
-                icon: Icons.search,
-                onTap: () async {
-                  final String? searchValue = await SearchModal.show(
-                    context: context,
-                  );
-                  if (onSearch != null) {
-                    onSearch!(searchValue);
-                  }
-                },
-                color: CustomColors.text,
-              )
-            else
-              const SizedBox(width: 60),
+
+            CustomIconButton(
+              icon: Icons.search,
+              onTap: () async {
+                final String? searchValue = await SearchModal.show(
+                  context: context,
+                );
+                if (onSearch != null) {
+                  onSearch!(searchValue);
+                }
+              },
+              color: CustomColors.text,
+            ),
           ],
         ),
       ),

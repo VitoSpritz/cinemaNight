@@ -23,6 +23,7 @@ class UserProfiles extends _$UserProfiles {
     int? age,
     String? imageUrl,
     String? preferredFilm,
+    String? preferredGenre,
   }) async {
     await service.createUserProfile(
       name: name,
@@ -30,6 +31,7 @@ class UserProfiles extends _$UserProfiles {
       age: age,
       imageUrl: imageUrl,
       preferredFilm: preferredFilm,
+      preferredGenre: preferredGenre,
     );
     ref.invalidateSelf();
   }

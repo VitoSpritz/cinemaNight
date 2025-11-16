@@ -11,6 +11,7 @@ abstract class UserProfile with _$UserProfile {
     String? imageUrl,
     int? age,
     String? preferredFilm,
+    String? preferredGenre,
   }) = _UserProfile;
 
   factory UserProfile.fromJson(Map<String, dynamic> json) =>

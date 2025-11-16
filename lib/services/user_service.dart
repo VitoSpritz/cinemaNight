@@ -12,6 +12,7 @@ class UserService {
     int? age,
     String? imageUrl,
     String? preferredFilm,
+    String? preferredGenre,
   }) async {
     final UserProfile newUser = UserProfile(
       userId: userId,
@@ -19,6 +20,7 @@ class UserService {
       age: age,
       imageUrl: imageUrl,
       preferredFilm: preferredFilm,
+      preferredGenre: preferredGenre,
     );
     await _repository.createUser(newUser);
 
@@ -36,6 +38,7 @@ class UserService {
     int? age,
     String? imageUrl,
     String? preferredFilm,
+    String? preferredGenre,
   }) async {
     final UserProfile update = UserProfile(
       userId: userId,
@@ -43,6 +46,7 @@ class UserService {
       firstLastName: name,
       imageUrl: imageUrl,
       preferredFilm: preferredFilm,
+      preferredGenre: preferredGenre,
     );
     await _repository.updateUserProfile(userId, update);
 
