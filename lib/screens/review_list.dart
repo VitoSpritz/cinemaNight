@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../consts/custom_colors.dart';
+import '../consts/custom_typography.dart';
 import '../l10n/app_localizations.dart';
 import '../model/review.dart';
 import '../providers/user_review.dart';
@@ -117,7 +118,7 @@ class _ReviewListState extends ConsumerState<ReviewList> {
                                 padding: const EdgeInsets.only(right: 4.0),
                                 child: Text(
                                   searchQuery!,
-                                  style: const TextStyle(fontSize: 12),
+                                  style: CustomTypography.caption,
                                 ),
                               ),
                               CustomIconButton(

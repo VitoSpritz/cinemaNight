@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../consts/custom_colors.dart';
+import '../consts/custom_typography.dart';
 import '../consts/sizes.dart';
 
 class CustomMovieDisplay extends ConsumerWidget {
@@ -41,7 +42,7 @@ class CustomMovieDisplay extends ConsumerWidget {
                     width: 100,
                     height: 125,
                     color: CustomColors.grey,
-                    child: Icon(
+                    child: const Icon(
                       Icons.movie,
                       color: CustomColors.white,
                       size: Sizes.iconSize,
@@ -56,14 +57,14 @@ class CustomMovieDisplay extends ConsumerWidget {
                 children: <Widget>[
                   Text(
                     movieTitle ?? 'Titolo non disponibile',
-                    style: Theme.of(context).textTheme.titleMedium,
+                    style: CustomTypography.titleM,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                   if (rating != null)
                     Text(
                       '⭐ ${rating!.toStringAsFixed(1)}',
-                      style: Theme.of(context).textTheme.bodySmall,
+                      style: CustomTypography.bodySmall,
                     ),
                 ],
               ),

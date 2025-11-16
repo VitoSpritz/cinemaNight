@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../consts/custom_colors.dart';
+import '../consts/custom_typography.dart';
 import '../l10n/app_localizations.dart';
 import 'logic/validators.dart';
 import 'sign_up.dart';
@@ -36,11 +37,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
-  }
-
-  void clearFieldsOnError() {
-    _emailController.clear();
-    _passwordController.clear();
   }
 
   Future<void> onSubmitButtonClick() async {
@@ -93,7 +89,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             backgroundColor: CustomColors.errorMessage,
           ),
         );
-        clearFieldsOnError();
       }
     } catch (e) {
       if (mounted) {
@@ -140,7 +135,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 width: MediaQuery.of(context).size.width * 0.8,
                 child: Text(
                   AppLocalizations.of(context)!.loginString,
-                  style: const TextStyle(
+                  style: CustomTypography.mainTitle.copyWith(
                     fontWeight: FontWeight.bold,
                     fontSize: 80,
                     color: CustomColors.mainYellow,
@@ -158,7 +153,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     border: const OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(10.0)),
                     ),
-                    labelText: AppLocalizations.of(context)!.email,
+                    label: Text(
+                      AppLocalizations.of(context)!.email,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
                     errorText: _emailError,
                   ),
                   keyboardType: TextInputType.emailAddress,
@@ -213,26 +211,26 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Text(
-                      AppLocalizations.of(context)!.notRegisteredPress,
-                      style: const TextStyle(
-                        color: CustomColors.white,
-                        fontWeight: FontWeight.normal,
-                        fontSize: 24,
+                    Expanded(
+                      child: Text(
+                        AppLocalizations.of(context)!.notRegisteredPress,
+                        style: CustomTypography.titleXL.copyWith(
+                          color: CustomColors.white,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 200),
-                    TextButton(
-                      onPressed: () => context.go(SignUpScreen.path),
-                      style: TextButton.styleFrom(
-                        padding: EdgeInsets.zero,
-                        minimumSize: const Size(0, 0),
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      ),
+                    GestureDetector(
+                      onTap: () => context.go(SignUpScreen.path),
+                      behavior: HitTestBehavior.translucent,
                       child: Text(
                         style: const TextStyle(
                           fontWeight: FontWeight.normal,
-                          fontSize: 24,
+                          color: CustomColors.mainYellow,
+                          decoration: TextDecoration.underline,
+                          decorationThickness: 1.5,
+                          decorationColor: CustomColors.mainYellow,
+                          fontSize: 20,
                         ),
                         AppLocalizations.of(context)!.here,
                       ),

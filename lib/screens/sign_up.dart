@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../consts/custom_colors.dart';
+import '../consts/custom_typography.dart';
 import '../l10n/app_localizations.dart';
 import 'logic/validators.dart';
 import 'login.dart';
@@ -169,9 +170,9 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                   children: <Widget>[
                     Text(
                       AppLocalizations.of(context)!.signUp,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
+                      style: CustomTypography.mainTitle.copyWith(
                         fontSize: 80,
+                        fontWeight: FontWeight.bold,
                         color: CustomColors.mainYellow,
                       ),
                     ),
@@ -185,7 +186,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                         hintText: AppLocalizations.of(
                           context,
                         )!.firstAndLastName,
-                        hintStyle: const TextStyle(fontWeight: FontWeight.bold),
+                        hintStyle: CustomTypography.bodyBold,
                         border: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10)),
                         ),
@@ -199,7 +200,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                         fillColor: CustomColors.inputFill,
                         errorText: _ageError,
                         hintText: AppLocalizations.of(context)!.age,
-                        hintStyle: const TextStyle(fontWeight: FontWeight.bold),
+                        hintStyle: CustomTypography.bodyBold,
                         border: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10)),
                         ),
@@ -214,7 +215,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                         filled: true,
                         fillColor: CustomColors.inputFill,
                         errorText: _emailError,
-                        hintStyle: const TextStyle(fontWeight: FontWeight.bold),
+                        hintStyle: CustomTypography.bodyBold,
                         hintText: AppLocalizations.of(context)!.email,
                         border: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -231,7 +232,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                         fillColor: CustomColors.inputFill,
                         errorText: _passwordError,
                         hintText: AppLocalizations.of(context)!.password,
-                        hintStyle: const TextStyle(fontWeight: FontWeight.bold),
+                        hintStyle: CustomTypography.bodyBold,
                         border: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10)),
                         ),
@@ -269,22 +270,22 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                           AppLocalizations.of(
                             context,
                           )!.alreadyHaveAnAccountPress,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.normal,
                             fontSize: 20,
                             color: CustomColors.white,
                           ),
                         ),
-                        TextButton(
-                          onPressed: () => context.go(LoginScreen.path),
-                          style: TextButton.styleFrom(
-                            padding: EdgeInsets.zero,
-                            minimumSize: const Size(0, 0),
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          ),
+                        GestureDetector(
+                          onTap: () => context.go(LoginScreen.path),
+                          behavior: HitTestBehavior.translucent,
                           child: Text(
                             style: const TextStyle(
                               fontWeight: FontWeight.normal,
+                              color: CustomColors.mainYellow,
+                              decoration: TextDecoration.underline,
+                              decorationThickness: 1.5,
+                              decorationColor: CustomColors.mainYellow,
                               fontSize: 20,
                             ),
                             AppLocalizations.of(context)!.here,

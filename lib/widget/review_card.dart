@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../consts/custom_typography.dart';
 import '../helpers/media_converter.dart';
 import '../model/media.dart';
 import '../model/media_with_poster.dart';
@@ -87,16 +88,13 @@ class ReviewCard extends ConsumerWidget {
                 const SizedBox(height: 8),
                 Text(
                   'Error loading ${review.type.name}',
-                  style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: CustomTypography.captionBolder,
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 4),
                 Text(
                   error.toString(),
-                  style: const TextStyle(fontSize: 10),
+                  style: CustomTypography.minimal,
                   textAlign: TextAlign.center,
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,

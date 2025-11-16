@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../consts/custom_colors.dart';
+import '../consts/custom_typography.dart';
 
 class SearchModal extends ConsumerWidget {
   const SearchModal({super.key});
@@ -40,7 +41,7 @@ class SearchModal extends ConsumerWidget {
                 Expanded(
                   child: Text(
                     "Ricerca un film",
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    style: CustomTypography.titleXL.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),

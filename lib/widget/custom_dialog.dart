@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../consts/custom_colors.dart';
+import '../consts/custom_typography.dart';
 import '../l10n/app_localizations.dart';
 
 class CustomDialog extends ConsumerWidget {
@@ -50,9 +51,9 @@ class CustomDialog extends ConsumerWidget {
           Expanded(
             child: Text(
               title,
-              style: Theme.of(
-                context,
-              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              style: CustomTypography.titleXL.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           GestureDetector(
@@ -65,12 +66,7 @@ class CustomDialog extends ConsumerWidget {
           ),
         ],
       ),
-      content: Text(
-        subtitle,
-        style: Theme.of(
-          context,
-        ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w400),
-      ),
+      content: Text(subtitle, style: CustomTypography.bodySmall),
       actions: <Widget>[
         Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -90,7 +86,9 @@ class CustomDialog extends ConsumerWidget {
               },
               child: Text(
                 AppLocalizations.of(context)!.confirmLabel,
-                style: const TextStyle(color: CustomColors.white),
+                style: CustomTypography.bodySmall.copyWith(
+                  color: CustomColors.white,
+                ),
               ),
             ),
             FilledButton(
@@ -104,7 +102,9 @@ class CustomDialog extends ConsumerWidget {
               onPressed: () => context.pop(false),
               child: Text(
                 AppLocalizations.of(context)!.cancelLabel,
-                style: const TextStyle(color: CustomColors.black),
+                style: CustomTypography.bodySmall.copyWith(
+                  color: CustomColors.black,
+                ),
               ),
             ),
           ],

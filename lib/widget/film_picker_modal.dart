@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../consts/custom_colors.dart';
+import '../consts/custom_typography.dart';
 import '../consts/sizes.dart';
 import '../helpers/media_converter.dart';
 import '../l10n/app_localizations.dart';
@@ -202,7 +203,9 @@ class _FilmPickerState extends ConsumerState<FilmPickerModal> {
           children: <Widget>[
             Text(
               AppLocalizations.of(context)!.addReview,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: CustomTypography.titleM.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
             ),
             const SizedBox(height: 16),
 
@@ -235,10 +238,7 @@ class _FilmPickerState extends ConsumerState<FilmPickerModal> {
                   children: <Widget>[
                     Text(
                       AppLocalizations.of(context)!.results,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: CustomTypography.bodyBold,
                     ),
                     const SizedBox(height: 8),
                     Expanded(
@@ -343,9 +343,11 @@ class _FilmPickerState extends ConsumerState<FilmPickerModal> {
                             child: Center(child: CircularProgressIndicator()),
                           )
                         : _reviewAlreadyExist == true
-                        ? const Text(
+                        ? Text(
                             "La recensione è già esistente!",
-                            style: TextStyle(color: CustomColors.errorMessage),
+                            style: CustomTypography.caption.copyWith(
+                              color: CustomColors.errorMessage,
+                            ),
                           )
                         : SizedBox(
                             width: double.infinity,

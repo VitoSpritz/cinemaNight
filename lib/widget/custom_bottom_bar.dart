@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../consts/custom_colors.dart';
+import '../consts/custom_typography.dart';
 import '../consts/sizes.dart';
 import '../l10n/app_localizations.dart';
 
@@ -80,10 +81,8 @@ class CustomBottomBar extends ConsumerWidget {
           const SizedBox(height: 4),
           Text(
             label,
-            style: TextStyle(
+            style: CustomTypography.captionBolder.copyWith(
               color: isActive ? CustomColors.white : CustomColors.black,
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
             ),
           ),
         ],

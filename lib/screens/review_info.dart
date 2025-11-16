@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../consts/custom_colors.dart';
+import '../consts/custom_typography.dart';
 import '../helpers/media_converter.dart';
 import '../l10n/app_localizations.dart';
 import '../model/media.dart';
@@ -152,8 +153,7 @@ class _ReviewInfoState extends ConsumerState<ReviewInfo> {
                           padding: const EdgeInsets.symmetric(horizontal: 16.0),
                           child: Text(
                             AppLocalizations.of(context)!.reviewInfoPageTitle,
-                            style: const TextStyle(
-                              fontSize: 18,
+                            style: CustomTypography.titleM.copyWith(
                               fontWeight: FontWeight.bold,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -201,10 +201,8 @@ class _ReviewInfoState extends ConsumerState<ReviewInfo> {
                                                   media: media,
                                                   field: MediaField.title,
                                                 ),
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .headlineSmall
-                                                    ?.copyWith(
+                                                style: CustomTypography.titleXL
+                                                    .copyWith(
                                                       fontWeight:
                                                           FontWeight.bold,
                                                     ),
@@ -222,9 +220,8 @@ class _ReviewInfoState extends ConsumerState<ReviewInfo> {
                                                         MediaField.releaseDate,
                                                   ),
                                                 ),
-                                                style: Theme.of(
-                                                  context,
-                                                ).textTheme.bodySmall,
+                                                style:
+                                                    CustomTypography.bodySmall,
                                               ),
                                               const SizedBox(height: 8),
                                               CustomRating(
@@ -254,9 +251,7 @@ class _ReviewInfoState extends ConsumerState<ReviewInfo> {
                                           field: MediaField.overview,
                                         ),
                                         maxLines: 2,
-                                        style: Theme.of(
-                                          context,
-                                        ).textTheme.bodyLarge,
+                                        style: CustomTypography.body,
                                       ),
                                     ),
                                     const SizedBox(height: 32),
@@ -337,9 +332,11 @@ class _ReviewInfoState extends ConsumerState<ReviewInfo> {
                                               }
                                             },
                                             child: Text(
-                                              style: const TextStyle(
-                                                color: CustomColors.black,
-                                              ),
+                                              style: CustomTypography
+                                                  .bodySmallBold
+                                                  .copyWith(
+                                                    color: CustomColors.black,
+                                                  ),
                                               AppLocalizations.of(
                                                 context,
                                               )!.updateButton,
@@ -390,9 +387,11 @@ class _ReviewInfoState extends ConsumerState<ReviewInfo> {
                                               }
                                             },
                                             child: Text(
-                                              style: const TextStyle(
-                                                color: CustomColors.black,
-                                              ),
+                                              style: CustomTypography
+                                                  .bodySmallBold
+                                                  .copyWith(
+                                                    color: CustomColors.black,
+                                                  ),
                                               AppLocalizations.of(
                                                 context,
                                               )!.deleteReviewButton,

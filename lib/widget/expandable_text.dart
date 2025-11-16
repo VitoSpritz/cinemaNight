@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../consts/custom_colors.dart';
+import '../consts/custom_typography.dart';
 import '../l10n/app_localizations.dart';
 
 class ExpandableText extends StatefulWidget {
@@ -32,7 +33,7 @@ class _ExpandableTextState extends State<ExpandableText> {
             padding: const EdgeInsets.all(4.0),
             child: Text(
               AppLocalizations.of(context)!.summary,
-              style: const TextStyle(
+              style: CustomTypography.body.copyWith(
                 color: CustomColors.purple,
                 fontWeight: FontWeight.bold,
               ),
@@ -66,7 +67,7 @@ class _ExpandableTextState extends State<ExpandableText> {
                     isExpanded
                         ? AppLocalizations.of(context)!.showLess
                         : AppLocalizations.of(context)!.showMore,
-                    style: const TextStyle(
+                    style: CustomTypography.body.copyWith(
                       color: CustomColors.purple,
                       fontWeight: FontWeight.bold,
                     ),

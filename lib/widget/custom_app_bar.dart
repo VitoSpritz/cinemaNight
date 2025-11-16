@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../consts/custom_colors.dart';
+import '../consts/custom_typography.dart';
 import 'custom_icon_button.dart';
 import 'search_modal.dart';
 
@@ -37,9 +38,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               child: Center(
                 child: Text(
                   title,
-                  style: const TextStyle(
+                  style: CustomTypography.mainTitle.copyWith(
                     color: CustomColors.text,
-                    fontSize: 32,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
