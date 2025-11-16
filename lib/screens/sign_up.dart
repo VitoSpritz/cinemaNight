@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../consts/custom_colors.dart';
 import '../consts/custom_typography.dart';
 import '../l10n/app_localizations.dart';
+import '../services/user_service.dart';
 import 'logic/validators.dart';
 import 'login.dart';
 
@@ -23,6 +24,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final UserService _userService = UserService();
 
   String? _emailError;
   String? _ageError;
@@ -90,9 +92,15 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     final AppLocalizations loc = AppLocalizations.of(context)!;
 
     try {
-      await _auth.createUserWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
+      final UserCredential createdUser = await _auth
+          .createUserWithEmailAndPassword(
+            email: _emailController.text.trim(),
+            password: _passwordController.text.trim(),
+          );
+      await _userService.createUserProfile(
+        name: _nameController.text,
+        userId: createdUser.user!.uid,
+        age: int.parse(_ageController.text),
       );
     } on FirebaseAuthException catch (e) {
       String errorMessage;

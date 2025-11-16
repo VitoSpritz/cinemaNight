@@ -58,7 +58,7 @@ class _ReviewListState extends ConsumerState<ReviewList> {
     return Scaffold(
       appBar: CustomAppBar(
         title: AppLocalizations.of(context)!.reviews,
-        searchEnabled: true,
+        actionButton: const CustomIconButton(icon: Icons.search),
         onSearch: (String? query) {
           setState(() {
             searchQuery = query;
