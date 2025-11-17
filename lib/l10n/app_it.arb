@@ -96,5 +96,11 @@
     "attentionLabel": "Attenzione!",
     "showLess": "Nascondi",
     "showMore": "Mostra altro",
-    "summary": "Riassunto"
+    "summary": "Riassunto",
+
+    "userData": "Dati Utente",
+    "favouriteGenre": "Genere Preferito:",
+    "favouriteMovie": "Film Preferito",
+    "profileUpdated": "Profilo Aggiornato!",
+    "unsavedChanges": "Modifiche non salvate"
 }

@@ -96,5 +96,11 @@
     "attentionLabel": "Attention!",
     "showLess": "Show less",
     "showMore": "Show more",
-    "summary": "Summary"
+    "summary": "Summary",
+
+    "userData": "User Data",
+    "favouriteGenre": "Favourite Genre:",
+    "favouriteMovie": "Favourite Movie",
+    "profileUpdated": "Profile Updated!",
+    "unsavedChanges": "Unsaved Changes!"
 }
