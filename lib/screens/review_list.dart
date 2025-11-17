@@ -11,6 +11,7 @@ import '../widget/custom_app_bar.dart';
 import '../widget/custom_icon_button.dart';
 import '../widget/film_picker_modal.dart';
 import '../widget/review_card.dart';
+import '../widget/search_modal.dart';
 
 class ReviewList extends ConsumerStatefulWidget {
   static String path = '/reviewList';
@@ -58,12 +59,18 @@ class _ReviewListState extends ConsumerState<ReviewList> {
     return Scaffold(
       appBar: CustomAppBar(
         title: AppLocalizations.of(context)!.reviews,
-        actionButton: const CustomIconButton(icon: Icons.search),
-        onSearch: (String? query) {
-          setState(() {
-            searchQuery = query;
-          });
-        },
+        actionButton: CustomIconButton(
+          icon: Icons.search,
+          onTap: () async {
+            final String? searchValue = await SearchModal.show(
+              context: context,
+            );
+            setState(() {
+              searchQuery = searchValue;
+            });
+          },
+          color: CustomColors.text,
+        ),
       ),
       body: RefreshIndicator(
         onRefresh: () async {

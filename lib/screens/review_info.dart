@@ -109,10 +109,10 @@ class _ReviewInfoState extends ConsumerState<ReviewInfo> {
           : Column(
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.only(
+                  padding: EdgeInsets.only(
                     left: 16.0,
                     right: 16.0,
-                    top: 16,
+                    top: MediaQuery.of(context).padding.top + 2,
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,

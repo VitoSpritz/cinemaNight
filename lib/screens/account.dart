@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -31,8 +30,9 @@ class _AccountState extends ConsumerState<Account> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _genreController = TextEditingController();
   final TextEditingController _movieController = TextEditingController();
-  final UserService _UserProfileService = UserService();
+  final UserService _userProfileService = UserService();
   File? _selectedImage;
+  ImageProvider? _cachedImageProvider;
 
   final List<String> _genres = <String>[
     'Azione',
@@ -82,29 +82,20 @@ class _AccountState extends ConsumerState<Account> {
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
 
     if (image != null) {
+      final File newImageFile = File(image.path);
       setState(() {
-        _selectedImage = File(image.path);
+        _selectedImage = newImageFile;
+        _cachedImageProvider = FileImage(newImageFile);
         _hasUnsavedChanges = true;
       });
     }
   }
 
-  _checkExistingImage({String? image}) {
-    if (image != null) {
-      final Uint8List dbImage = ImageHelper.base64ToBytes(image);
-      return Image.memory(dbImage).image;
-    } else if (_selectedImage != null) {
-      return Image.file(_selectedImage!).image;
-    } else {
-      return Image.asset("assets/images/defaultUserImage.jpg").image;
-    }
-  }
-
   @override
   void dispose() {
-    _nameController.removeListener(_checkForChanges);
-    _genreController.removeListener(_checkForChanges);
-    _movieController.removeListener(_checkForChanges);
+    _nameController.dispose();
+    _genreController.dispose();
+    _movieController.dispose();
     _nameController.dispose();
     _genreController.dispose();
     _movieController.dispose();
@@ -119,7 +110,7 @@ class _AccountState extends ConsumerState<Account> {
     String? preferredFilm,
     String? preferredGenre,
   }) async {
-    await _UserProfileService.updateUser(
+    await _userProfileService.updateUser(
       userId: userId,
       name: name,
       age: age,
@@ -136,7 +127,7 @@ class _AccountState extends ConsumerState<Account> {
       _originalMovie = preferredFilm;
     });
 
-    ref.invalidate(userProfilesProvider);
+    ref.refresh(userProfilesProvider);
   }
 
   @override
@@ -202,6 +193,11 @@ class _AccountState extends ConsumerState<Account> {
           ),
           body: userProvider.when(
             data: (UserProfile data) {
+              setState(() {
+                _cachedImageProvider = data.imageUrl != null
+                    ? MemoryImage(ImageHelper.base64ToBytes(data.imageUrl!))
+                    : const AssetImage("assetsimagesdefaultUserImage.jpg");
+              });
               if (_originalName == null) {
                 _originalName = data.firstLastName ?? "";
                 _originalGenre = data.preferredGenre ?? "";
@@ -241,12 +237,14 @@ class _AccountState extends ConsumerState<Account> {
                                 height: 120,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  image: DecorationImage(
-                                    image: _checkExistingImage(
-                                      image: data.imageUrl,
-                                    ),
-                                    fit: BoxFit.cover,
-                                  ),
+
+                                  image: _cachedImageProvider != null
+                                      ? DecorationImage(
+                                          image: _cachedImageProvider!,
+                                          fit: BoxFit.cover,
+                                        )
+                                      : null,
+
                                   color: Colors.grey[400],
                                 ),
                               ),
@@ -267,17 +265,20 @@ class _AccountState extends ConsumerState<Account> {
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          'Dati',
-                          style: TextStyle(
+                          AppLocalizations.of(context)!.userData,
+                          style: const TextStyle(
                             color: CustomColors.mainYellow,
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         const SizedBox(height: 16),
-                        const Text(
-                          'Nome Utente:',
-                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        Text(
+                          AppLocalizations.of(context)!.firstAndLastName,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
                         ),
                         const SizedBox(height: 8),
                         TextField(
@@ -296,9 +297,12 @@ class _AccountState extends ConsumerState<Account> {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        const Text(
-                          'Genere preferito:',
-                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        Text(
+                          AppLocalizations.of(context)!.favouriteGenre,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
                         ),
                         const SizedBox(height: 8),
 
@@ -319,7 +323,9 @@ class _AccountState extends ConsumerState<Account> {
                                 ))!;
                           },
                           decoration: InputDecoration(
-                            hintText: "genere preferito",
+                            hintText: AppLocalizations.of(
+                              context,
+                            )!.favouriteGenre,
                             filled: true,
                             fillColor: Colors.grey[300],
                             border: OutlineInputBorder(
@@ -330,9 +336,12 @@ class _AccountState extends ConsumerState<Account> {
                         ),
 
                         const SizedBox(height: 16),
-                        const Text(
-                          'Film preferito',
-                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        Text(
+                          AppLocalizations.of(context)!.favouriteMovie,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
                         ),
                         const SizedBox(height: 8),
                         TextField(
@@ -342,7 +351,9 @@ class _AccountState extends ConsumerState<Account> {
                           controller: _movieController,
                           style: const TextStyle(color: Colors.black),
                           decoration: InputDecoration(
-                            hintText: 'Film preferito',
+                            hintText: AppLocalizations.of(
+                              context,
+                            )!.favouriteMovie,
                             filled: true,
                             fillColor: Colors.grey[300],
                             border: OutlineInputBorder(
@@ -406,44 +417,17 @@ class _AccountState extends ConsumerState<Account> {
                         ),
                         const SizedBox(height: 8),
 
-                        if (_hasUnsavedChanges)
-                          Container(
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: Colors.orange,
-                              border: Border.all(
-                                color: Colors.orange,
-                                width: 2,
-                              ),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: const Row(
-                              children: <Widget>[
-                                Icon(
-                                  Icons.warning_amber_rounded,
-                                  color: Colors.white,
-                                  size: 24,
-                                ),
-                                SizedBox(width: 12),
-                                Expanded(
-                                  child: Text(
-                                    'Modifiche non salvate',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 16),
-                          child: Row(
+                          child: Column(
                             children: <Widget>[
-                              Expanded(
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: _hasUnsavedChanges
+                                      ? Border.all(color: Colors.red, width: 2)
+                                      : null,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
                                 child: ElevatedButton(
                                   onPressed: () async {
                                     if (userProvider.value != null) {
@@ -469,9 +453,11 @@ class _AccountState extends ConsumerState<Account> {
                                         ScaffoldMessenger.of(
                                           context,
                                         ).showSnackBar(
-                                          const SnackBar(
+                                          SnackBar(
                                             content: Text(
-                                              'Profilo aggiornato!',
+                                              AppLocalizations.of(
+                                                context,
+                                              )!.profileUpdated,
                                             ),
                                           ),
                                         );
@@ -487,16 +473,30 @@ class _AccountState extends ConsumerState<Account> {
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(8),
                                     ),
+                                    minimumSize: const Size(double.infinity, 0),
                                   ),
-                                  child: const Text(
-                                    'Conferma',
-                                    style: TextStyle(
+                                  child: Text(
+                                    AppLocalizations.of(context)!.confirmLabel,
+                                    style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
                                 ),
                               ),
+                              if (_hasUnsavedChanges)
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 8),
+                                  child: Text(
+                                    AppLocalizations.of(
+                                      context,
+                                    )!.unsavedChanges,
+                                    style: const TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ),
                             ],
                           ),
                         ),

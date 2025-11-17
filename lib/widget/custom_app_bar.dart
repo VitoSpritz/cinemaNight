@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../consts/custom_colors.dart';
 import '../consts/custom_typography.dart';
-import 'custom_icon_button.dart';
-import 'search_modal.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -46,19 +44,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
               ),
             ),
-
-            CustomIconButton(
-              icon: Icons.search,
-              onTap: () async {
-                final String? searchValue = await SearchModal.show(
-                  context: context,
-                );
-                if (onSearch != null) {
-                  onSearch!(searchValue);
-                }
-              },
-              color: CustomColors.text,
-            ),
+            actionButton ?? const SizedBox(width: 40),
           ],
         ),
       ),
