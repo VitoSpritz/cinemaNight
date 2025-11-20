@@ -7,6 +7,7 @@ part 'user_profile.g.dart';
 abstract class UserProfile with _$UserProfile {
   const factory UserProfile({
     required String userId,
+    List<String>? savedChats,
     String? firstLastName,
     String? imageUrl,
     int? age,

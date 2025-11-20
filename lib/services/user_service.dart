@@ -57,4 +57,9 @@ class UserService {
     await _repository.deleteUserProfile(userId);
     return;
   }
+
+  Future<void> addChat(String userId, String chatId) async {
+    await _repository.addChat(userId, chatId);
+    return;
+  }
 }

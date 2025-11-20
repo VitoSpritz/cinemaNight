@@ -32,4 +32,10 @@ class UserProfileRepository {
   Future<void> deleteUserProfile(String userId) async {
     await _firestore.collection('users').doc(userId).delete();
   }
+
+  Future<void> addChat(String userId, String chatId) async {
+    await _firestore.collection('users').doc(userId).update(<Object, Object?>{
+      'savedChats': FieldValue.arrayUnion(<dynamic>[chatId]),
+    });
+  }
 }

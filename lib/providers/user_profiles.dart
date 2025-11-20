@@ -52,4 +52,9 @@ class UserProfiles extends _$UserProfiles {
     );
     ref.invalidateSelf();
   }
+
+  Future<void> addChat({required String userId, required String chatId}) async {
+    await service.addChat(userId, chatId);
+    ref.invalidateSelf();
+  }
 }
