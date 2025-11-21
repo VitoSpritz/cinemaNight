@@ -3,12 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../consts/custom_typography.dart';
+import '../l10n/app_localizations.dart';
 import '../model/chat_item.dart';
 import '../model/user_profile.dart';
 import '../providers/chat_list.dart';
 import '../providers/user_profiles.dart';
 import '../services/chat_service.dart';
 import '../widget/confirm_dialog.dart';
+import '../widget/state_badge.dart';
 
 class ChatList extends ConsumerStatefulWidget {
   const ChatList({super.key});
@@ -37,9 +40,7 @@ class _ChatListState extends ConsumerState<ChatList> {
         _scrollController.position.maxScrollExtent * 0.9) {
       final PaginatedChatItem? chatState = ref.read(chatListProvider).value;
       if (chatState != null && chatState.hasMore) {
-        ref
-            .read(chatListProvider.notifier)
-            .listMoreChat(lastDocument: chatState.startAfter!);
+        ref.read(chatListProvider.notifier).loadMoreChats();
       }
     }
   }
@@ -48,30 +49,6 @@ class _ChatListState extends ConsumerState<ChatList> {
     final ChatService service = ChatService();
     await service.deleteChat(userId: userId, chatId: chatId);
     ref.invalidate(chatListProvider);
-  }
-
-  String _getStateText(String state) {
-    switch (state) {
-      case "opened":
-        return 'Aperto';
-      case "ongoing":
-        return 'In corso';
-      case "closed":
-        return 'Chiuso';
-    }
-    return "Erorr";
-  }
-
-  Color _getStateColor(String state) {
-    switch (state) {
-      case "opened":
-        return Colors.green;
-      case "ongoing":
-        return Colors.orange;
-      case "closed":
-        return Colors.grey;
-    }
-    return Colors.white;
   }
 
   @override
@@ -89,8 +66,10 @@ class _ChatListState extends ConsumerState<ChatList> {
               return paginatedChat.when(
                 data: (PaginatedChatItem data) {
                   if (data.chatItems.isEmpty) {
-                    return const Center(
-                      child: Text("Nessuna chat disponibile"),
+                    return Center(
+                      child: Text(
+                        AppLocalizations.of(context)!.noChatAvailable,
+                      ),
                     );
                   }
 
@@ -98,99 +77,110 @@ class _ChatListState extends ConsumerState<ChatList> {
                     onRefresh: () async {
                       ref.invalidate(chatListProvider);
                     },
-                    child: CustomScrollView(
-                      controller: _scrollController,
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      slivers: <Widget>[
-                        SliverPadding(
-                          padding: const EdgeInsets.all(8.0),
-                          sliver: SliverList.separated(
-                            itemCount:
-                                data.chatItems.length + (data.hasMore ? 1 : 0),
-                            separatorBuilder:
-                                (BuildContext context, int index) =>
-                                    const Divider(height: 1),
-                            itemBuilder: (BuildContext context, int index) {
-                              if (index == data.chatItems.length) {
-                                return const Padding(
-                                  padding: EdgeInsets.all(16.0),
-                                  child: Center(
-                                    child: CircularProgressIndicator(),
-                                  ),
-                                );
-                              }
-
-                              final ChatItem chat = data.chatItems[index];
-
-                              return ListTile(
-                                onLongPress: () {
-                                  ConfirmDialog.show(
-                                    context: context,
-                                    title: "Attenzione!",
-                                    subtitle:
-                                        "Sei dicuro di voler eliminare questa chat ${chat.name}?",
-                                    cancelFunction: () async => context.pop(),
-                                    confirmFunction: () async => _deleteChat(
-                                      chatId: chat.id,
-                                      userId: user.userId,
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                        bottom: MediaQuery.of(context).padding.bottom * 16.0,
+                      ),
+                      child: CustomScrollView(
+                        controller: _scrollController,
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        slivers: <Widget>[
+                          SliverPadding(
+                            padding: const EdgeInsets.all(8.0),
+                            sliver: SliverList.separated(
+                              itemCount:
+                                  data.chatItems.length +
+                                  (data.hasMore ? 1 : 0),
+                              separatorBuilder:
+                                  (BuildContext context, int index) =>
+                                      const Divider(height: 1),
+                              itemBuilder: (BuildContext context, int index) {
+                                if (index == data.chatItems.length) {
+                                  return const Center(
+                                    child: Padding(
+                                      padding: EdgeInsets.all(16.0),
+                                      child: CircularProgressIndicator(),
                                     ),
                                   );
-                                },
-                                onTap: () {},
-                                contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 8,
-                                ),
-                                title: Text(
-                                  user.savedChats != null &&
-                                          user.savedChats?.contains(chat.id) ==
-                                              true
-                                      ? '${chat.name} Salvata!'
-                                      : chat.name,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                subtitle: Padding(
-                                  padding: const EdgeInsets.only(top: 4),
-                                  child: Text(
-                                    DateFormat(
-                                      'dd/MM/yyyy HH:mm',
-                                    ).format(chat.createdAt),
-                                    style: TextStyle(
-                                      color: Colors.grey.shade600,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ),
-                                trailing: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 10,
-                                    vertical: 6,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: _getStateColor(
-                                      chat.state ?? "closed",
-                                    ).withValues(alpha: 0.2),
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Text(
-                                    _getStateText(chat.state ?? "closed"),
-                                    style: TextStyle(
-                                      color: _getStateColor(
-                                        chat.state ?? "closed",
+                                }
+
+                                final ChatItem chat = data.chatItems[index];
+
+                                return ListTile(
+                                  onLongPress: () {
+                                    ConfirmDialog.show(
+                                      context: context,
+                                      title: "Attenzione!",
+                                      subtitle:
+                                          "Sei dicuro di voler eliminare questa chat ${chat.name}?",
+                                      cancelFunction: () async => context.pop(),
+                                      confirmFunction: () async => _deleteChat(
+                                        chatId: chat.id,
+                                        userId: user.userId,
                                       ),
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                                    );
+                                  },
+                                  onTap: () {},
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 8,
                                   ),
-                                ),
-                              );
-                            },
+                                  title: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                        user.savedChats != null &&
+                                                user.savedChats?.contains(
+                                                      chat.id,
+                                                    ) ==
+                                                    true
+                                            ? '${chat.name} Salvata!'
+                                            : chat.name,
+                                        style: CustomTypography.bodyBold,
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                          right: 16.0,
+                                        ),
+                                        child: Text(
+                                          (chat.description == null ||
+                                                  chat.description!.isEmpty ==
+                                                      true)
+                                              ? AppLocalizations.of(
+                                                  context,
+                                                )!.noDescriptionAvailable
+                                              : chat.description!,
+                                          style: CustomTypography.caption,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                      Row(
+                                        children: <Widget>[
+                                          Text(
+                                            "Data di chiusura: ",
+                                            style: CustomTypography.caption,
+                                          ),
+                                          Text(
+                                            DateFormat(
+                                              'dd/MM/yyyy HH:mm',
+                                            ).format(chat.closesAt),
+                                            style: CustomTypography.caption,
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  trailing: StateBadge(
+                                    state: chat.state,
+                                    closesAt: chat.closesAt,
+                                  ),
+                                );
+                              },
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   );
                 },

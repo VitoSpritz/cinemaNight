@@ -23,12 +23,12 @@ abstract class ChatItem with _$ChatItem {
     // ignore: invalid_annotation_target
     @JsonKey(name: 'created_by') required String createdBy,
     required String name,
-    String? state,
+    required String state,
     String? description,
     // ignore: invalid_annotation_target
-    @JsonKey(name: 'created_at')
+    @JsonKey(name: 'closes_at')
     @DateTimeSerializer()
-    required DateTime createdAt,
+    required DateTime closesAt,
     required String password,
   }) = _ChatItem;
 

@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../model/chat_item.dart';
@@ -9,6 +8,7 @@ part 'chat_list.g.dart';
 @riverpod
 class ChatList extends _$ChatList {
   final ChatService service = ChatService();
+  bool _isFetchingMore = false;
 
   @override
   Future<PaginatedChatItem> build() async {
@@ -17,14 +17,14 @@ class ChatList extends _$ChatList {
 
   Future<void> createChat({
     required String createdBy,
-    required DateTime createdAt,
+    required DateTime closesAt,
     required String name,
     required String password,
     required String? description,
   }) async {
     await service.createChat(
       createdBy: createdBy,
-      createdAt: createdAt,
+      closesAt: closesAt,
       name: name,
       password: password,
       description: description,
@@ -32,9 +32,46 @@ class ChatList extends _$ChatList {
     ref.invalidateSelf();
   }
 
-  Future<PaginatedChatItem> listMoreChat({
-    required DocumentSnapshot lastDocument,
-  }) async {
-    return await service.getMoreChat(lastDocument: lastDocument);
+  Future<void> loadMoreChats() async {
+    if (_isFetchingMore) {
+      return;
+    }
+
+    final PaginatedChatItem? currentData = state.value;
+
+    if (currentData == null || !currentData.hasMore) {
+      return;
+    }
+
+    if (currentData.startAfter == null) {
+      return;
+    }
+
+    _isFetchingMore = true;
+
+    try {
+      final PaginatedChatItem nextPage = await service.getMoreChat(
+        lastDocument: currentData.startAfter!,
+      );
+
+      final List<ChatItem> updatedChatItems = <ChatItem>[
+        ...currentData.chatItems,
+        ...nextPage.chatItems,
+      ];
+
+      // ignore: always_specify_types
+      state = AsyncValue.data(
+        PaginatedChatItem(
+          chatItems: updatedChatItems,
+          hasMore: nextPage.hasMore,
+          startAfter: nextPage.startAfter,
+        ),
+      );
+    } catch (e, st) {
+      // ignore: always_specify_types
+      state = AsyncError(e, st);
+    } finally {
+      _isFetchingMore = false;
+    }
   }
 }

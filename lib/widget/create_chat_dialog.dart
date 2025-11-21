@@ -171,7 +171,7 @@ class _CreateChatDialogState extends ConsumerState<CreateChatDialog> {
 
       final ChatItem chat = await service.createChat(
         name: _nameController.text,
-        createdAt: combinedDateTime,
+        closesAt: combinedDateTime,
         createdBy: userId,
         password: _passwordController.text,
         description: _descriptionController.text,

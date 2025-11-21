@@ -9,7 +9,7 @@ class ChatService {
 
   Future<ChatItem> createChat({
     required String createdBy,
-    required DateTime createdAt,
+    required DateTime closesAt,
     required String name,
     required String password,
     required String? description,
@@ -19,7 +19,7 @@ class ChatService {
       createdBy: createdBy,
       name: name,
       state: ChatItemState.opened.name,
-      createdAt: DateTime.now(),
+      closesAt: closesAt,
       password: password,
       description: description,
     );

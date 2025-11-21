@@ -25,7 +25,7 @@ class ChatRepository {
   Future<PaginatedChatItem> listFirstChat({int pageSize = 10}) async {
     final QuerySnapshot<Map<String, dynamic>> result = await _firestore
         .collection('chats')
-        .orderBy('created_at', descending: true)
+        .orderBy('name', descending: true)
         .limit(pageSize)
         .get();
 
@@ -49,7 +49,7 @@ class ChatRepository {
   }) async {
     final QuerySnapshot<Map<String, dynamic>> result = await _firestore
         .collection('chats')
-        .orderBy('created_at', descending: true)
+        .orderBy('name', descending: true)
         .startAfterDocument(lastDocument)
         .limit(pageSize)
         .get();
