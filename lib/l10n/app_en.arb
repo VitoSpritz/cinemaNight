@@ -102,5 +102,11 @@
     "favouriteGenre": "Favourite Genre:",
     "favouriteMovie": "Favourite Movie",
     "profileUpdated": "Profile Updated!",
-    "unsavedChanges": "Unsaved Changes!"
+    "unsavedChanges": "Unsaved Changes!",
+    "noChatAvailable": "No chat available",
+    "noDescriptionAvailable": "Nessuna descrizione",
+    "openedBadgeLabel": "Opened",
+    "ongoingBadgeLabel": "Ongoing",
+    "closedBadgeLabel": "Closed",
+    "inactiveBadgeLabel": "Inactive"
 }
