@@ -40,7 +40,8 @@ void main() {
 
       final ChatItem newChat = ChatItem(
         createdBy: newUser.userId,
-        createdAt: DateTime.now(),
+        closesAt: DateTime.now(),
+        password: "passowrd123",
         id: chatId,
         name: "Test",
         state: ChatItemState.opened.name,
@@ -59,7 +60,7 @@ void main() {
       expect(paginatedChatItems.chatItems.length, 1);
 
       await userProfileRepository.deleteUserProfile(userId);
-      await chatRepository.deleteChat(chatId: chatId);
+      await chatRepository.deleteChat(chatId: chatId, userId: userId);
     });
   });
 }
