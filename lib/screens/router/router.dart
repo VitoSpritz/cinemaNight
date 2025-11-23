@@ -8,6 +8,7 @@ import '../../providers/auth.dart';
 import '../../widget/custom_bottom_bar.dart';
 import '../account.dart';
 import '../chats.dart';
+import '../group_chat.dart';
 import '../home.dart';
 import '../login.dart';
 import '../review_info.dart';
@@ -126,6 +127,14 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((Ref ref) {
         path: ReviewList.path,
         builder: (BuildContext context, GoRouterState state) =>
             const ReviewList(),
+      ),
+      GoRoute(
+        path: GroupChat.path,
+        name: 'groupChat',
+        builder: (BuildContext context, GoRouterState state) {
+          final String? chatId = state.uri.queryParameters['chatId'];
+          return GroupChat(chatId: chatId!);
+        },
       ),
     ],
   );
