@@ -6,16 +6,18 @@ import '../consts/custom_colors.dart';
 import '../consts/custom_typography.dart';
 
 class SearchModal extends ConsumerWidget {
-  const SearchModal({super.key});
+  final String title;
+  const SearchModal({super.key, required this.title});
 
   static Future<String?> show({
     required BuildContext context,
+    required String title,
     Future<void> Function()? function,
   }) {
     return showDialog<String>(
       context: context,
       builder: (BuildContext context) {
-        return const SearchModal();
+        return SearchModal(title: title);
       },
     );
   }
@@ -40,7 +42,7 @@ class SearchModal extends ConsumerWidget {
               children: <Widget>[
                 Expanded(
                   child: Text(
-                    "Ricerca un film",
+                    title,
                     style: CustomTypography.titleXL.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -48,7 +50,7 @@ class SearchModal extends ConsumerWidget {
                 ),
                 GestureDetector(
                   behavior: HitTestBehavior.translucent,
-                  onTap: () => context.pop(),
+                  onTap: () => context.pop(searchController.text),
                   child: const Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Icon(Icons.close, fill: 0),

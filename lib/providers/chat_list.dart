@@ -75,3 +75,9 @@ class ChatList extends _$ChatList {
     }
   }
 }
+
+@riverpod
+Future<List<ChatItem>> chatByName(Ref ref, String chatName) async {
+  final ChatService service = ChatService();
+  return await service.getChatByName(chatName: chatName);
+}

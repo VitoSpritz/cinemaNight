@@ -1,25 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../l10n/app_localizations.dart';
 import '../widget/create_chat_dialog.dart';
 import '../widget/custom_add_button.dart';
 import '../widget/custom_app_bar.dart';
 import '../widget/custom_icon_button.dart';
+import '../widget/search_modal.dart';
 import 'chat_list.dart';
 
-class Chats extends StatelessWidget {
+class Chats extends ConsumerStatefulWidget {
   static String path = '/chats';
 
   const Chats({super.key});
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _ChatsState();
+}
+
+class _ChatsState extends ConsumerState<Chats> {
+  String? _chatName;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
         title: AppLocalizations.of(context)!.chats,
-        actionButton: CustomIconButton(icon: Icons.search, onTap: () {}),
+        actionButton: CustomIconButton(
+          icon: Icons.search,
+          onTap: () async {
+            final String? searchValue = await SearchModal.show(
+              title: AppLocalizations.of(context)!.searchAChat,
+              context: context,
+            );
+            setState(() {
+              _chatName = searchValue;
+            });
+          },
+        ),
       ),
-      body: const ChatList(),
+      body: ChatList(chatName: _chatName),
       floatingActionButton: CustomAddButton(
         onPressed: () {
           CreateChatDialog.show(context: context);

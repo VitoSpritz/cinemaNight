@@ -37,6 +37,13 @@ class ChatService {
     return chat;
   }
 
+  Future<List<ChatItem>> getChatByName({required String chatName}) async {
+    final List<ChatItem> chat = await _chatRepository.getChatByName(
+      chatName: chatName,
+    );
+    return chat;
+  }
+
   Future<PaginatedChatItem> getFirstChatPage({int? pageSize}) async {
     return await _chatRepository.listFirstChat(pageSize: pageSize ?? 10);
   }

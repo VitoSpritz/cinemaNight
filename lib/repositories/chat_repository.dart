@@ -22,6 +22,24 @@ class ChatRepository {
     return ChatItem.fromJson(result.data()!);
   }
 
+  Future<List<ChatItem>> getChatByName({required String chatName}) async {
+    final QuerySnapshot<Map<String, dynamic>> result = await _firestore
+        .collection('chats')
+        .where('name', isEqualTo: chatName)
+        .get();
+
+    if (result.docs.isEmpty) {
+      return <ChatItem>[];
+    }
+
+    return result.docs
+        .map(
+          (QueryDocumentSnapshot<Map<String, dynamic>> doc) =>
+              ChatItem.fromJson(doc.data()),
+        )
+        .toList();
+  }
+
   Future<PaginatedChatItem> listFirstChat({int pageSize = 10}) async {
     final QuerySnapshot<Map<String, dynamic>> result = await _firestore
         .collection('chats')

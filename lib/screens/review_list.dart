@@ -63,6 +63,7 @@ class _ReviewListState extends ConsumerState<ReviewList> {
           icon: Icons.search,
           onTap: () async {
             final String? searchValue = await SearchModal.show(
+              title: AppLocalizations.of(context)!.searchAMovie,
               context: context,
             );
             setState(() {
