@@ -108,5 +108,7 @@
     "openedBadgeLabel": "Opened",
     "ongoingBadgeLabel": "Ongoing",
     "closedBadgeLabel": "Closed",
-    "inactiveBadgeLabel": "Inactive"
+    "inactiveBadgeLabel": "Inactive",
+    "searchAFilm":  "Search a film",
+    "searchAChat": "Search a chat"
 }
