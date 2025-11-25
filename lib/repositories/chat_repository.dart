@@ -107,7 +107,5 @@ class ChatRepository {
     batch.delete(_firestore.collection('chats').doc(chatId));
 
     await batch.commit();
-
-    await _firestore.collection('chats').doc(chatId).delete();
   }
 }

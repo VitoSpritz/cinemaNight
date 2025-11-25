@@ -70,7 +70,9 @@ class ChatListItem extends ConsumerWidget {
           title: "Attenzione!",
           subtitle: "Sei dicuro di voler eliminare questa chat ${chat.name}?",
           cancelFunction: () async => context.pop(),
-          confirmFunction: () async => deleteFunction,
+          confirmFunction: () async {
+            deleteFunction?.call();
+          },
         );
       },
       onTap: () {
@@ -81,11 +83,12 @@ class ChatListItem extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            user.savedChats != null &&
+            chat.name,
+            style:
+                user.savedChats != null &&
                     user.savedChats?.contains(chat.id) == true
-                ? '${chat.name} Salvata!'
-                : chat.name,
-            style: CustomTypography.bodyBold,
+                ? CustomTypography.bodyBold
+                : CustomTypography.body,
           ),
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
