@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../consts/global_state.dart';
+import '../../model/chat_item.dart';
 import '../../providers/auth.dart';
 import '../../widget/custom_bottom_bar.dart';
 import '../account.dart';
@@ -132,8 +133,13 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((Ref ref) {
         path: GroupChat.path,
         name: 'groupChat',
         builder: (BuildContext context, GoRouterState state) {
+          final ChatItemState? chatState = state
+              .uri
+              .queryParameters['chatState']
+              ?.toChatItemState();
           final String? chatId = state.uri.queryParameters['chatId'];
-          return GroupChat(chatId: chatId!);
+
+          return GroupChat(chatId: chatId!, chatState: chatState!);
         },
       ),
     ],

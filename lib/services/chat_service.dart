@@ -54,6 +54,15 @@ class ChatService {
     return await _chatRepository.listPaginatedChat(lastDocument: lastDocument);
   }
 
+  Future<ChatItem> updateChat({
+    required String chatId,
+    required ChatItem updatedChat,
+  }) async {
+    await _chatRepository.updateChat(chatId: chatId, updatedChat: updatedChat);
+
+    return await getChatById(chatId: chatId);
+  }
+
   Future<void> deleteChat({
     required String userId,
     required String chatId,

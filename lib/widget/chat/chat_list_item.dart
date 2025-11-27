@@ -32,7 +32,10 @@ class ChatListItem extends ConsumerWidget {
     if (chat.createdBy == user.userId) {
       context.pushNamed(
         'groupChat',
-        queryParameters: <String, String>{'chatId': chat.id},
+        queryParameters: <String, String>{
+          'chatId': chat.id,
+          'chatState': ChatItemState.opened.jsonValue,
+        },
       );
     } else {
       final String? password = await InsertPasswordDialog.show(

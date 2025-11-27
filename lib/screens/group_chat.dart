@@ -3,13 +3,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../consts/custom_colors.dart';
 import '../consts/custom_typography.dart';
+import '../model/chat_item.dart';
+import '../providers/chat_list.dart';
+import '../widget/chat/select_dates_dialog.dart';
 import '../widget/custom_app_bar.dart';
 
 class GroupChat extends ConsumerStatefulWidget {
   static String path = "/group";
   final String chatId;
+  final ChatItemState chatState;
 
-  const GroupChat({super.key, required this.chatId});
+  const GroupChat({super.key, required this.chatId, required this.chatState});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _GroupChatState();
@@ -17,28 +21,43 @@ class GroupChat extends ConsumerStatefulWidget {
 
 class _GroupChatState extends ConsumerState<GroupChat> {
   final TextEditingController _messageController = TextEditingController();
+  final ScrollController _chatScrollController = ScrollController();
   final ScrollController _scrollController = ScrollController();
 
   @override
   void dispose() {
     _messageController.dispose();
+    _chatScrollController.dispose();
     _scrollController.dispose();
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _currentState = widget.chatState;
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (widget.chatState == ChatItemState.opened.name) {
+        await _showInitialStateDialog(context);
+      }
+    });
   }
 
   Future<void> _sendMessage() async {
     final String message = _messageController.text.trim();
 
-    if (message.isEmpty) return;
+    if (message.isEmpty) {
+      return;
+    }
 
     try {
       // TODO: Send message
 
       _messageController.clear();
 
-      if (_scrollController.hasClients) {
-        _scrollController.animateTo(
-          _scrollController.position.maxScrollExtent,
+      if (_chatScrollController.hasClients) {
+        _chatScrollController.animateTo(
+          _chatScrollController.position.maxScrollExtent,
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeOut,
         );
@@ -52,18 +71,40 @@ class _GroupChatState extends ConsumerState<GroupChat> {
     }
   }
 
+  Future<void> _showInitialStateDialog(BuildContext context) async {
+    final List<DateTime?>? selectedDates = await showDialog<List<DateTime?>>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dialogContext) {
+        return const SelectDatesDialog();
+      },
+    );
+
+    if (selectedDates != null) {
+      final ChatItem currentChat = await ref.read(
+        getChatItemByIdProvider(widget.chatId).future,
+      );
+
+      final ChatItem toUpdate = currentChat.copyWith(
+        state: ChatItemState.ongoing.name,
+      );
+      await ref
+          .read(chatListProvider.notifier)
+          .updateChat(chatId: widget.chatId, updatedChat: toUpdate);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const CustomAppBar(title: 'Group Chat'),
       body: Column(
         children: <Widget>[
-          //TODO: add logic to this section
           Expanded(
             child: Container(
               color: CustomColors.white.withValues(alpha: 0.5),
               child: ListView.builder(
-                controller: _scrollController,
+                controller: _chatScrollController,
                 padding: const EdgeInsets.all(16),
                 itemCount: 0,
                 itemBuilder: (BuildContext context, int index) {

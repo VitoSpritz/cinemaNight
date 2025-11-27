@@ -16,6 +16,34 @@ enum ChatItemState {
   closed,
 }
 
+extension ChatItemStateExtension on ChatItemState {
+  String get jsonValue {
+    switch (this) {
+      case ChatItemState.opened:
+        return 'opened';
+      case ChatItemState.ongoing:
+        return 'ongoing';
+      case ChatItemState.closed:
+        return 'closed';
+    }
+  }
+}
+
+extension StringToChatItemState on String {
+  ChatItemState? toChatItemState() {
+    switch (this) {
+      case 'opened':
+        return ChatItemState.opened;
+      case 'ongoing':
+        return ChatItemState.ongoing;
+      case 'closed':
+        return ChatItemState.closed;
+      default:
+        return null;
+    }
+  }
+}
+
 @freezed
 abstract class ChatItem with _$ChatItem {
   const factory ChatItem({

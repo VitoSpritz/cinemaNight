@@ -86,6 +86,16 @@ class ChatRepository {
     );
   }
 
+  Future<void> updateChat({
+    required String chatId,
+    required ChatItem updatedChat,
+  }) async {
+    await _firestore
+        .collection('chats')
+        .doc(chatId)
+        .update(updatedChat.toJson());
+  }
+
   Future<void> deleteChat({
     required String userId,
     required String chatId,

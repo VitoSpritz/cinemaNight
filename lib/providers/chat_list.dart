@@ -32,6 +32,15 @@ class ChatList extends _$ChatList {
     ref.invalidateSelf();
   }
 
+  Future<void> updateChat({
+    required String chatId,
+    required ChatItem updatedChat,
+  }) async {
+    service.updateChat(chatId: chatId, updatedChat: updatedChat);
+
+    ref.invalidateSelf();
+  }
+
   Future<void> loadMoreChats() async {
     if (_isFetchingMore) {
       return;
@@ -80,4 +89,10 @@ class ChatList extends _$ChatList {
 Future<List<ChatItem>> chatByName(Ref ref, String chatName) async {
   final ChatService service = ChatService();
   return await service.getChatByName(chatName: chatName);
+}
+
+@riverpod
+Future<ChatItem> getChatItemById(Ref ref, String chatId) async {
+  final ChatService service = ChatService();
+  return await service.getChatById(chatId: chatId);
 }
