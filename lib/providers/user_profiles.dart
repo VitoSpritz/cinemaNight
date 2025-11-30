@@ -58,3 +58,9 @@ class UserProfiles extends _$UserProfiles {
     ref.invalidateSelf();
   }
 }
+
+@riverpod
+Future<UserProfile> getUserById(Ref ref, String userId) async {
+  final UserService service = UserService();
+  return await service.getUserById(userId);
+}
