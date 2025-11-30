@@ -7,12 +7,12 @@ import '../../consts/custom_typography.dart';
 import '../../l10n/app_localizations.dart';
 import '../../model/chat_item.dart';
 import '../../model/user_profile.dart';
-import '../../screens/group_chat.dart';
+import '../../providers/chat_list.dart';
 import '../confirm_dialog.dart';
 import '../state_badge.dart';
 import 'insert_password_dialog.dart';
 
-class ChatListItem extends ConsumerWidget {
+class ChatListItem extends ConsumerStatefulWidget {
   final ChatItem chat;
   final UserProfile user;
   final Function()? deleteFunction;
@@ -24,7 +24,14 @@ class ChatListItem extends ConsumerWidget {
     required this.user,
   });
 
-  Future<void> _checkUserCreation({
+  @override
+  ConsumerState<ChatListItem> createState() => _ChatListItemState();
+}
+
+class _ChatListItemState extends ConsumerState<ChatListItem> {
+  bool _hasCheckedState = false;
+
+  Future<void> _checkUserForChat({
     required UserProfile user,
     required ChatItem chat,
     required BuildContext context,
@@ -34,7 +41,7 @@ class ChatListItem extends ConsumerWidget {
         'groupChat',
         queryParameters: <String, String>{
           'chatId': chat.id,
-          'chatState': ChatItemState.opened.jsonValue,
+          'chatState': chat.state,
         },
       );
     } else {
@@ -49,7 +56,13 @@ class ChatListItem extends ConsumerWidget {
       }
 
       if (password.isNotEmpty && chat.password == password) {
-        context.go(GroupChat.path);
+        context.pushNamed(
+          'groupChat',
+          queryParameters: <String, String>{
+            'chatId': chat.id,
+            'chatState': chat.state,
+          },
+        );
       } else {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -64,41 +77,67 @@ class ChatListItem extends ConsumerWidget {
     }
   }
 
+  void _checkAndUpdateChatState() {
+    if (!_hasCheckedState && widget.chat.closesAt.isBefore(DateTime.now())) {
+      _hasCheckedState = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        if (mounted) {
+          final ChatItem toUpdate = widget.chat.copyWith(
+            state: ChatItemState.closed.name,
+          );
+
+          await ref
+              .read(chatListProvider.notifier)
+              .updateChat(chatId: widget.chat.id, updatedChat: toUpdate);
+        }
+      });
+    }
+  }
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
+    _checkAndUpdateChatState();
     return ListTile(
       onLongPress: () {
-        ConfirmDialog.show(
-          context: context,
-          title: "Attenzione!",
-          subtitle: "Sei dicuro di voler eliminare questa chat ${chat.name}?",
-          cancelFunction: () async => context.pop(),
-          confirmFunction: () async {
-            deleteFunction?.call();
-          },
-        );
+        if (widget.user.userId == widget.chat.createdBy) {
+          ConfirmDialog.show(
+            context: context,
+            title: "Attenzione!",
+            subtitle:
+                "Sei dicuro di voler eliminare questa chat ${widget.chat.name}?",
+            cancelFunction: () async => context.pop(),
+            confirmFunction: () async {
+              widget.deleteFunction?.call();
+            },
+          );
+        }
       },
-      onTap: () {
-        _checkUserCreation(chat: chat, context: context, user: user);
+      onTap: () async {
+        _checkUserForChat(
+          chat: widget.chat,
+          context: context,
+          user: widget.user,
+        );
       },
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            chat.name,
+            widget.chat.name,
             style:
-                user.savedChats != null &&
-                    user.savedChats?.contains(chat.id) == true
+                widget.user.savedChats != null &&
+                    widget.user.savedChats?.contains(widget.chat.id) == true
                 ? CustomTypography.bodyBold
                 : CustomTypography.body,
           ),
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
             child: Text(
-              (chat.description == null || chat.description!.isEmpty == true)
+              (widget.chat.description == null ||
+                      widget.chat.description!.isEmpty == true)
                   ? AppLocalizations.of(context)!.noDescriptionAvailable
-                  : chat.description!,
+                  : widget.chat.description!,
               style: CustomTypography.caption,
               overflow: TextOverflow.ellipsis,
             ),
@@ -107,14 +146,17 @@ class ChatListItem extends ConsumerWidget {
             children: <Widget>[
               Text("Data di chiusura: ", style: CustomTypography.caption),
               Text(
-                DateFormat('dd/MM/yyyy HH:mm').format(chat.closesAt),
+                DateFormat('dd/MM/yyyy HH:mm').format(widget.chat.closesAt),
                 style: CustomTypography.caption,
               ),
             ],
           ),
         ],
       ),
-      trailing: StateBadge(state: chat.state, closesAt: chat.closesAt),
+      trailing: StateBadge(
+        state: widget.chat.state,
+        closesAt: widget.chat.closesAt,
+      ),
     );
   }
 }

@@ -92,8 +92,8 @@ class _ChatListState extends ConsumerState<ChatList> {
                 return ChatListItem(
                   chat: chat,
                   user: user,
-                  deleteFunction: () =>
-                      _deleteChat(userId: user.userId, chatId: chat.id),
+                  deleteFunction: () async =>
+                      await _deleteChat(userId: user.userId, chatId: chat.id),
                 );
               },
             ),
