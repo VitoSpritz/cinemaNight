@@ -31,7 +31,7 @@ class HomeScreen extends ConsumerWidget {
         elevation: 0,
         actions: <Widget>[
           IconButton(
-            icon: const Icon(Icons.logout, size: Sizes.iconSize),
+            icon: const Icon(Icons.logout, size: Sizes.iconMedium),
             onPressed: () async {
               final bool? isLoggingOut = await showDialog<bool>(
                 context: context,

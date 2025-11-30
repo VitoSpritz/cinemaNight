@@ -1,3 +1,4 @@
 abstract class Sizes {
-  static const double iconSize = 24;
+  static const double iconMedium = 24;
+  static const double iconSmall = 12;
 }

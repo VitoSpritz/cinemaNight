@@ -45,7 +45,7 @@ class CustomMovieDisplay extends ConsumerWidget {
                     child: const Icon(
                       Icons.movie,
                       color: CustomColors.white,
-                      size: Sizes.iconSize,
+                      size: Sizes.iconMedium,
                     ),
                   ),
           ),

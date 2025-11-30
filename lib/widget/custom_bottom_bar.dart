@@ -76,7 +76,7 @@ class CustomBottomBar extends ConsumerWidget {
           Icon(
             icon,
             color: isActive ? CustomColors.white : CustomColors.black,
-            size: Sizes.iconSize,
+            size: Sizes.iconMedium,
           ),
           const SizedBox(height: 4),
           Text(

@@ -215,7 +215,7 @@ class _FilmPickerState extends ConsumerState<FilmPickerModal> {
                 decoration: InputDecoration(
                   labelText: AppLocalizations.of(context)!.title,
                   border: const OutlineInputBorder(),
-                  suffixIcon: const Icon(Icons.search, size: Sizes.iconSize),
+                  suffixIcon: const Icon(Icons.search, size: Sizes.iconMedium),
                 ),
                 onSubmitted: (_) => _searchMedia(),
               ),
