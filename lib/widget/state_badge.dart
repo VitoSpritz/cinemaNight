@@ -33,10 +33,15 @@ class _StateBadgeState extends ConsumerState<StateBadge> {
           _badgeColor = Colors.green;
           _badgeText = AppLocalizations.of(context)!.openedBadgeLabel;
         });
-      case "ongoing":
+      case "dateSelection":
         return setState(() {
           _badgeColor = Colors.yellow;
-          _badgeText = AppLocalizations.of(context)!.ongoingBadgeLabel;
+          _badgeText = AppLocalizations.of(context)!.dateSelectionLabel;
+        });
+      case "filmSelection":
+        return setState(() {
+          _badgeColor = Colors.yellow;
+          _badgeText = AppLocalizations.of(context)!.filmSelectionLabel;
         });
       case "closed":
         return setState(() {

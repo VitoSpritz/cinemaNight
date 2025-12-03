@@ -10,8 +10,10 @@ part 'chat_item.g.dart';
 enum ChatItemState {
   @JsonValue("opened")
   opened,
-  @JsonValue("ongoing")
-  ongoing,
+  @JsonValue("dateSelection")
+  dateSelection,
+  @JsonValue("filmSelection")
+  filmSelection,
   @JsonValue("closed")
   closed,
 }
@@ -21,8 +23,10 @@ extension ChatItemStateExtension on ChatItemState {
     switch (this) {
       case ChatItemState.opened:
         return 'opened';
-      case ChatItemState.ongoing:
-        return 'ongoing';
+      case ChatItemState.dateSelection:
+        return 'dateSelection';
+      case ChatItemState.filmSelection:
+        return 'filmSelection';
       case ChatItemState.closed:
         return 'closed';
     }
@@ -34,8 +38,10 @@ extension StringToChatItemState on String {
     switch (this) {
       case 'opened':
         return ChatItemState.opened;
-      case 'ongoing':
-        return ChatItemState.ongoing;
+      case 'dateSelection':
+        return ChatItemState.dateSelection;
+      case 'filmSelection':
+        return ChatItemState.filmSelection;
       case 'closed':
         return ChatItemState.closed;
       default:
@@ -58,6 +64,10 @@ abstract class ChatItem with _$ChatItem {
     @DateTimeSerializer()
     required DateTime closesAt,
     required String password,
+    @DateTimeSerializer()
+    // ignore: invalid_annotation_target
+    @JsonKey(name: 'end_date_selection')
+    DateTime? endDateSelection,
   }) = _ChatItem;
 
   factory ChatItem.fromJson(Map<String, dynamic> json) =>

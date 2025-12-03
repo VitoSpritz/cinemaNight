@@ -5,12 +5,14 @@ import 'package:intl/intl.dart';
 import '../../consts/custom_colors.dart';
 import '../../consts/custom_typography.dart';
 import '../../consts/sizes.dart';
+import '../../model/chat_item.dart';
 import '../../model/chat_message.dart';
 
 class CustomMessage extends ConsumerWidget {
   final bool isUserMessage;
   final String userId;
   final ChatMessage message;
+  final ChatItemState chatState;
   final String? senderName;
   final Function()? dateLikeFunction;
   final Function()? removeDateLikeFunction;
@@ -21,6 +23,7 @@ class CustomMessage extends ConsumerWidget {
     required this.isUserMessage,
     required this.message,
     required this.userId,
+    required this.chatState,
     this.senderName,
     this.dateLikeFunction,
     this.dateUpdateCount,
@@ -126,7 +129,9 @@ class CustomMessage extends ConsumerWidget {
                             GestureDetector(
                               behavior: HitTestBehavior.translucent,
                               onTap: () async {
-                                removeDateLikeFunction?.call();
+                                chatState == ChatItemState.dateSelection
+                                    ? removeDateLikeFunction?.call()
+                                    : null;
                               },
                               child: const Icon(
                                 Icons.thumb_up,
@@ -136,9 +141,7 @@ class CustomMessage extends ConsumerWidget {
                             ),
                             const SizedBox(width: 4),
                             Text(
-                              dateUpdateCount != null
-                                  ? dateUpdateCount.toString()
-                                  : "0",
+                              dateLikeUsers.length.toString(),
                               style: CustomTypography.caption,
                             ),
                           ],
@@ -150,15 +153,15 @@ class CustomMessage extends ConsumerWidget {
                             GestureDetector(
                               behavior: HitTestBehavior.translucent,
                               onTap: () async {
-                                dateLikeFunction?.call();
+                                chatState == ChatItemState.dateSelection
+                                    ? dateLikeFunction?.call()
+                                    : null;
                               },
                               child: const Icon(Icons.thumb_up, size: 12),
                             ),
                             const SizedBox(width: 4),
                             Text(
-                              dateUpdateCount != null
-                                  ? dateUpdateCount.toString()
-                                  : "0",
+                              dateLikeUsers.length.toString(),
                               style: CustomTypography.caption,
                             ),
                           ],

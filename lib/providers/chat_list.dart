@@ -5,7 +5,7 @@ import '../services/chat_service.dart';
 
 part 'chat_list.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class ChatList extends _$ChatList {
   final ChatService service = ChatService();
   bool _isFetchingMore = false;
@@ -95,4 +95,10 @@ Future<List<ChatItem>> chatByName(Ref ref, String chatName) async {
 Future<ChatItem> getChatItemById(Ref ref, String chatId) async {
   final ChatService service = ChatService();
   return await service.getChatById(chatId: chatId);
+}
+
+@riverpod
+Future<PaginatedChatItem> userChatList(Ref ref, String userId) async {
+  final ChatService service = ChatService();
+  return await service.getChatsByUser(userId: userId);
 }

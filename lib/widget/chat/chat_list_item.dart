@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import '../../consts/custom_typography.dart';
 import '../../l10n/app_localizations.dart';
 import '../../model/chat_item.dart';
+import '../../model/date_model.dart';
 import '../../model/user_profile.dart';
 import '../../providers/chat_list.dart';
 import '../confirm_dialog.dart';
@@ -29,7 +30,8 @@ class ChatListItem extends ConsumerStatefulWidget {
 }
 
 class _ChatListItemState extends ConsumerState<ChatListItem> {
-  bool _hasCheckedState = false;
+  bool _isClosed = false;
+  bool _isFilmSelection = false;
 
   Future<void> _checkUserForChat({
     required UserProfile user,
@@ -42,6 +44,7 @@ class _ChatListItemState extends ConsumerState<ChatListItem> {
         queryParameters: <String, String>{
           'chatId': chat.id,
           'chatState': chat.state,
+          'maxDate': const DateTimeSerializer().toJson(chat.closesAt),
         },
       );
     } else {
@@ -61,6 +64,7 @@ class _ChatListItemState extends ConsumerState<ChatListItem> {
           queryParameters: <String, String>{
             'chatId': chat.id,
             'chatState': chat.state,
+            'maxDate': const DateTimeSerializer().toJson(chat.closesAt),
           },
         );
       } else {
@@ -78,12 +82,28 @@ class _ChatListItemState extends ConsumerState<ChatListItem> {
   }
 
   void _checkAndUpdateChatState() {
-    if (!_hasCheckedState && widget.chat.closesAt.isBefore(DateTime.now())) {
-      _hasCheckedState = true;
+    if (!_isClosed && widget.chat.closesAt.isBefore(DateTime.now())) {
+      _isClosed = true;
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         if (mounted) {
           final ChatItem toUpdate = widget.chat.copyWith(
             state: ChatItemState.closed.name,
+          );
+
+          await ref
+              .read(chatListProvider.notifier)
+              .updateChat(chatId: widget.chat.id, updatedChat: toUpdate);
+        }
+      });
+    }
+    if (!_isFilmSelection &&
+        widget.chat.endDateSelection != null &&
+        widget.chat.endDateSelection!.isBefore(DateTime.now())) {
+      _isFilmSelection = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        if (mounted) {
+          final ChatItem toUpdate = widget.chat.copyWith(
+            state: ChatItemState.filmSelection.name,
           );
 
           await ref

@@ -24,11 +24,11 @@ class ChatList extends ConsumerStatefulWidget {
 class _ChatListState extends ConsumerState<ChatList> {
   final ScrollController _scrollController = ScrollController();
   String? _activeSearchQuery;
+  bool _allChats = true;
 
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(_onScroll);
     _activeSearchQuery = widget.chatName;
   }
 
@@ -49,16 +49,11 @@ class _ChatListState extends ConsumerState<ChatList> {
     super.dispose();
   }
 
-  void _onScroll() {
-    if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent * 0.9) {
-      if (_activeSearchQuery == null || _activeSearchQuery!.isEmpty) {
-        final PaginatedChatItem? chatState = ref.read(chatListProvider).value;
-        if (chatState != null && chatState.hasMore) {
-          ref.read(chatListProvider.notifier).loadMoreChats();
-        }
-      }
-    }
+  void _loadMoreIfNeeded() {
+    if (!_allChats) return;
+    if (_activeSearchQuery != null && _activeSearchQuery!.isNotEmpty) return;
+
+    ref.read(chatListProvider.notifier).loadMoreChats();
   }
 
   Widget _buildChatList(PaginatedChatItem data, UserProfile user) {
@@ -79,6 +74,10 @@ class _ChatListState extends ConsumerState<ChatList> {
                   const Divider(height: 1),
               itemBuilder: (BuildContext context, int index) {
                 if (index == data.chatItems.length) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    _loadMoreIfNeeded();
+                  });
+
                   return const Center(
                     child: Padding(
                       padding: EdgeInsets.all(16.0),
@@ -129,18 +128,63 @@ class _ChatListState extends ConsumerState<ChatList> {
 
   @override
   Widget build(BuildContext context) {
-    final AsyncValue<PaginatedChatItem> paginatedChat = ref.watch(
-      chatListProvider,
-    );
     final AsyncValue<UserProfile> loggedUser = ref.watch(userProfilesProvider);
+
+    final AsyncValue<PaginatedChatItem> paginatedChat = _allChats
+        ? ref.watch(chatListProvider)
+        : ref.watch(userChatListProvider(loggedUser.value?.userId ?? ''));
 
     final String? searchQuery = _activeSearchQuery;
 
     return Column(
       children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTap: () {
+                  setState(() {
+                    _allChats = true;
+                  });
+                },
+                child: Text(
+                  "Tutte le chat",
+                  style: _allChats
+                      ? CustomTypography.bodySmallBold.copyWith(
+                          color: CustomColors.mainYellow,
+                          decoration: TextDecoration.underline,
+                          decorationColor: CustomColors.mainYellow,
+                        )
+                      : CustomTypography.bodySmall,
+                ),
+              ),
+              GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTap: () {
+                  setState(() {
+                    _allChats = false;
+                  });
+                },
+                child: Text(
+                  "Le mie chat",
+                  style: !_allChats
+                      ? CustomTypography.bodySmallBold.copyWith(
+                          color: CustomColors.mainYellow,
+                          decoration: TextDecoration.underline,
+                          decorationColor: CustomColors.mainYellow,
+                        )
+                      : CustomTypography.bodySmall,
+                ),
+              ),
+            ],
+          ),
+        ),
         if (searchQuery != null && searchQuery.isNotEmpty)
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0),
             child: Align(
               alignment: Alignment.centerLeft,
               child: DecoratedBox(

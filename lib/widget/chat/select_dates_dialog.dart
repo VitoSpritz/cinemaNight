@@ -6,7 +6,9 @@ import '../../consts/custom_typography.dart';
 import '../../l10n/app_localizations.dart';
 
 class SelectDatesDialog extends StatefulWidget {
-  const SelectDatesDialog({super.key});
+  final DateTime maxDate;
+
+  const SelectDatesDialog({super.key, required this.maxDate});
 
   @override
   State<SelectDatesDialog> createState() => _SelectDatesDialogState();
@@ -24,8 +26,9 @@ class _SelectDatesDialogState extends State<SelectDatesDialog> {
           _selectedDates.length > index && _selectedDates[index] != null
           ? _selectedDates[index]!
           : DateTime.now(),
+
       firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(const Duration(days: 365)),
+      lastDate: widget.maxDate,
       locale: const Locale('it', 'IT'),
       builder: (BuildContext context, Widget? child) {
         return Theme(

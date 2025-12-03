@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../consts/custom_colors.dart';
 import '../consts/custom_typography.dart';
@@ -13,14 +14,22 @@ import '../providers/messages.dart';
 import '../providers/user_profiles.dart';
 import '../widget/chat/custom_message.dart';
 import '../widget/chat/select_dates_dialog.dart';
+import '../widget/chat/select_end_date.dart';
 import '../widget/custom_app_bar.dart';
+import 'chats.dart';
 
 class GroupChat extends ConsumerStatefulWidget {
   static String path = "/group";
   final String chatId;
   final ChatItemState chatState;
+  final DateTime maxDate;
 
-  const GroupChat({super.key, required this.chatId, required this.chatState});
+  const GroupChat({
+    super.key,
+    required this.chatId,
+    required this.chatState,
+    required this.maxDate,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _GroupChatState();
@@ -93,32 +102,46 @@ class _GroupChatState extends ConsumerState<GroupChat> {
       context: context,
       barrierDismissible: false,
       builder: (BuildContext dialogContext) {
-        return const SelectDatesDialog();
+        return SelectDatesDialog(maxDate: widget.maxDate);
       },
     );
 
     if (selectedDates != null) {
-      final ChatItem currentChat = await ref.read(
-        getChatItemByIdProvider(widget.chatId).future,
+      final DateTime? endDate = await showDialog<DateTime>(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return const SelectEndDate();
+        },
       );
+      if (endDate != null) {
+        final ChatItem currentChat = await ref.read(
+          getChatItemByIdProvider(widget.chatId).future,
+        );
 
-      final ChatItem toUpdate = currentChat.copyWith(
-        state: ChatItemState.ongoing.name,
-      );
-      await ref
-          .read(chatListProvider.notifier)
-          .updateChat(chatId: widget.chatId, updatedChat: toUpdate);
-
-      for (DateTime? date in selectedDates) {
-        final ChatContent content = ChatContent.date(proposedDate: date!);
+        final ChatItem toUpdate = currentChat.copyWith(
+          state: ChatItemState.dateSelection.name,
+          endDateSelection: endDate,
+        );
         await ref
-            .read(messagesProvider(widget.chatId).notifier)
-            .createMessage(
-              chatId: widget.chatId,
-              sentBy: user.value!.userId,
-              sentAt: DateTime.now(),
-              content: content,
-            );
+            .read(chatListProvider.notifier)
+            .updateChat(chatId: widget.chatId, updatedChat: toUpdate);
+
+        ref.invalidate(getChatItemByIdProvider(widget.chatId));
+
+        for (DateTime? date in selectedDates) {
+          final ChatContent content = ChatContent.date(proposedDate: date!);
+          await ref
+              .read(messagesProvider(widget.chatId).notifier)
+              .createMessage(
+                chatId: widget.chatId,
+                sentBy: user.value!.userId,
+                sentAt: DateTime.now(),
+                content: content,
+              );
+        }
+      } else {
+        context.go(Chats.path);
       }
     }
   }
@@ -131,6 +154,10 @@ class _GroupChatState extends ConsumerState<GroupChat> {
 
     final AsyncValue<UserProfile> userAsync = ref.watch(userProfilesProvider);
 
+    final AsyncValue<ChatItem> chatAsync = ref.watch(
+      getChatItemByIdProvider(widget.chatId),
+    );
+
     return Scaffold(
       appBar: const CustomAppBar(title: 'Group Chat'),
       body: Column(
@@ -138,98 +165,127 @@ class _GroupChatState extends ConsumerState<GroupChat> {
           Expanded(
             child: userAsync.when(
               data: (UserProfile user) {
-                return messageAsync.when(
-                  data: (PaginatedChatMessage data) {
-                    final List<ChatMessage> displayMessages = data.chatMessages;
-                    return Container(
-                      color: CustomColors.white.withValues(alpha: 0.5),
-                      child: CustomScrollView(
-                        controller: _scrollController,
-                        reverse: true,
-                        slivers: <Widget>[
-                          SliverPadding(
-                            padding: const EdgeInsets.all(16),
-                            sliver: SliverList.separated(
-                              itemCount: displayMessages.length,
-                              separatorBuilder:
-                                  (BuildContext context, int index) {
-                                    return const SizedBox(height: 8);
-                                  },
-                              itemBuilder: (BuildContext context, int index) {
-                                final ChatMessage message =
-                                    displayMessages[index];
-                                final AsyncValue<UserProfile> messageUser = ref
-                                    .watch(getUserByIdProvider(message.userId));
-
-                                return messageUser.when(
-                                  data: (UserProfile data) {
-                                    final bool isUserMessage =
-                                        message.userId == user.userId;
-                                    return CustomMessage(
-                                      isUserMessage: isUserMessage,
-                                      userId: user.userId,
-                                      message: message,
-                                      dateUpdateCount: message.content.when(
-                                        text: (String text) => null,
-                                        date:
-                                            (
-                                              DateTime date,
-                                              List<String> likes,
-                                            ) => likes.length,
-                                        film:
-                                            (
-                                              String film,
-                                              List<String> likes,
-                                              List<String> dislikes,
-                                              String? comment,
-                                            ) => null,
+                return chatAsync.when(
+                  data: (ChatItem chat) {
+                    return messageAsync.when(
+                      data: (PaginatedChatMessage data) {
+                        final List<ChatMessage> displayMessages =
+                            data.chatMessages;
+                        return Container(
+                          color: CustomColors.white.withValues(alpha: 0.5),
+                          child: CustomScrollView(
+                            controller: _scrollController,
+                            reverse: true,
+                            slivers: <Widget>[
+                              displayMessages.isEmpty
+                                  ? const SliverToBoxAdapter(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Center(
+                                            child: Text(
+                                              "Non ci sono ancora messaggi",
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                      dateLikeFunction: () async {
-                                        await ref
-                                            .read(
-                                              messagesProvider(
-                                                widget.chatId,
-                                              ).notifier,
-                                            )
-                                            .addMessageDate(
-                                              userId: user.userId,
-                                              chatId: widget.chatId,
-                                              messageId: message.id,
-                                            );
-                                      },
-                                      removeDateLikeFunction: () async {
-                                        await ref
-                                            .read(
-                                              messagesProvider(
-                                                widget.chatId,
-                                              ).notifier,
-                                            )
-                                            .removeMessageDate(
-                                              userId: user.userId,
-                                              chatId: widget.chatId,
-                                              messageId: message.id,
-                                            );
-                                      },
-                                      senderName:
-                                          user.userId == data.firstLastName
-                                          ? user.firstLastName
-                                          : data.firstLastName,
-                                    );
-                                  },
-                                  error: (_, __) => const Text("Error"),
-                                  loading: () => const Center(
-                                    child: CircularProgressIndicator(),
-                                  ),
-                                );
-                              },
-                            ),
+                                    )
+                                  : SliverPadding(
+                                      padding: const EdgeInsets.all(16),
+                                      sliver: SliverList.separated(
+                                        itemCount: displayMessages.length,
+                                        separatorBuilder:
+                                            (BuildContext context, int index) {
+                                              return const SizedBox(height: 8);
+                                            },
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                              final ChatMessage message =
+                                                  displayMessages[index];
+                                              final AsyncValue<UserProfile>
+                                              messageUser = ref.watch(
+                                                getUserByIdProvider(
+                                                  message.userId,
+                                                ),
+                                              );
+
+                                              return messageUser.when(
+                                                data: (UserProfile data) {
+                                                  final bool isUserMessage =
+                                                      message.userId ==
+                                                      user.userId;
+
+                                                  return CustomMessage(
+                                                    isUserMessage:
+                                                        isUserMessage,
+                                                    userId: user.userId,
+                                                    message: message,
+                                                    chatState: chat.state
+                                                        .toChatItemState()!,
+                                                    dateLikeFunction: () async {
+                                                      await ref
+                                                          .read(
+                                                            messagesProvider(
+                                                              widget.chatId,
+                                                            ).notifier,
+                                                          )
+                                                          .addMessageDate(
+                                                            userId: user.userId,
+                                                            chatId:
+                                                                widget.chatId,
+                                                            messageId:
+                                                                message.id,
+                                                          );
+                                                    },
+                                                    removeDateLikeFunction:
+                                                        () async {
+                                                          await ref
+                                                              .read(
+                                                                messagesProvider(
+                                                                  widget.chatId,
+                                                                ).notifier,
+                                                              )
+                                                              .removeMessageDate(
+                                                                userId:
+                                                                    user.userId,
+                                                                chatId: widget
+                                                                    .chatId,
+                                                                messageId:
+                                                                    message.id,
+                                                              );
+                                                        },
+                                                    senderName:
+                                                        user.userId ==
+                                                            data.firstLastName
+                                                        ? user.firstLastName
+                                                        : data.firstLastName,
+                                                  );
+                                                },
+                                                error: (_, __) =>
+                                                    const Text("Error"),
+                                                loading: () => const Center(
+                                                  child:
+                                                      CircularProgressIndicator(),
+                                                ),
+                                              );
+                                            },
+                                      ),
+                                    ),
+                            ],
                           ),
-                        ],
-                      ),
+                        );
+                      },
+                      error: (_, __) {
+                        return const Center(child: Text("Error "));
+                      },
+                      loading: () {
+                        return const Center(child: CircularProgressIndicator());
+                      },
                     );
                   },
                   error: (_, __) {
-                    return const Center(child: Text("Error "));
+                    return const Center(child: Text("Chat error"));
                   },
                   loading: () {
                     return const Center(child: CircularProgressIndicator());

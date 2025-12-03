@@ -13,6 +13,7 @@ class ChatService {
     required String name,
     required String password,
     required String? description,
+    DateTime? endDateSelection,
   }) async {
     final ChatItem chatItem = ChatItem(
       id: const Uuid().v4(),
@@ -22,6 +23,7 @@ class ChatService {
       closesAt: closesAt,
       password: password,
       description: description,
+      endDateSelection: endDateSelection,
     );
 
     await _chatRepository.createChat(chatItem);
@@ -52,6 +54,15 @@ class ChatService {
     required DocumentSnapshot lastDocument,
   }) async {
     return await _chatRepository.listPaginatedChat(lastDocument: lastDocument);
+  }
+
+  Future<PaginatedChatItem> getChatsByUser({required String userId}) async {
+    final List<ChatItem> chats = await _chatRepository.getChatsByUserId(userId: userId);
+    return PaginatedChatItem(
+      chatItems: chats,
+      hasMore: false,
+      startAfter: null,
+    );
   }
 
   Future<ChatItem> updateChat({

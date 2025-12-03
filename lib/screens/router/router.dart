@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../consts/global_state.dart';
 import '../../model/chat_item.dart';
+import '../../model/date_model.dart';
 import '../../providers/auth.dart';
 import '../../widget/custom_bottom_bar.dart';
 import '../account.dart';
@@ -138,8 +139,17 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((Ref ref) {
               .queryParameters['chatState']
               ?.toChatItemState();
           final String? chatId = state.uri.queryParameters['chatId'];
+          final DateTime maxDate = state.uri.queryParameters['maxDate'] != null
+              ? const DateTimeSerializer().fromJson(
+                  state.uri.queryParameters['maxDate']!,
+                )
+              : DateTime.now();
 
-          return GroupChat(chatId: chatId!, chatState: chatState!);
+          return GroupChat(
+            chatId: chatId!,
+            chatState: chatState!,
+            maxDate: maxDate,
+          );
         },
       ),
     ],
