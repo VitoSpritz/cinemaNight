@@ -92,7 +92,7 @@ class ChatMessageRepository {
         });
   }
 
-  Future<void> addMessageDates({
+  Future<void> addLikeToMessage({
     required String userId,
     required String chatId,
     required String messageId,
@@ -107,7 +107,7 @@ class ChatMessageRepository {
         });
   }
 
-  Future<void> removeMessageDates({
+  Future<void> removeLikeFromMessage({
     required String userId,
     required String chatId,
     required String messageId,
@@ -120,5 +120,55 @@ class ChatMessageRepository {
         .update(<Object, Object?>{
           'content.likes': FieldValue.arrayRemove(<dynamic>[userId]),
         });
+  }
+
+  Future<void> addDislikeToMessage({
+    required String userId,
+    required String chatId,
+    required String messageId,
+  }) async {
+    await _firestore
+        .collection('chats')
+        .doc(chatId)
+        .collection('messages')
+        .doc(messageId)
+        .update(<Object, Object?>{
+          'content.dislikes': FieldValue.arrayUnion(<dynamic>[userId]),
+        });
+  }
+
+  Future<void> removeDislikeFromMessage({
+    required String userId,
+    required String chatId,
+    required String messageId,
+  }) async {
+    await _firestore
+        .collection('chats')
+        .doc(chatId)
+        .collection('messages')
+        .doc(messageId)
+        .update(<Object, Object?>{
+          'content.dislikes': FieldValue.arrayRemove(<dynamic>[userId]),
+        });
+  }
+
+  Future<ChatMessage?> getUserFilmMessage({
+    required String userId,
+    required String chatId,
+  }) async {
+    final QuerySnapshot<Map<String, dynamic>> result = await _firestore
+        .collection('chats')
+        .doc(chatId)
+        .collection('messages')
+        .where('user_id', isEqualTo: userId)
+        .where('content.runtimeType', isEqualTo: 'film')
+        .limit(1)
+        .get();
+
+    if (result.docs.isEmpty) {
+      return null;
+    }
+
+    return ChatMessage.fromJson(result.docs.first.data());
   }
 }

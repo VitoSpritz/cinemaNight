@@ -34,7 +34,6 @@ sealed class ChatContent with _$ChatContent {
     @JsonKey(name: 'film_id') required String filmId,
     @Default(<String>[]) List<String> likes,
     @Default(<String>[]) List<String> dislikes,
-    String? comment,
   }) = FilmContent;
 
   factory ChatContent.fromJson(Map<String, dynamic> json) =>

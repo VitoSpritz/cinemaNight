@@ -23,12 +23,12 @@ class Messages extends _$Messages {
     }
   }
 
-  Future<void> addMessageDate({
+  Future<void> addLikeToMessage({
     required String userId,
     required String chatId,
     required String messageId,
   }) async {
-    await service.addMessageDates(
+    await service.addLikeToMessage(
       userId: userId,
       chatId: chatId,
       messageId: messageId,
@@ -36,12 +36,38 @@ class Messages extends _$Messages {
     ref.invalidateSelf();
   }
 
-  Future<void> removeMessageDate({
+  Future<void> removeLikeFromMessage({
     required String userId,
     required String chatId,
     required String messageId,
   }) async {
-    await service.removeMessageDates(
+    await service.removeLikeFromMessage(
+      userId: userId,
+      chatId: chatId,
+      messageId: messageId,
+    );
+    ref.invalidateSelf();
+  }
+
+  Future<void> addDislikeToMessage({
+    required String userId,
+    required String chatId,
+    required String messageId,
+  }) async {
+    await service.addDislikeToMessage(
+      userId: userId,
+      chatId: chatId,
+      messageId: messageId,
+    );
+    ref.invalidateSelf();
+  }
+
+  Future<void> removeDislikeFromMessage({
+    required String userId,
+    required String chatId,
+    required String messageId,
+  }) async {
+    await service.removeDislikeFromMessage(
       userId: userId,
       chatId: chatId,
       messageId: messageId,

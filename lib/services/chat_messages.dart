@@ -48,27 +48,61 @@ class ChatMessages {
     );
   }
 
-  Future<void> addMessageDates({
+  Future<void> addLikeToMessage({
     required String userId,
     required String chatId,
     required String messageId,
   }) async {
-    await _messageRepository.addMessageDates(
+    await _messageRepository.addLikeToMessage(
       userId: userId,
       chatId: chatId,
       messageId: messageId,
     );
   }
 
-  Future<void> removeMessageDates({
+  Future<void> removeLikeFromMessage({
     required String userId,
     required String chatId,
     required String messageId,
   }) async {
-    await _messageRepository.removeMessageDates(
+    await _messageRepository.removeLikeFromMessage(
       userId: userId,
       chatId: chatId,
       messageId: messageId,
+    );
+  }
+
+  Future<void> addDislikeToMessage({
+    required String userId,
+    required String chatId,
+    required String messageId,
+  }) async {
+    await _messageRepository.addDislikeToMessage(
+      userId: userId,
+      chatId: chatId,
+      messageId: messageId,
+    );
+  }
+
+  Future<void> removeDislikeFromMessage({
+    required String userId,
+    required String chatId,
+    required String messageId,
+  }) async {
+    await _messageRepository.removeDislikeFromMessage(
+      userId: userId,
+      chatId: chatId,
+      messageId: messageId,
+    );
+  }
+
+  Future<ChatMessage?> getUserFilmMessage({
+    required String userId,
+    required String chatId,
+  }) async {
+    return _messageRepository.getUserFilmMessage(
+      userId: userId,
+      chatId: chatId,
     );
   }
 
