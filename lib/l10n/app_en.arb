@@ -111,5 +111,6 @@
     "closedBadgeLabel": "Closed",
     "inactiveBadgeLabel": "Inactive",
     "searchAFilm":  "Search a film",
-    "searchAChat": "Search a chat"
+    "searchAChat": "Search a chat",
+    "proposeAFilm": "Proponi un film"
 }

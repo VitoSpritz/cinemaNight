@@ -9,6 +9,7 @@ import '../../model/chat_item.dart';
 import '../../model/date_model.dart';
 import '../../model/user_profile.dart';
 import '../../providers/chat_list.dart';
+import '../../providers/user_profiles.dart';
 import '../confirm_dialog.dart';
 import '../state_badge.dart';
 import 'insert_password_dialog.dart';
@@ -38,7 +39,8 @@ class _ChatListItemState extends ConsumerState<ChatListItem> {
     required ChatItem chat,
     required BuildContext context,
   }) async {
-    if (chat.createdBy == user.userId) {
+    if ((chat.createdBy == user.userId) ||
+        (user.savedChats!.contains(chat.id))) {
       context.pushNamed(
         'groupChat',
         queryParameters: <String, String>{
@@ -59,6 +61,17 @@ class _ChatListItemState extends ConsumerState<ChatListItem> {
       }
 
       if (password.isNotEmpty && chat.password == password) {
+        await ref
+            .read(userProfilesProvider.notifier)
+            .updateUserProfile(
+              userId: user.userId,
+              name: user.firstLastName,
+              age: user.age,
+              imageUrl: user.imageUrl,
+              preferredFilm: user.preferredFilm,
+              preferredGenre: user.preferredGenre,
+              savedChats: <String>[...?user.savedChats, chat.id],
+            );
         context.pushNamed(
           'groupChat',
           queryParameters: <String, String>{

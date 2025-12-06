@@ -38,10 +38,12 @@ class UserProfiles extends _$UserProfiles {
 
   Future<void> updateUserProfile({
     required String userId,
-    required String name,
+    String? name,
     int? age,
     String? imageUrl,
     String? preferredFilm,
+    String? preferredGenre,
+    List<String>? savedChats,
   }) async {
     await service.updateUser(
       name: name,
@@ -49,6 +51,8 @@ class UserProfiles extends _$UserProfiles {
       age: age,
       imageUrl: imageUrl,
       preferredFilm: preferredFilm,
+      preferredGenre: preferredGenre,
+      savedChats: savedChats,
     );
     ref.invalidateSelf();
   }

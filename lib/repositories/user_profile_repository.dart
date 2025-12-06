@@ -38,4 +38,18 @@ class UserProfileRepository {
       'savedChats': FieldValue.arrayUnion(<dynamic>[chatId]),
     });
   }
+
+  Future<List<UserProfile>> getUsersByChat({required String chatId}) async {
+    final QuerySnapshot<Map<String, dynamic>> result = await _firestore
+        .collection('users')
+        .where('savedChats', arrayContains: chatId)
+        .get();
+
+    return result.docs
+        .map(
+          (QueryDocumentSnapshot<Map<String, dynamic>> doc) =>
+              UserProfile.fromJson(doc.data()),
+        )
+        .toList();
+  }
 }

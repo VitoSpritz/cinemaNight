@@ -34,11 +34,12 @@ class UserService {
 
   Future<UserProfile> updateUser({
     required String userId,
-    required String name,
+    String? name,
     int? age,
     String? imageUrl,
     String? preferredFilm,
     String? preferredGenre,
+    List<String>? savedChats,
   }) async {
     final UserProfile update = UserProfile(
       userId: userId,
@@ -47,6 +48,7 @@ class UserService {
       imageUrl: imageUrl,
       preferredFilm: preferredFilm,
       preferredGenre: preferredGenre,
+      savedChats: savedChats,
     );
     await _repository.updateUserProfile(userId, update);
 
@@ -61,5 +63,9 @@ class UserService {
   Future<void> addChat(String userId, String chatId) async {
     await _repository.addChat(userId, chatId);
     return;
+  }
+
+  Future<List<UserProfile>> getUsersByChat({required String chatId}) async {
+    return await _repository.getUsersByChat(chatId: chatId);
   }
 }

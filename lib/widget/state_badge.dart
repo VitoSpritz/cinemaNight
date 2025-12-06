@@ -19,40 +19,33 @@ class _StateBadgeState extends ConsumerState<StateBadge> {
   String? _badgeText;
 
   void _calculateState({required String state, required DateTime date}) {
-    final bool isExpired = date.isBefore(DateTime.now());
-    if (isExpired) {
-      return setState(() {
-        _badgeColor = CustomColors.gray;
-        _badgeText = AppLocalizations.of(context)!.closedBadgeLabel;
-      });
-    }
-
     switch (state) {
       case "opened":
-        return setState(() {
-          _badgeColor = Colors.green;
-          _badgeText = AppLocalizations.of(context)!.openedBadgeLabel;
-        });
+        _badgeColor = Colors.green;
+        _badgeText = AppLocalizations.of(context)!.openedBadgeLabel;
+        return;
       case "dateSelection":
-        return setState(() {
-          _badgeColor = Colors.yellow;
-          _badgeText = AppLocalizations.of(context)!.dateSelectionLabel;
-        });
+        _badgeColor = Colors.yellow;
+        _badgeText = AppLocalizations.of(context)!.dateSelectionLabel;
+        return;
       case "filmSelection":
-        return setState(() {
-          _badgeColor = Colors.yellow;
-          _badgeText = AppLocalizations.of(context)!.filmSelectionLabel;
-        });
+        _badgeColor = Colors.yellow;
+        _badgeText = AppLocalizations.of(context)!.filmSelectionLabel;
+        return;
       case "closed":
-        return setState(() {
-          _badgeColor = Colors.grey;
-          _badgeText = AppLocalizations.of(context)!.closedBadgeLabel;
-        });
+        _badgeColor = CustomColors.gray;
+        _badgeText = AppLocalizations.of(context)!.closedBadgeLabel;
+        return;
     }
-    setState(() {
-      _badgeColor = Colors.white;
-      _badgeText = AppLocalizations.of(context)!.inactiveBadgeLabel;
-    });
+
+    if (date.isBefore(DateTime.now())) {
+      _badgeColor = CustomColors.gray;
+      _badgeText = AppLocalizations.of(context)!.closedBadgeLabel;
+      return;
+    }
+
+    _badgeColor = Colors.white;
+    _badgeText = AppLocalizations.of(context)!.inactiveBadgeLabel;
   }
 
   @override

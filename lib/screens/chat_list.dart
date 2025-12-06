@@ -50,8 +50,12 @@ class _ChatListState extends ConsumerState<ChatList> {
   }
 
   void _loadMoreIfNeeded() {
-    if (!_allChats) return;
-    if (_activeSearchQuery != null && _activeSearchQuery!.isNotEmpty) return;
+    if (!_allChats) {
+      return;
+    }
+    if (_activeSearchQuery != null && _activeSearchQuery!.isNotEmpty) {
+      return;
+    }
 
     ref.read(chatListProvider.notifier).loadMoreChats();
   }

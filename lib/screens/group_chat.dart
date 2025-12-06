@@ -10,12 +10,16 @@ import '../model/chat_item.dart';
 import '../model/chat_message.dart';
 import '../model/user_profile.dart';
 import '../providers/chat_list.dart';
+import '../providers/get_film_message.dart';
+import '../providers/get_user_by_chat_id.dart';
 import '../providers/messages.dart';
 import '../providers/user_profiles.dart';
 import '../widget/chat/custom_message.dart';
 import '../widget/chat/select_dates_dialog.dart';
 import '../widget/chat/select_end_date.dart';
 import '../widget/custom_app_bar.dart';
+import '../widget/film_suggestion_modal.dart';
+import '../widget/user_list_modal.dart';
 import 'chats.dart';
 
 class GroupChat extends ConsumerStatefulWidget {
@@ -39,6 +43,7 @@ class _GroupChatState extends ConsumerState<GroupChat> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _chatScrollController = ScrollController();
   final ScrollController _scrollController = ScrollController();
+  String? _suggestedFilmName;
 
   @override
   void dispose() {
@@ -146,6 +151,63 @@ class _GroupChatState extends ConsumerState<GroupChat> {
     }
   }
 
+  Future<void> _sendSugggestedFilm({
+    required String userId,
+    required String filmName,
+  }) async {
+    try {
+      await ref
+          .read(messagesProvider(widget.chatId).notifier)
+          .createMessage(
+            chatId: widget.chatId,
+            sentAt: DateTime.now(),
+            sentBy: userId,
+            content: ChatContent.film(filmId: filmName),
+          );
+
+      if (_chatScrollController.hasClients) {
+        _chatScrollController.animateTo(
+          _chatScrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Errore nell\'invio: $e')));
+      }
+    }
+  }
+
+  Future<String?> _showModal() async {
+    return await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      useRootNavigator: true,
+      isDismissible: false,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (BuildContext context) {
+        return const FilmSuggestionModal();
+      },
+    );
+  }
+
+  Future<void> _showUserListModal({required String chatId}) async {
+    final List<UserProfile> userList = await ref.read(
+      getUsersByChatProvider(chatId: chatId).future,
+    );
+
+    await UserListModal.show(
+      title: "Utenti iscritti",
+      userList: userList,
+      context: context,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final AsyncValue<PaginatedChatMessage> messageAsync = ref.watch(
@@ -158,8 +220,34 @@ class _GroupChatState extends ConsumerState<GroupChat> {
       getChatItemByIdProvider(widget.chatId),
     );
 
+    final bool isChatCreator =
+        chatAsync.whenOrNull(
+          data: (ChatItem chat) => userAsync.whenOrNull(
+            data: (UserProfile user) => chat.createdBy == user.userId,
+          ),
+        ) ??
+        false;
+
+    final bool canAddFilm =
+        userAsync.whenOrNull(
+          data: (UserProfile user) {
+            final AsyncValue<ChatMessage?> filmMessageAsync = ref.watch(
+              getFilmMessageProvider(user.userId, widget.chatId),
+            );
+            return filmMessageAsync.whenOrNull(
+                  data: (ChatMessage? msg) => msg == null,
+                ) ??
+                true;
+          },
+        ) ??
+        true;
+
     return Scaffold(
-      appBar: const CustomAppBar(title: 'Group Chat'),
+      appBar: CustomAppBar(
+        title: 'Group Chat',
+        rightIcon: Icons.info,
+        onRightIconTap: () => _showUserListModal(chatId: widget.chatId),
+      ),
       body: Column(
         children: <Widget>[
           Expanded(
@@ -199,77 +287,91 @@ class _GroupChatState extends ConsumerState<GroupChat> {
                                             (BuildContext context, int index) {
                                               return const SizedBox(height: 8);
                                             },
-                                        itemBuilder:
-                                            (BuildContext context, int index) {
-                                              final ChatMessage message =
-                                                  displayMessages[index];
-                                              final AsyncValue<UserProfile>
-                                              messageUser = ref.watch(
-                                                getUserByIdProvider(
-                                                  message.userId,
-                                                ),
-                                              );
+                                        itemBuilder: (BuildContext context, int index) {
+                                          final ChatMessage message =
+                                              displayMessages[index];
+                                          final AsyncValue<UserProfile>
+                                          messageUser = ref.watch(
+                                            getUserByIdProvider(message.userId),
+                                          );
 
-                                              return messageUser.when(
-                                                data: (UserProfile data) {
-                                                  final bool isUserMessage =
-                                                      message.userId ==
-                                                      user.userId;
-
-                                                  return CustomMessage(
-                                                    isUserMessage:
-                                                        isUserMessage,
-                                                    userId: user.userId,
-                                                    message: message,
-                                                    chatState: chat.state
-                                                        .toChatItemState()!,
-                                                    dateLikeFunction: () async {
-                                                      await ref
-                                                          .read(
-                                                            messagesProvider(
-                                                              widget.chatId,
-                                                            ).notifier,
-                                                          )
-                                                          .addMessageDate(
-                                                            userId: user.userId,
-                                                            chatId:
-                                                                widget.chatId,
-                                                            messageId:
-                                                                message.id,
-                                                          );
-                                                    },
-                                                    removeDateLikeFunction:
-                                                        () async {
-                                                          await ref
-                                                              .read(
-                                                                messagesProvider(
-                                                                  widget.chatId,
-                                                                ).notifier,
-                                                              )
-                                                              .removeMessageDate(
-                                                                userId:
-                                                                    user.userId,
-                                                                chatId: widget
-                                                                    .chatId,
-                                                                messageId:
-                                                                    message.id,
-                                                              );
-                                                        },
-                                                    senderName:
-                                                        user.userId ==
-                                                            data.firstLastName
-                                                        ? user.firstLastName
-                                                        : data.firstLastName,
-                                                  );
+                                          return messageUser.when(
+                                            data: (UserProfile data) {
+                                              final bool isUserMessage =
+                                                  message.userId == user.userId;
+                                              return CustomMessage(
+                                                isUserMessage: isUserMessage,
+                                                userId: user.userId,
+                                                message: message,
+                                                chatState: chat.state
+                                                    .toChatItemState()!,
+                                                onLikeFunction: () async {
+                                                  await ref
+                                                      .read(
+                                                        messagesProvider(
+                                                          widget.chatId,
+                                                        ).notifier,
+                                                      )
+                                                      .addLikeToMessage(
+                                                        userId: user.userId,
+                                                        chatId: widget.chatId,
+                                                        messageId: message.id,
+                                                      );
                                                 },
-                                                error: (_, __) =>
-                                                    const Text("Error"),
-                                                loading: () => const Center(
-                                                  child:
-                                                      CircularProgressIndicator(),
-                                                ),
+                                                onRemoveLikeFunction: () async {
+                                                  await ref
+                                                      .read(
+                                                        messagesProvider(
+                                                          widget.chatId,
+                                                        ).notifier,
+                                                      )
+                                                      .removeLikeFromMessage(
+                                                        userId: user.userId,
+                                                        chatId: widget.chatId,
+                                                        messageId: message.id,
+                                                      );
+                                                },
+                                                onDislikeFunction: () async {
+                                                  await ref
+                                                      .read(
+                                                        messagesProvider(
+                                                          widget.chatId,
+                                                        ).notifier,
+                                                      )
+                                                      .addDislikeToMessage(
+                                                        userId: user.userId,
+                                                        chatId: widget.chatId,
+                                                        messageId: message.id,
+                                                      );
+                                                },
+                                                onRemoveDilikeFunction: () async {
+                                                  await ref
+                                                      .read(
+                                                        messagesProvider(
+                                                          widget.chatId,
+                                                        ).notifier,
+                                                      )
+                                                      .removeDislikeFromMessage(
+                                                        userId: user.userId,
+                                                        chatId: widget.chatId,
+                                                        messageId: message.id,
+                                                      );
+                                                },
+                                                senderName:
+                                                    user.userId ==
+                                                        data.firstLastName
+                                                    ? user.firstLastName
+                                                    : data.firstLastName,
                                               );
                                             },
+                                            error: (_, __) =>
+                                                const Text("Error"),
+                                            loading: () => const Center(
+                                              child:
+                                                  CircularProgressIndicator(),
+                                            ),
+                                          );
+                                        },
                                       ),
                                     ),
                             ],
@@ -311,9 +413,12 @@ class _GroupChatState extends ConsumerState<GroupChat> {
               children: <Widget>[
                 Expanded(
                   child: TextField(
+                    enabled: isChatCreator,
                     controller: _messageController,
                     decoration: InputDecoration(
-                      hintText: "Scrivi un messaggio",
+                      hintText: isChatCreator
+                          ? "Scrivi un messaggio"
+                          : "Non sei l'amministratore del gruppo",
                       hintStyle: CustomTypography.caption,
                       filled: true,
                       fillColor: CustomColors.white.withValues(alpha: 0.4),
@@ -352,24 +457,60 @@ class _GroupChatState extends ConsumerState<GroupChat> {
                   ),
                 ),
                 const SizedBox(width: 8),
-
                 GestureDetector(
-                  onTap: () async =>
-                      await _sendMessage(userId: userAsync.value!.userId),
+                  behavior: HitTestBehavior.translucent,
+                  onTap: canAddFilm
+                      ? () async {
+                          _suggestedFilmName = await _showModal();
+                          if (_suggestedFilmName != null) {
+                            await _sendSugggestedFilm(
+                              userId: userAsync.value!.userId,
+                              filmName: _suggestedFilmName!,
+                            );
+                            ref.invalidate(
+                              getFilmMessageProvider(
+                                userAsync.value!.userId,
+                                widget.chatId,
+                              ),
+                            );
+                          }
+                        }
+                      : null,
                   child: Container(
                     width: 48,
                     height: 48,
-                    decoration: const BoxDecoration(
-                      color: CustomColors.black,
+                    decoration: BoxDecoration(
+                      color: canAddFilm
+                          ? CustomColors.purple
+                          : CustomColors.purple.withValues(alpha: 0.2),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(
-                      Icons.send,
+                      Icons.add,
                       color: CustomColors.white,
                       size: 20,
                     ),
                   ),
                 ),
+                const SizedBox(width: 8),
+                if (isChatCreator)
+                  GestureDetector(
+                    onTap: () async =>
+                        await _sendMessage(userId: userAsync.value!.userId),
+                    child: Container(
+                      width: 48,
+                      height: 48,
+                      decoration: const BoxDecoration(
+                        color: CustomColors.black,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.send,
+                        color: CustomColors.white,
+                        size: 20,
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),

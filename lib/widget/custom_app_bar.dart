@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 
 import '../consts/custom_colors.dart';
 import '../consts/custom_typography.dart';
+import '../consts/sizes.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
-
+  final IconData? rightIcon;
+  final Future<void> Function()? onRightIconTap;
   final Widget? actionButton;
   final Function(String?)? onSearch;
 
@@ -14,6 +16,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     required this.title,
     this.onSearch,
     this.actionButton,
+    this.onRightIconTap,
+    this.rightIcon,
   });
 
   @override
@@ -45,6 +49,19 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               ),
             ),
             actionButton ?? const SizedBox(width: 40),
+            if (rightIcon != null)
+              Padding(
+                padding: const EdgeInsets.only(right: 42.0),
+                child: GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTap: onRightIconTap,
+                  child: Icon(
+                    rightIcon,
+                    size: Sizes.iconMedium,
+                    color: CustomColors.text,
+                  ),
+                ),
+              ),
           ],
         ),
       ),

@@ -1,45 +1,39 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../consts/custom_colors.dart';
 import '../consts/custom_typography.dart';
 import '../consts/sizes.dart';
 import '../helpers/media_converter.dart';
 import '../l10n/app_localizations.dart';
 import '../model/media.dart';
 import '../model/multi_with_poster.dart';
-import '../model/review.dart';
-import '../model/user_profile.dart';
 import '../providers/tmdb_api.dart';
-import '../providers/user_profiles.dart';
-import '../providers/user_review.dart';
-import '../services/review_service.dart';
 import 'custom_movie_display.dart';
-import 'custom_rating.dart';
 
-class FilmPickerModal extends ConsumerStatefulWidget {
-  const FilmPickerModal({super.key});
+class FilmSuggestionModal extends StatefulWidget {
+  const FilmSuggestionModal({super.key});
+
+  static Future<String?> show(BuildContext context) {
+    return showModalBottomSheet<String?>(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) => const FilmSuggestionModal(),
+    );
+  }
 
   @override
-  ConsumerState<FilmPickerModal> createState() => _FilmPickerState();
+  State<FilmSuggestionModal> createState() => _FilmSuggestionModalState();
 }
 
-class _FilmPickerState extends ConsumerState<FilmPickerModal> {
+class _FilmSuggestionModalState extends State<FilmSuggestionModal> {
   final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _reviewController = TextEditingController();
-  final TextEditingController _ratingController = TextEditingController();
-
   final TmdbApi _tmdbApi = TmdbApi();
   List<MultiWithPoster> _searchResults = <MultiWithPoster>[];
   bool _isLoading = false;
-  bool _isCreatingReview = false;
   MultiWithPoster? _selectedMedia;
-  final ReviewService _reviewService = ReviewService();
   int _currentPage = 1;
   int _totalPages = 1;
   late ScrollController _scrollController;
   bool _isLoadingMore = false;
-  bool _reviewAlreadyExist = false;
 
   @override
   void initState() {
@@ -52,7 +46,6 @@ class _FilmPickerState extends ConsumerState<FilmPickerModal> {
   void dispose() {
     _titleController.dispose();
     _scrollController.dispose();
-    _reviewController.dispose();
     super.dispose();
   }
 
@@ -95,61 +88,18 @@ class _FilmPickerState extends ConsumerState<FilmPickerModal> {
     }
   }
 
-  Future<void> _createReview({
-    required int filmId,
-    required String type,
-    required String filmName,
-    String? review,
-    double? rating,
-  }) async {
-    setState(() {
-      _isCreatingReview = true;
-    });
-
-    try {
-      final UserProfile userProfile = await ref.read(
-        userProfilesProvider.future,
-      );
-      final AsyncValue<List<Review>> userReview = ref.read(userReviewProvider);
-
-      if (userReview.value?.any(
-            (Review element) =>
-                (element.filmId == filmId.toString() &&
-                element.type.name == type),
-          ) ==
-          true) {
-        if (mounted) {
-          setState(() {
-            _reviewAlreadyExist = true;
-          });
-        }
-      } else {
-        await _reviewService.createReview(
-          userId: userProfile.userId,
-          filmId: filmId.toString(),
-          type: type == "movie"
-              ? ReviewItemType.movie
-              : ReviewItemType.tvSeries,
-          filmName: filmName,
-          description: review,
-          rating: rating,
-        );
-        if (mounted) {
-          Navigator.pop(context);
-          ref.invalidate(userReviewProvider);
-        }
-      }
-    } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text("Error $e")));
-      }
+  void _confirmSelection() {
+    if (_selectedMedia == null) {
+      return;
     }
 
-    setState(() {
-      _isCreatingReview = false;
-    });
+    Navigator.pop(
+      context,
+      MediaConverter.getValue(
+        media: _selectedMedia!.media,
+        field: MediaField.title,
+      ).toString(),
+    );
   }
 
   Future<void> _searchMedia() async {
@@ -202,7 +152,7 @@ class _FilmPickerState extends ConsumerState<FilmPickerModal> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              AppLocalizations.of(context)!.addReview,
+              "Proponi un film",
               style: CustomTypography.titleM.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -256,12 +206,7 @@ class _FilmPickerState extends ConsumerState<FilmPickerModal> {
                           final MultiWithPoster item = _searchResults[index];
                           return GestureDetector(
                             onTap: () {
-                              setState(
-                                () => (
-                                  _selectedMedia = item,
-                                  _reviewAlreadyExist = false,
-                                ),
-                              );
+                              setState(() => _selectedMedia = item);
                             },
                             child: Padding(
                               padding: const EdgeInsets.only(bottom: 8.0),
@@ -317,62 +262,14 @@ class _FilmPickerState extends ConsumerState<FilmPickerModal> {
                       },
                       child: Text(AppLocalizations.of(context)!.changeMovie),
                     ),
-                    Row(
-                      children: <Widget>[
-                        const Text("Il tuo voto:"),
-                        CustomRating(
-                          onRatingChanged: (double rating) {
-                            _ratingController.text = rating.toString();
-                          },
-                        ),
-                      ],
-                    ),
                     const SizedBox(height: 16),
-                    TextField(
-                      controller: _reviewController,
-                      decoration: InputDecoration(
-                        labelText: AppLocalizations.of(context)!.review,
-                        border: const OutlineInputBorder(),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: _confirmSelection,
+                        child: Text(AppLocalizations.of(context)!.confirmLabel),
                       ),
-                      maxLines: 3,
                     ),
-                    const SizedBox(height: 16),
-                    _isCreatingReview
-                        ? const SizedBox(
-                            height: 48,
-                            child: Center(child: CircularProgressIndicator()),
-                          )
-                        : _reviewAlreadyExist == true
-                        ? Text(
-                            "La recensione è già esistente!",
-                            style: CustomTypography.caption.copyWith(
-                              color: CustomColors.errorMessage,
-                            ),
-                          )
-                        : SizedBox(
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              onPressed: () async => await _createReview(
-                                filmId: MediaConverter.getValue(
-                                  media: _selectedMedia!.media,
-                                  field: MediaField.id,
-                                ),
-                                type: MediaConverter.getValue(
-                                  media: _selectedMedia!.media,
-                                  field: MediaField.mediaType,
-                                ),
-                                review: _reviewController.text,
-                                rating:
-                                    double.tryParse(_ratingController.text) ??
-                                    0.0,
-                                filmName: MediaConverter.getValue(
-                                  media: _selectedMedia!.media,
-                                  field: MediaField.title,
-                                ),
-                              ),
-                              child: Text(AppLocalizations.of(context)!.save),
-                            ),
-                          ),
                   ],
                 ),
               ),
