@@ -500,7 +500,9 @@ class _GroupChatState extends ConsumerState<GroupChat> {
                     width: 48,
                     height: 48,
                     decoration: BoxDecoration(
-                      color: canAddFilm
+                      color:
+                          canAddFilm &&
+                              widget.chatState == ChatItemState.filmSelection
                           ? CustomColors.purple
                           : CustomColors.purple.withValues(alpha: 0.2),
                       shape: BoxShape.circle,

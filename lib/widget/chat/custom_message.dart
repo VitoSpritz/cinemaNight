@@ -53,8 +53,6 @@ class CustomMessage extends ConsumerWidget {
           dislikes,
     );
 
-    debugPrint("Runtime type => ${message.content.runtimeType}");
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Row(
@@ -168,7 +166,10 @@ class CustomMessage extends ConsumerWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        DateFormat('EEE, M/d/y').format(message.sentAt),
+                        DateFormat(
+                          'EEE, dd/M/yyyy',
+                          AppLocalizations.of(context)!.localeName,
+                        ).format(message.sentAt),
                         style: CustomTypography.minimal,
                       ),
 

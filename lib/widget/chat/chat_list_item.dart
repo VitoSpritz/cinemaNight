@@ -177,10 +177,13 @@ class _ChatListItemState extends ConsumerState<ChatListItem> {
           ),
           Row(
             children: <Widget>[
-              Text("Data di chiusura: ", style: CustomTypography.caption),
-              Text(
-                DateFormat('dd/MM/yyyy HH:mm').format(widget.chat.closesAt),
-                style: CustomTypography.caption,
+              Text("Chiude il: ", style: CustomTypography.caption),
+              Expanded(
+                child: Text(
+                  DateFormat('dd/MM/yyyy HH:mm').format(widget.chat.closesAt),
+                  overflow: TextOverflow.ellipsis,
+                  style: CustomTypography.caption,
+                ),
               ),
             ],
           ),
