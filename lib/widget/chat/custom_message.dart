@@ -53,6 +53,8 @@ class CustomMessage extends ConsumerWidget {
           dislikes,
     );
 
+    debugPrint("Runtime type => ${message.content.runtimeType}");
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Row(
@@ -169,7 +171,9 @@ class CustomMessage extends ConsumerWidget {
                         DateFormat('EEE, M/d/y').format(message.sentAt),
                         style: CustomTypography.minimal,
                       ),
-                      if (message.content.runtimeType.toString() != "text")
+
+                      if (message.content.runtimeType.toString() !=
+                          "TextContent")
                         LikeDislikeBottomMessageView(
                           chatState: chatState,
                           userId: userId,
