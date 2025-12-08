@@ -29,32 +29,36 @@ class CustomBottomBar extends ConsumerWidget {
     return Scaffold(
       body: navigationShell,
       bottomNavigationBar: Container(
-        height: 80,
         color: CustomColors.mainYellow,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            _buildNavItem(
-              index: 3,
-              icon: Icons.home,
-              label: AppLocalizations.of(context)!.home,
+        child: SafeArea(
+          child: SizedBox(
+            height: 56.0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                _buildNavItem(
+                  index: 3,
+                  icon: Icons.home,
+                  label: AppLocalizations.of(context)!.home,
+                ),
+                _buildNavItem(
+                  index: 1,
+                  icon: Icons.list,
+                  label: AppLocalizations.of(context)!.reviews,
+                ),
+                _buildNavItem(
+                  index: 2,
+                  icon: Icons.chat,
+                  label: AppLocalizations.of(context)!.chats,
+                ),
+                _buildNavItem(
+                  index: 0,
+                  icon: Icons.account_box_rounded,
+                  label: AppLocalizations.of(context)!.account,
+                ),
+              ],
             ),
-            _buildNavItem(
-              index: 1,
-              icon: Icons.list,
-              label: AppLocalizations.of(context)!.reviews,
-            ),
-            _buildNavItem(
-              index: 2,
-              icon: Icons.chat,
-              label: AppLocalizations.of(context)!.chats,
-            ),
-            _buildNavItem(
-              index: 0,
-              icon: Icons.account_box_rounded,
-              label: AppLocalizations.of(context)!.account,
-            ),
-          ],
+          ),
         ),
       ),
     );

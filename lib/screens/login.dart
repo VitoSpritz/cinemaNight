@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -127,119 +128,130 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             ],
           ),
         ),
-        child: Center(
-          child: Column(
-            children: <Widget>[
-              const SizedBox(height: 90),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.8,
-                child: Text(
-                  AppLocalizations.of(context)!.loginString,
-                  style: CustomTypography.mainTitle.copyWith(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 80,
-                    color: CustomColors.mainYellow,
-                  ),
+        child: CustomScrollView(
+          slivers: <Widget>[
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width * 0.1,
                 ),
-              ),
-              const SizedBox(height: 16),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.8,
-                child: TextField(
-                  controller: _emailController,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: CustomColors.inputFill,
-                    border: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                    ),
-                    label: Text(
-                      AppLocalizations.of(context)!.email,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    errorText: _emailError,
-                  ),
-                  keyboardType: TextInputType.emailAddress,
-                ),
-              ),
-              const SizedBox(height: 69),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.8,
-                child: TextField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: CustomColors.inputFill,
-                    border: const OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                    ),
-                    label: Text(
-                      AppLocalizations.of(context)!.password,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    errorText: _passwordError,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 69),
-              FractionallySizedBox(
-                widthFactor: 0.85,
-                child: FilledButton(
-                  onPressed: () => onSubmitButtonClick(),
-                  style: FilledButton.styleFrom(
-                    backgroundColor: CustomColors.mainYellow,
-                    foregroundColor: CustomColors.black,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  child: _isLoading
-                      ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: CustomColors.black,
-                          ),
-                        )
-                      : Text(AppLocalizations.of(context)!.loginButton),
-                ),
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.80,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                child: Column(
                   children: <Widget>[
-                    Expanded(
-                      child: Text(
-                        AppLocalizations.of(context)!.notRegisteredPress,
-                        style: CustomTypography.titleXL.copyWith(
-                          color: CustomColors.white,
-                        ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                        top: MediaQuery.of(context).padding.top + 16.0,
                       ),
-                    ),
-                    const SizedBox(height: 200),
-                    GestureDetector(
-                      onTap: () => context.go(SignUpScreen.path),
-                      behavior: HitTestBehavior.translucent,
                       child: Text(
-                        style: const TextStyle(
-                          fontWeight: FontWeight.normal,
+                        textAlign: TextAlign.center,
+                        AppLocalizations.of(context)!.loginString,
+                        style: CustomTypography.mainTitle.copyWith(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 60,
                           color: CustomColors.mainYellow,
-                          decoration: TextDecoration.underline,
-                          decorationThickness: 1.5,
-                          decorationColor: CustomColors.mainYellow,
-                          fontSize: 20,
                         ),
-                        AppLocalizations.of(context)!.here,
                       ),
                     ),
+                    const Spacer(),
+                    TextField(
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: CustomColors.inputFill,
+                        border: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                        ),
+                        label: Text(
+                          AppLocalizations.of(context)!.email,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        errorText: _emailError,
+                      ),
+                      keyboardType: TextInputType.emailAddress,
+                      onTapOutside: (PointerDownEvent event) {
+                        FocusManager.instance.primaryFocus?.unfocus();
+                      },
+                    ),
+                    const SizedBox(height: 32),
+                    TextField(
+                      controller: _passwordController,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: CustomColors.inputFill,
+                        border: const OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                        ),
+                        label: Text(
+                          AppLocalizations.of(context)!.password,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        errorText: _passwordError,
+                      ),
+                      onTapOutside: (PointerDownEvent event) {
+                        FocusManager.instance.primaryFocus?.unfocus();
+                      },
+                    ),
+                    const SizedBox(height: 32),
+                    SizedBox(
+                      width: double.infinity,
+                      child: FilledButton(
+                        onPressed: () => onSubmitButtonClick(),
+                        style: FilledButton.styleFrom(
+                          backgroundColor: CustomColors.mainYellow,
+                          foregroundColor: CustomColors.black,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: _isLoading
+                            ? const SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: CustomColors.black,
+                                ),
+                              )
+                            : Text(AppLocalizations.of(context)!.loginButton),
+                      ),
+                    ),
+                    const Spacer(),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: RichText(
+                        textAlign: TextAlign.center,
+                        textScaler: MediaQuery.of(context).textScaler,
+                        text: TextSpan(
+                          children: <InlineSpan>[
+                            TextSpan(
+                              text: AppLocalizations.of(
+                                context,
+                              )!.notRegisteredPress,
+                              style: CustomTypography.titleM.copyWith(
+                                color: CustomColors.white,
+                              ),
+                            ),
+                            TextSpan(
+                              text: AppLocalizations.of(context)!.here,
+                              style: CustomTypography.titleM.copyWith(
+                                color: CustomColors.mainYellow,
+                                decoration: TextDecoration.underline,
+                                decorationColor: CustomColors.mainYellow,
+                              ),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () => context.go(SignUpScreen.path),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const Spacer(),
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

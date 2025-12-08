@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -167,19 +168,22 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
             ],
           ),
         ),
-        child: Center(
-          child: Column(
-            children: <Widget>[
-              const SizedBox(height: 90),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.8,
+        child: CustomScrollView(
+          slivers: <Widget>[
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width * 0.1,
+                ),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+                    SizedBox(height: MediaQuery.of(context).padding.top + 16.0),
                     Text(
+                      textAlign: TextAlign.center,
                       AppLocalizations.of(context)!.signUp,
                       style: CustomTypography.mainTitle.copyWith(
-                        fontSize: 80,
+                        fontSize: 60,
                         fontWeight: FontWeight.bold,
                         color: CustomColors.mainYellow,
                       ),
@@ -199,6 +203,9 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                           borderRadius: BorderRadius.all(Radius.circular(10)),
                         ),
                       ),
+                      onTapOutside: (PointerDownEvent event) {
+                        FocusManager.instance.primaryFocus?.unfocus();
+                      },
                     ),
                     const SizedBox(height: 20),
                     TextField(
@@ -214,6 +221,9 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                         ),
                       ),
                       keyboardType: TextInputType.number,
+                      onTapOutside: (PointerDownEvent event) {
+                        FocusManager.instance.primaryFocus?.unfocus();
+                      },
                     ),
                     const SizedBox(height: 20),
                     TextField(
@@ -230,6 +240,9 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                         ),
                       ),
                       keyboardType: TextInputType.emailAddress,
+                      onTapOutside: (PointerDownEvent event) {
+                        FocusManager.instance.primaryFocus?.unfocus();
+                      },
                     ),
                     const SizedBox(height: 20),
                     TextField(
@@ -245,8 +258,11 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                           borderRadius: BorderRadius.all(Radius.circular(10)),
                         ),
                       ),
+                      onTapOutside: (PointerDownEvent event) {
+                        FocusManager.instance.primaryFocus?.unfocus();
+                      },
                     ),
-                    const SizedBox(height: 20),
+                    const Spacer(),
                     SizedBox(
                       width: double.infinity,
                       child: FilledButton(
@@ -255,7 +271,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                           backgroundColor: CustomColors.mainYellow,
                           foregroundColor: CustomColors.black,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadiusGeometry.circular(10),
+                            borderRadius: BorderRadius.circular(10),
                           ),
                         ),
                         child: _isLoading
@@ -271,41 +287,38 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          AppLocalizations.of(
-                            context,
-                          )!.alreadyHaveAnAccountPress,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.normal,
-                            fontSize: 20,
-                            color: CustomColors.white,
+                    RichText(
+                      textAlign: TextAlign.center,
+                      textScaler: MediaQuery.of(context).textScaler,
+                      text: TextSpan(
+                        children: <InlineSpan>[
+                          TextSpan(
+                            text: AppLocalizations.of(
+                              context,
+                            )!.alreadyHaveAnAccountPress,
+                            style: CustomTypography.titleM.copyWith(
+                              color: CustomColors.white,
+                            ),
                           ),
-                        ),
-                        GestureDetector(
-                          onTap: () => context.go(LoginScreen.path),
-                          behavior: HitTestBehavior.translucent,
-                          child: Text(
-                            style: const TextStyle(
-                              fontWeight: FontWeight.normal,
+                          TextSpan(
+                            text: AppLocalizations.of(context)!.here,
+                            style: CustomTypography.titleM.copyWith(
                               color: CustomColors.mainYellow,
                               decoration: TextDecoration.underline,
-                              decorationThickness: 1.5,
                               decorationColor: CustomColors.mainYellow,
-                              fontSize: 20,
                             ),
-                            AppLocalizations.of(context)!.here,
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () => context.go(LoginScreen.path),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
+                    const Spacer(),
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
