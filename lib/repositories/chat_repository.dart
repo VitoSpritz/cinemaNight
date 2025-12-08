@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../model/chat_item.dart';
+import '../model/chat_message.dart';
 
 class ChatRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -135,6 +136,59 @@ class ChatRepository {
       startAfter: docsToUse.isNotEmpty ? docsToUse.last : null,
       hasMore: hasMore,
     );
+  }
+
+  Future<({ChatMessage? topDateMessage, ChatMessage? topFilmMessage})>
+  getMostLikedMessages({required String chatId}) async {
+    final QuerySnapshot<Map<String, dynamic>> dateResult = await _firestore
+        .collection('chats')
+        .doc(chatId)
+        .collection('messages')
+        .where('content.runtimeType', isEqualTo: 'date')
+        .get();
+
+    final QuerySnapshot<Map<String, dynamic>> filmResult = await _firestore
+        .collection('chats')
+        .doc(chatId)
+        .collection('messages')
+        .where('content.runtimeType', isEqualTo: 'film')
+        .get();
+
+    final List<ChatMessage> dateMessages = dateResult.docs
+        .map(
+          (QueryDocumentSnapshot<Map<String, dynamic>> doc) =>
+              ChatMessage.fromJson(doc.data()),
+        )
+        .toList();
+
+    final List<ChatMessage> filmMessages = filmResult.docs
+        .map(
+          (QueryDocumentSnapshot<Map<String, dynamic>> doc) =>
+              ChatMessage.fromJson(doc.data()),
+        )
+        .toList();
+
+    ChatMessage? topDate;
+    if (dateMessages.isNotEmpty) {
+      dateMessages.sort((ChatMessage a, ChatMessage b) {
+        final int aLikes = (a.content as DateContent).likes.length;
+        final int bLikes = (b.content as DateContent).likes.length;
+        return bLikes.compareTo(aLikes);
+      });
+      topDate = dateMessages.first;
+    }
+
+    ChatMessage? topFilm;
+    if (filmMessages.isNotEmpty) {
+      filmMessages.sort((ChatMessage a, ChatMessage b) {
+        final int aLikes = (a.content as FilmContent).likes.length;
+        final int bLikes = (b.content as FilmContent).likes.length;
+        return bLikes.compareTo(aLikes);
+      });
+      topFilm = filmMessages.first;
+    }
+
+    return (topDateMessage: topDate, topFilmMessage: topFilm);
   }
 
   Future<void> updateChat({

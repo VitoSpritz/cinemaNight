@@ -14,6 +14,7 @@ import '../providers/get_film_message.dart';
 import '../providers/get_user_by_chat_id.dart';
 import '../providers/messages.dart';
 import '../providers/user_profiles.dart';
+import '../widget/chat/chat_recap.dart';
 import '../widget/chat/custom_message.dart';
 import '../widget/chat/select_dates_dialog.dart';
 import '../widget/chat/select_end_date.dart';
@@ -60,7 +61,24 @@ class _GroupChatState extends ConsumerState<GroupChat> {
       if (widget.chatState == ChatItemState.opened) {
         await _showInitialStateDialog(context);
       }
+
+      if (widget.chatState == ChatItemState.closed) {
+        await showCustomBottomModal();
+      }
     });
+  }
+
+  Future<void> showCustomBottomModal() async {
+    await showModalBottomSheet(
+      context: context,
+      elevation: 0.0,
+      useSafeArea: true,
+      isScrollControlled: true,
+      isDismissible: true,
+      builder: (BuildContext context) {
+        return ChatRecap(chatId: widget.chatId);
+      },
+    );
   }
 
   Future<void> _sendMessage({required String userId}) async {
@@ -459,7 +477,9 @@ class _GroupChatState extends ConsumerState<GroupChat> {
                 const SizedBox(width: 8),
                 GestureDetector(
                   behavior: HitTestBehavior.translucent,
-                  onTap: canAddFilm
+                  onTap:
+                      (canAddFilm &&
+                          widget.chatState == ChatItemState.filmSelection)
                       ? () async {
                           _suggestedFilmName = await _showModal();
                           if (_suggestedFilmName != null) {

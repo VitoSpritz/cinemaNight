@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
 
 import '../model/chat_item.dart';
+import '../model/chat_message.dart';
 import '../repositories/chat_repository.dart';
 
 class ChatService {
@@ -56,8 +57,15 @@ class ChatService {
     return await _chatRepository.listPaginatedChat(lastDocument: lastDocument);
   }
 
+  Future<({ChatMessage? topDateMessage, ChatMessage? topFilmMessage})>
+  getMostLikedMessages({required String chatId}) async {
+    return _chatRepository.getMostLikedMessages(chatId: chatId);
+  }
+
   Future<PaginatedChatItem> getChatsByUser({required String userId}) async {
-    final List<ChatItem> chats = await _chatRepository.getChatsByUserId(userId: userId);
+    final List<ChatItem> chats = await _chatRepository.getChatsByUserId(
+      userId: userId,
+    );
     return PaginatedChatItem(
       chatItems: chats,
       hasMore: false,

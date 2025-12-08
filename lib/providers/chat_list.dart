@@ -1,6 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../model/chat_item.dart';
+import '../model/chat_message.dart';
 import '../services/chat_service.dart';
 
 part 'chat_list.g.dart';
@@ -101,4 +102,12 @@ Future<ChatItem> getChatItemById(Ref ref, String chatId) async {
 Future<PaginatedChatItem> userChatList(Ref ref, String userId) async {
   final ChatService service = ChatService();
   return await service.getChatsByUser(userId: userId);
+}
+
+@riverpod
+Future<({ChatMessage? topDateMessage, ChatMessage? topFilmMessage})>
+getMostLikedMessages(Ref ref, {required String chatId}) async {
+  final ChatService service = ChatService();
+
+  return service.getMostLikedMessages(chatId: chatId);
 }
