@@ -133,6 +133,7 @@ class _FilmPickerState extends ConsumerState<FilmPickerModal> {
           filmName: filmName,
           description: review,
           rating: rating,
+          lowercaseName: filmName.toLowerCase(),
         );
         if (mounted) {
           Navigator.pop(context);

@@ -82,6 +82,7 @@ class _ReviewInfoState extends ConsumerState<ReviewInfo> {
       description: newReview,
       filmName: filmName,
       rating: rating,
+      lowercaseName: filmName.toLowerCase(),
     );
 
     ref.invalidate(userReviewProvider);

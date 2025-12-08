@@ -11,6 +11,7 @@ class ReviewService {
     required String filmId,
     required ReviewItemType type,
     required String filmName,
+    required String lowercaseName,
     double? rating,
     String? description,
   }) async {
@@ -21,6 +22,7 @@ class ReviewService {
       filmId: filmId,
       type: type,
       filmName: filmName,
+      lowercaseName: lowercaseName,
       userId: userId,
       description: description,
       rating: rating,
@@ -53,6 +55,7 @@ class ReviewService {
     required String filmId,
     required ReviewItemType type,
     required String filmName,
+    required String lowercaseName,
     double? rating,
     String? description,
   }) async {
@@ -62,6 +65,7 @@ class ReviewService {
       userId: userId,
       type: type,
       filmName: filmName,
+      lowercaseName: lowercaseName,
       description: description,
       rating: rating,
     );

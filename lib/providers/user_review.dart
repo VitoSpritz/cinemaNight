@@ -22,6 +22,7 @@ class UserReview extends _$UserReview {
     required String filmId,
     required ReviewItemType type,
     required String filmName,
+    required String lowercaseName,
     String? description,
     double? rating,
   }) async {
@@ -30,6 +31,7 @@ class UserReview extends _$UserReview {
       filmId: filmId,
       type: type,
       filmName: filmName,
+      lowercaseName: lowercaseName,
       description: description,
       rating: rating,
     );
@@ -43,6 +45,7 @@ class UserReview extends _$UserReview {
     required String filmId,
     required ReviewItemType type,
     required String filmName,
+    required String lowercaseName,
     double? rating,
     String? description,
   }) async {
@@ -52,6 +55,7 @@ class UserReview extends _$UserReview {
       filmName: filmName,
       type: type,
       filmId: filmId,
+      lowercaseName: lowercaseName,
       description: description,
       rating: rating,
     );
