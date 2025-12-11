@@ -63,7 +63,7 @@ class ChatRecap extends ConsumerWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 24.0),
                     child: Text(
-                      "La chat è terminata! Ecco i risultati",
+                      AppLocalizations.of(context)!.chatRecapTitle,
                       style: CustomTypography.titleM.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -89,7 +89,9 @@ class ChatRecap extends ConsumerWidget {
                                 child: Padding(
                                   padding: const EdgeInsets.only(top: 4.0),
                                   child: Text(
-                                    "Data scelta per la serata: $chosenDate",
+                                    AppLocalizations.of(
+                                      context,
+                                    )!.chatRecapChosenDate(chosenDate!),
                                   ),
                                 ),
                               ),
@@ -110,7 +112,9 @@ class ChatRecap extends ConsumerWidget {
                                 child: Padding(
                                   padding: const EdgeInsets.only(top: 4.0),
                                   child: Text(
-                                    "Film scelto per la serata: $chosenFilm",
+                                    AppLocalizations.of(
+                                      context,
+                                    )!.chatRecapChosenFilm(chosenFilm!),
                                   ),
                                 ),
                               ),

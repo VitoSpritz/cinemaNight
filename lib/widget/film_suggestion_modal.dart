@@ -82,7 +82,13 @@ class _FilmSuggestionModalState extends State<FilmSuggestionModal> {
       setState(() => _isLoadingMore = false);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error loading more: ${e.toString()}')),
+          SnackBar(
+            content: Text(
+              AppLocalizations.of(
+                context,
+              )!.filmSuggestionModalLoadingMoreError(e.toString()),
+            ),
+          ),
         );
       }
     }
@@ -130,9 +136,15 @@ class _FilmSuggestionModalState extends State<FilmSuggestionModal> {
     } catch (e) {
       setState(() => _isLoading = false);
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Error: ${e.toString()}')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              AppLocalizations.of(
+                context,
+              )!.filmSuggestionModalError(e.toString()),
+            ),
+          ),
+        );
       }
     }
   }
@@ -152,7 +164,7 @@ class _FilmSuggestionModalState extends State<FilmSuggestionModal> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Text(
-              "Proponi un film",
+              AppLocalizations.of(context)!.filmSuggestionModalSuggetFilm,
               style: CustomTypography.titleM.copyWith(
                 fontWeight: FontWeight.bold,
               ),

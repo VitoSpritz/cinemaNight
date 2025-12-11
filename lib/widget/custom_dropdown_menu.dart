@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../consts/custom_colors.dart';
+import '../l10n/app_localizations.dart';
 
 class CustomDropdownMenu extends ConsumerWidget {
   final List<String> values;
@@ -25,7 +26,6 @@ class CustomDropdownMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final TextEditingController searchController = TextEditingController();
     return AlertDialog(
       alignment: Alignment.topCenter,
       scrollable: true,
@@ -43,7 +43,9 @@ class CustomDropdownMenu extends ConsumerWidget {
               children: <Widget>[
                 Expanded(
                   child: Text(
-                    "Seleziona un genere",
+                    AppLocalizations.of(
+                      context,
+                    )!.customDropdownMenuSelectAGenre,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),

@@ -79,6 +79,12 @@ class SearchModal extends ConsumerWidget {
                         context.pop(searchController.text);
                       }
                     },
+                    onSubmitted: (String value) {
+                      if (searchController.text.isNotEmpty &&
+                          searchController.text.trim().isNotEmpty) {
+                        context.pop(searchController.text);
+                      }
+                    },
                   ),
                 ),
               ),

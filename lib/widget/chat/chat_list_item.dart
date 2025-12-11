@@ -52,8 +52,8 @@ class _ChatListItemState extends ConsumerState<ChatListItem> {
     } else {
       final String? password = await InsertPasswordDialog.show(
         context: context,
-        mainTitle: "Accesso riservato",
-        subtitle: "Inserire la password per entrare",
+        mainTitle: AppLocalizations.of(context)!.chatListItemMainTitle,
+        subtitle: AppLocalizations.of(context)!.chatListItemSubtitle,
       );
 
       if (password == null) {
@@ -83,10 +83,12 @@ class _ChatListItemState extends ConsumerState<ChatListItem> {
       } else {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Password errata. Riprova.'),
+            SnackBar(
+              content: Text(
+                AppLocalizations.of(context)!.chatListItemWrongPassword,
+              ),
               backgroundColor: Colors.red,
-              duration: Duration(seconds: 3),
+              duration: const Duration(seconds: 3),
             ),
           );
         }
@@ -136,8 +138,9 @@ class _ChatListItemState extends ConsumerState<ChatListItem> {
           ConfirmDialog.show(
             context: context,
             title: "Attenzione!",
-            subtitle:
-                "Sei dicuro di voler eliminare questa chat ${widget.chat.name}?",
+            subtitle: AppLocalizations.of(
+              context,
+            )!.chatListItemDeleteChatMessage(widget.chat.name),
             cancelFunction: () async => context.pop(),
             confirmFunction: () async {
               widget.deleteFunction?.call();
@@ -177,7 +180,10 @@ class _ChatListItemState extends ConsumerState<ChatListItem> {
           ),
           Row(
             children: <Widget>[
-              Text("Chiude il: ", style: CustomTypography.caption),
+              Text(
+                AppLocalizations.of(context)!.chatListItemClosesAt,
+                style: CustomTypography.caption,
+              ),
               Expanded(
                 child: Text(
                   DateFormat('dd/MM/yyyy HH:mm').format(widget.chat.closesAt),

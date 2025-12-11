@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../consts/custom_colors.dart';
 import '../consts/custom_typography.dart';
 import '../consts/sizes.dart';
+import '../l10n/app_localizations.dart';
 
 class CustomMovieDisplay extends ConsumerWidget {
   final Uint8List? imageUrl;
@@ -56,14 +57,19 @@ class CustomMovieDisplay extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    movieTitle ?? 'Titolo non disponibile',
+                    movieTitle ??
+                        AppLocalizations.of(
+                          context,
+                        )!.customMovieDisplayTitleNotAvailable,
                     style: CustomTypography.titleM,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                   if (rating != null)
                     Text(
-                      '⭐ ${rating!.toStringAsFixed(1)}',
+                      AppLocalizations.of(
+                        context,
+                      )!.customMovieDisplay(rating!.toStringAsFixed(1)),
                       style: CustomTypography.bodySmall,
                     ),
                 ],

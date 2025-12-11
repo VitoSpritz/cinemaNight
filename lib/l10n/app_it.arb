@@ -6,7 +6,15 @@
     "areYouSureYouWantToQuit": "Sei sicuro di voler uscire?",
     "yes": "Si",
     "no": "No",
-    "welcome": "Benvenuto",
+    "welcome": "Benvenuto, {data}",
+    "@welcome": {
+        "placeholders":{
+            "data": {
+                "type": "String"
+                }
+        }
+    },
+    "singelWelcome": "Benvenuto",
     "goToHome": "Vai alla pagina principale",
     "currentUserString": "Utente: {email}",
     "@currentUserString":{
@@ -112,5 +120,113 @@
     "inactiveBadgeLabel": "Inattivo",
     "searchAFilm":  "Ricerca un film",
     "searchAChat": "Ricerca una chat",
-    "proposeAFilm": "Proponi un film"
+    "proposeAFilm": "Proponi un film",
+
+    "userListModalNoUserSubscribed": "Nessun utente iscritto",
+
+    "reviewCardLoadingError": "Errore nel caricamento {name}",
+    "@reviewCardLoadingError":{
+        "placeholders": {
+            "name":{
+                "type": "String"
+            }
+        }
+    },
+
+    "filmPickerModalYourGrade": "Il tuo voto:",
+    "filmPickerModalReviewAlreadyExisting": "La recensione è già esistente!",
+
+    "customMovieDisplayTitleNotAvailable": "Titolo non disponibile",
+    "customMovieDisplay": "⭐ {data}",
+    "@customMovieDisplay": {
+        "placeholders": {
+            "data":{
+                "type": "String"
+            }
+        }
+    },
+
+    "customDropdownMenuSelectAGenre": "Seleziona un genere",
+
+    "createChatDialogNameError":"Inserire un nome valido",
+    "createChatDialogDateError":"Inserire una data valida",
+    "createChatDialogPasswordError": "La password non rispecchia i canoni minimi",
+    "cerateChatDialogCreateGroup": "Crea un gruppo",
+    "cerateChatDialogCreateNome": "Nome",
+    "cerateChatDialogCreatePassword": "Password",
+    "cerateChatDialogCreateDescriptionOptional": "Descrizione (opzionale)",
+    "cerateChatDialogCreateDescription": "Descrizione",
+    "cerateChatDialogClosingDate": "Data di chiusura",
+    "cerateChatDialogDate": "Data",
+    "cerateChatDialogHour": "Ora",
+
+    "selectEndDateSelectDate": "La data e ora devono essere entro 48 ore da ora",
+    "selectEndDateSelctTime": "Seleziona prima una data",
+    "selectEndDateSelectaDateTime": "Seleziona data e ora",
+    "selectEndDateSelectLimitDate": "Inserire una data limite per poter selezionare una data valida",
+    "selectEndDateSelectaDate": "Seleziona data",
+    "selectEndDateTime": "Ora",
+
+    "insetPasswordDialogInsertPassword": "Inserisci una password",
+    "insetPasswordDialogWrongPassword": "Password errata",
+    "insetPasswordDialogPassword": "Password",
+
+    "chatRecapTitle": "La chat è terminata! Ecco i risultati",
+    "chatRecapChosenDate": "Data scelta per la serata: {data}",
+    "@chatRecapChosenDate": {
+        "placeholders": {
+            "data":{
+                "type": "String"
+            }
+        }
+    },
+    "chatRecapChosenFilm": "Film scelto per la serata: {data}",
+    "@chatRecapChosenFilm": {
+        "placeholders": {
+            "data":{
+                "type": "String"
+            }
+        }
+    },
+
+    "chatListItemMainTitle": "Accesso riservato",
+    "chatListItemSubtitle": "Inserire la password per entrare",
+    "chatListItemWrongPassword": "Password errata. Riprova.",
+    "chatListItemDeleteChatMessage": "Sei dicuro di voler eliminare questa chat {data}?",
+    "@chatListItemDeleteChatMessage": {
+        "placeholders": {
+            "data":{
+                "type": "String"
+            }
+        }
+    },
+    "chatListItemClosesAt": "Chiude il: ",
+
+    "filmSuggestionModalSuggetFilm": "Proponi un film",
+    "filmSuggestionModalLoadingMoreError": "Errore nel caricare altri: {data}",
+    "@filmSuggestionModalLoadingMoreError": {
+        "placeholders": {
+            "data":{
+                "type": "String"
+            }
+        }
+    },
+    "filmSuggestionModalError": "Errore: {data}",
+    "@filmSuggestionModalError": {
+        "placeholders": {
+            "data":{
+                "type": "String"
+            }
+        }
+    },
+
+
+    "homeReviewInstructionFirst": "Inizia subito ad utilizzare CineChat, lascia una tua recensione oppure crea un gruppo!",
+    "homeReviewInstructionSecond": "Crea una recensione",
+    "homeReviewInstructionThird": "Cliccando il tasto ",
+    "homeReviewInstructionFourth": " potrai scrivere recensione sui film che hai visto, dargli un voto e condividerli con i tuoi amici.",
+
+    "homeChatInstructionFirst": "Parla con i tuoi amici",
+    "homeChatInstructionSecond": "Se invece vuoi vuoi parlare con i tuoi amici e organizzare serate a tema cinema, clicca ",
+    "homeChatInstructionThird": " per poter creare una chat, scegliere da una a cinque possibili date e proponi al massimo un film. I più votati saranno scelti alla chiusura della camera."
 }

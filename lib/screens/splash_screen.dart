@@ -53,7 +53,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
           children: <Widget>[
             Image.asset('assets/images/logo.png', width: 200),
             const SizedBox(height: 20),
-            CircularProgressIndicator(color: CustomColors.white),
+            const CircularProgressIndicator(color: CustomColors.white),
           ],
         ),
       ),

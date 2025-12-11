@@ -1,13 +1,11 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
-import '../consts/sizes.dart';
+import '../consts/custom_typography.dart';
 import '../l10n/app_localizations.dart';
 import '../model/user_profile.dart';
 import '../providers/user_profiles.dart';
-import 'login.dart';
+import '../widget/custom_app_bar.dart';
 
 class HomeScreen extends ConsumerWidget {
   static String path = '/home';
@@ -19,75 +17,139 @@ class HomeScreen extends ConsumerWidget {
     final AsyncValue<UserProfile> userProfileAsync = ref.watch(
       userProfilesProvider,
     );
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        title: Text(
-          AppLocalizations.of(context)!.homePage,
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: Colors.blue.shade700,
-        foregroundColor: Colors.white,
-        elevation: 0,
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.logout, size: Sizes.iconMedium),
-            onPressed: () async {
-              final bool? isLoggingOut = await showDialog<bool>(
-                context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                    title: Text(AppLocalizations.of(context)!.confirmLogout),
-                    content: Text(
-                      AppLocalizations.of(context)!.areYouSureYouWantToQuit,
-                    ),
-                    actions: <Widget>[
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pop(false),
-                        child: Text(AppLocalizations.of(context)!.no),
+    return userProfileAsync.when(
+      data: (UserProfile data) {
+        return Scaffold(
+          appBar: CustomAppBar(title: AppLocalizations.of(context)!.homePage),
+          body: CustomScrollView(
+            slivers: <Widget>[
+              SliverFillRemaining(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 24.0,
+                    horizontal: 16,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        data.firstLastName != null
+                            ? AppLocalizations.of(
+                                context,
+                              )!.welcome(data.firstLastName!)
+                            : AppLocalizations.of(context)!.singelWelcome,
+                        style: CustomTypography.titleM.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      TextButton(
-                        onPressed: () => Navigator.of(context).pop(true),
-                        child: Text(AppLocalizations.of(context)!.yes),
+                      const SizedBox(height: 12),
+                      Text(
+                        AppLocalizations.of(
+                          context,
+                        )!.homeReviewInstructionFirst,
+                        style: CustomTypography.body,
                       ),
+                      const SizedBox(height: 16),
+                      Card.outlined(
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  AppLocalizations.of(
+                                    context,
+                                  )!.homeReviewInstructionSecond,
+                                  style: CustomTypography.bodyBold,
+                                ),
+                                const SizedBox(height: 8),
+                                Text.rich(
+                                  TextSpan(
+                                    children: <InlineSpan>[
+                                      TextSpan(
+                                        text: AppLocalizations.of(
+                                          context,
+                                        )!.homeReviewInstructionThird,
+                                      ),
+                                      const WidgetSpan(
+                                        alignment: PlaceholderAlignment.middle,
+                                        child: Icon(Icons.list, size: 18),
+                                      ),
+                                      TextSpan(
+                                        text: AppLocalizations.of(
+                                          context,
+                                        )!.homeReviewInstructionFourth,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Card.outlined(
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  AppLocalizations.of(
+                                    context,
+                                  )!.homeChatInstructionFirst,
+                                  style: CustomTypography.bodyBold,
+                                ),
+                                const SizedBox(height: 8),
+                                Text.rich(
+                                  TextSpan(
+                                    children: <InlineSpan>[
+                                      TextSpan(
+                                        text: AppLocalizations.of(
+                                          context,
+                                        )!.homeChatInstructionSecond,
+                                      ),
+                                      const WidgetSpan(
+                                        alignment: PlaceholderAlignment.middle,
+                                        child: Icon(Icons.chat, size: 18),
+                                      ),
+                                      TextSpan(
+                                        text: AppLocalizations.of(
+                                          context,
+                                        )!.homeChatInstructionThird,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      const Spacer(),
                     ],
-                  );
-                },
-              );
-              if (isLoggingOut == true) {
-                await FirebaseAuth.instance.signOut();
-                if (context.mounted) {
-                  context.go(LoginScreen.path);
-                }
-              }
-            },
-          ),
-        ],
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              AppLocalizations.of(context)!.welcome,
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              AppLocalizations.of(context)!.currentUserString(
-                FirebaseAuth.instance.currentUser?.email ??
-                    AppLocalizations.of(context)!.unknown,
+                  ),
+                ),
               ),
-              style: const TextStyle(fontSize: 16),
-            ),
-            Text(userProfileAsync.value?.firstLastName ?? "No name"),
-            ElevatedButton(
-              onPressed: () => context.push(HomeScreen.path),
-              child: Text(AppLocalizations.of(context)!.goToHome),
-            ),
-          ],
-        ),
-      ),
+            ],
+          ),
+        );
+      },
+      error: (_, __) {
+        return const Center(child: Text("Errore"));
+      },
+      loading: () {
+        return const Center(
+          child: Column(children: <Widget>[CircularProgressIndicator()]),
+        );
+      },
     );
   }
 }

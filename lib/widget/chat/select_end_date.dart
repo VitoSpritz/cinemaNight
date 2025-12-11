@@ -74,9 +74,9 @@ class _SelectEndDateState extends State<SelectEndDate> {
           if (combined.isAfter(maxDate)) {
             if (context.mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
+                SnackBar(
                   content: Text(
-                    'La data e ora devono essere entro 48 ore da ora',
+                    AppLocalizations.of(context)!.selectEndDateSelectDate,
                   ),
                 ),
               );
@@ -94,9 +94,11 @@ class _SelectEndDateState extends State<SelectEndDate> {
 
   Future<void> _selectTime(BuildContext context) async {
     if (_selectedDateTime == null) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Seleziona prima una data')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.selectEndDateSelctTime),
+        ),
+      );
       return;
     }
 
@@ -132,8 +134,10 @@ class _SelectEndDateState extends State<SelectEndDate> {
       if (combined.isAfter(maxDate)) {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('La data e ora devono essere entro 48 ore da ora'),
+            SnackBar(
+              content: Text(
+                AppLocalizations.of(context)!.selectEndDateSelectDate,
+              ),
             ),
           );
         }
@@ -170,7 +174,7 @@ class _SelectEndDateState extends State<SelectEndDate> {
           children: <Widget>[
             Expanded(
               child: Text(
-                "Seleziona data e ora",
+                AppLocalizations.of(context)!.selectEndDateSelctTime,
                 style: CustomTypography.titleXL.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -185,7 +189,7 @@ class _SelectEndDateState extends State<SelectEndDate> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               Text(
-                "Inserire una data limite per poter selezionare una data valida",
+                AppLocalizations.of(context)!.selectEndDateSelectLimitDate,
                 style: CustomTypography.caption,
               ),
               const Spacer(),
@@ -217,7 +221,9 @@ class _SelectEndDateState extends State<SelectEndDate> {
                               child: Text(
                                 _selectedDateTime != null
                                     ? _formatDate(_selectedDateTime!)
-                                    : 'Seleziona data',
+                                    : AppLocalizations.of(
+                                        context,
+                                      )!.selectEndDateSelectaDate,
                                 style: CustomTypography.bodySmall.copyWith(
                                   color: _selectedDateTime != null
                                       ? CustomColors.black
@@ -262,7 +268,9 @@ class _SelectEndDateState extends State<SelectEndDate> {
                               child: Text(
                                 _selectedDateTime != null
                                     ? _formatTime(_selectedDateTime!)
-                                    : 'Ora',
+                                    : AppLocalizations.of(
+                                        context,
+                                      )!.selectEndDateTime,
                                 style: CustomTypography.bodySmall.copyWith(
                                   color: _selectedDateTime != null
                                       ? CustomColors.black
@@ -293,7 +301,13 @@ class _SelectEndDateState extends State<SelectEndDate> {
                 onPressed: () async {
                   if (_selectedDateTime == null) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Seleziona data e ora')),
+                      SnackBar(
+                        content: Text(
+                          AppLocalizations.of(
+                            context,
+                          )!.selectEndDateSelectaDateTime,
+                        ),
+                      ),
                     );
                     return;
                   }

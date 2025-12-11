@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import '../consts/custom_colors.dart';
 import '../consts/custom_typography.dart';
 import '../consts/regex.dart';
+import '../l10n/app_localizations.dart';
 import '../model/chat_item.dart';
 import '../model/user_profile.dart';
 import '../providers/chat_list.dart';
@@ -136,24 +137,26 @@ class _CreateChatDialogState extends ConsumerState<CreateChatDialog> {
 
     if (_nameController.text.trim().isEmpty) {
       setState(() {
-        _nameError = "Inserire un nome valido";
+        _nameError = AppLocalizations.of(context)!.createChatDialogNameError;
       });
     }
 
     if (_selectedDate == null) {
       setState(() {
-        _dateError = "Inserire una data valida";
+        _dateError = AppLocalizations.of(context)!.createChatDialogDateError;
       });
     }
 
     if (_selectedTime == null) {
       setState(() {
-        _dateError = "Inserire una data valida";
+        _dateError = AppLocalizations.of(context)!.createChatDialogDateError;
       });
     }
 
     if (!Regex.passwordRegex.hasMatch(_passwordController.text)) {
-      _passwordError = "La password non rispecchia i canoni minimi";
+      _passwordError = AppLocalizations.of(
+        context,
+      )!.createChatDialogPasswordError;
     }
 
     if (_nameError != null || _dateError != null || _passwordError != null) {
@@ -216,7 +219,7 @@ class _CreateChatDialogState extends ConsumerState<CreateChatDialog> {
             children: <Widget>[
               Expanded(
                 child: Text(
-                  "Crea un gruppo",
+                  AppLocalizations.of(context)!.cerateChatDialogCreateGroup,
                   style: CustomTypography.titleXL.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
@@ -244,14 +247,18 @@ class _CreateChatDialogState extends ConsumerState<CreateChatDialog> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     CustomInputField(
-                      fieldName: "Nome",
+                      fieldName: AppLocalizations.of(
+                        context,
+                      )!.cerateChatDialogCreateNome,
                       controller: _nameController,
                       errorMessage: _nameError,
                       textType: TextInputType.text,
                     ),
                     const SizedBox(height: 8),
                     CustomInputField(
-                      fieldName: "Password",
+                      fieldName: AppLocalizations.of(
+                        context,
+                      )!.cerateChatDialogCreatePassword,
                       controller: _passwordController,
                       hidden: true,
                       textType: TextInputType.visiblePassword,
@@ -261,7 +268,9 @@ class _CreateChatDialogState extends ConsumerState<CreateChatDialog> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(
-                        "Descrizione (opzionale)",
+                        AppLocalizations.of(
+                          context,
+                        )!.cerateChatDialogCreateDescriptionOptional,
                         style: CustomTypography.bodySmall,
                       ),
                     ),
@@ -277,7 +286,9 @@ class _CreateChatDialogState extends ConsumerState<CreateChatDialog> {
                           hintStyle: CustomTypography.bodySmall,
                           filled: true,
                           fillColor: CustomColors.white.withValues(alpha: 0.7),
-                          hintText: "Descrizione",
+                          hintText: AppLocalizations.of(
+                            context,
+                          )!.cerateChatDialogCreateDescription,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20),
                             borderSide: const BorderSide(
@@ -315,7 +326,9 @@ class _CreateChatDialogState extends ConsumerState<CreateChatDialog> {
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  "Data di chiusura",
+                                  AppLocalizations.of(
+                                    context,
+                                  )!.cerateChatDialogClosingDate,
                                   style: CustomTypography.bodySmall,
                                 ),
                               ),
@@ -348,7 +361,9 @@ class _CreateChatDialogState extends ConsumerState<CreateChatDialog> {
                                               ? DateFormat(
                                                   'dd/MM/yy',
                                                 ).format(_selectedDate!)
-                                              : 'Data',
+                                              : AppLocalizations.of(
+                                                  context,
+                                                )!.cerateChatDialogDate,
                                           style: CustomTypography.bodySmall
                                               .copyWith(
                                                 color: _selectedDate != null
@@ -377,7 +392,9 @@ class _CreateChatDialogState extends ConsumerState<CreateChatDialog> {
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  "Ora",
+                                  AppLocalizations.of(
+                                    context,
+                                  )!.cerateChatDialogHour,
                                   style: CustomTypography.bodySmall,
                                 ),
                               ),
@@ -408,7 +425,9 @@ class _CreateChatDialogState extends ConsumerState<CreateChatDialog> {
                                         child: Text(
                                           _selectedTime != null
                                               ? _formatTime(_selectedTime!)
-                                              : 'Ora',
+                                              : AppLocalizations.of(
+                                                  context,
+                                                )!.cerateChatDialogHour,
                                           style: CustomTypography.bodySmall
                                               .copyWith(
                                                 color: _selectedTime != null

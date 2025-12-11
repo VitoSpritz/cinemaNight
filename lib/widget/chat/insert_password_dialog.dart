@@ -59,7 +59,9 @@ class _InsertPasswordDialogState extends ConsumerState<InsertPasswordDialog> {
 
     if (password.isEmpty) {
       setState(() {
-        _errorMessage = "Inserisci una password";
+        _errorMessage = AppLocalizations.of(
+          context,
+        )!.insetPasswordDialogInsertPassword;
       });
       return;
     }
@@ -80,7 +82,9 @@ class _InsertPasswordDialogState extends ConsumerState<InsertPasswordDialog> {
     } catch (e) {
       if (mounted) {
         setState(() {
-          _errorMessage = "Password errata";
+          _errorMessage = AppLocalizations.of(
+            context,
+          )!.insetPasswordDialogWrongPassword;
           _isLoading = false;
         });
       }
@@ -132,7 +136,9 @@ class _InsertPasswordDialogState extends ConsumerState<InsertPasswordDialog> {
               enabled: !_isLoading,
               decoration: InputDecoration(
                 labelText: "Password",
-                hintText: "Inserisci la password",
+                hintText: AppLocalizations.of(
+                  context,
+                )!.insetPasswordDialogInsertPassword,
                 filled: true,
                 fillColor: CustomColors.white.withValues(alpha: 0.7),
                 border: OutlineInputBorder(

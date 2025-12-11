@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../consts/custom_colors.dart';
 import '../consts/custom_typography.dart';
+import '../l10n/app_localizations.dart';
 import '../model/user_profile.dart';
 
 class UserListModal extends ConsumerWidget {
@@ -54,7 +55,7 @@ class UserListModal extends ConsumerWidget {
             const SizedBox(height: 16),
             if (userList.isEmpty)
               Text(
-                'Nessun utente iscritto',
+                AppLocalizations.of(context)!.userListModalNoUserSubscribed,
                 style: CustomTypography.bodySmall,
               )
             else

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../consts/custom_typography.dart';
 import '../helpers/media_converter.dart';
+import '../l10n/app_localizations.dart';
 import '../model/media.dart';
 import '../model/media_with_poster.dart';
 import '../model/review.dart';
@@ -87,7 +88,9 @@ class ReviewCard extends ConsumerWidget {
                 const Icon(Icons.error, color: Colors.red, size: 32),
                 const SizedBox(height: 8),
                 Text(
-                  'Error loading ${review.type.name}',
+                  AppLocalizations.of(
+                    context,
+                  )!.reviewCardLoadingError(review.type.name),
                   style: CustomTypography.captionBolder,
                   textAlign: TextAlign.center,
                 ),

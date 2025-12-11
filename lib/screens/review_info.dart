@@ -259,8 +259,14 @@ class _ReviewInfoState extends ConsumerState<ReviewInfo> {
                                     Container(
                                       padding: const EdgeInsets.all(16),
                                       child: TextField(
+                                        onTapOutside: (PointerDownEvent event) {
+                                          FocusManager.instance.primaryFocus
+                                              ?.unfocus();
+                                        },
                                         controller: _reviewController,
                                         decoration: InputDecoration(
+                                          fillColor: CustomColors.white,
+                                          filled: true,
                                           labelText: AppLocalizations.of(
                                             context,
                                           )!.insertAReview,

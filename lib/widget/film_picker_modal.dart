@@ -219,6 +219,9 @@ class _FilmPickerState extends ConsumerState<FilmPickerModal> {
                   suffixIcon: const Icon(Icons.search, size: Sizes.iconMedium),
                 ),
                 onSubmitted: (_) => _searchMedia(),
+                onTapOutside: (PointerDownEvent event) {
+                  FocusManager.instance.primaryFocus?.unfocus();
+                },
               ),
               const SizedBox(height: 16),
               Center(
@@ -320,7 +323,11 @@ class _FilmPickerState extends ConsumerState<FilmPickerModal> {
                     ),
                     Row(
                       children: <Widget>[
-                        const Text("Il tuo voto:"),
+                        Text(
+                          AppLocalizations.of(
+                            context,
+                          )!.filmPickerModalYourGrade,
+                        ),
                         CustomRating(
                           onRatingChanged: (double rating) {
                             _ratingController.text = rating.toString();
@@ -335,6 +342,9 @@ class _FilmPickerState extends ConsumerState<FilmPickerModal> {
                         labelText: AppLocalizations.of(context)!.review,
                         border: const OutlineInputBorder(),
                       ),
+                      onTapOutside: (PointerDownEvent event) {
+                        FocusManager.instance.primaryFocus?.unfocus();
+                      },
                       maxLines: 3,
                     ),
                     const SizedBox(height: 16),
@@ -345,7 +355,9 @@ class _FilmPickerState extends ConsumerState<FilmPickerModal> {
                           )
                         : _reviewAlreadyExist == true
                         ? Text(
-                            "La recensione è già esistente!",
+                            AppLocalizations.of(
+                              context,
+                            )!.filmPickerModalReviewAlreadyExisting,
                             style: CustomTypography.caption.copyWith(
                               color: CustomColors.errorMessage,
                             ),
