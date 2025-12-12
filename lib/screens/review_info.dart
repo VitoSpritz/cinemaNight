@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../consts/custom_colors.dart';
 import '../consts/custom_typography.dart';
+import '../consts/sizes.dart';
 import '../helpers/media_converter.dart';
 import '../l10n/app_localizations.dart';
 import '../model/media.dart';
@@ -17,6 +19,7 @@ import '../services/review_service.dart';
 import '../widget/custom_dialog.dart';
 import '../widget/custom_rating.dart';
 import '../widget/expandable_text.dart';
+import 'review_list.dart';
 
 class ReviewInfo extends ConsumerStatefulWidget {
   static const String path = '/review/:reviewId/info';
@@ -64,13 +67,15 @@ class _ReviewInfoState extends ConsumerState<ReviewInfo> {
     return false;
   }
 
-  void _updateReview({
+  Future<void> _updateReview({
+    required Review review,
     required String newReview,
     required String userId,
     required int filmId,
     required String type,
     required String filmName,
     required double rating,
+    List<String>? likes,
   }) async {
     await _reviewService.updateReview(
       reviewId: widget.reviewId,
@@ -83,6 +88,7 @@ class _ReviewInfoState extends ConsumerState<ReviewInfo> {
       filmName: filmName,
       rating: rating,
       lowercaseName: filmName.toLowerCase(),
+      likes: likes ?? review.likes,
     );
 
     ref.invalidate(userReviewProvider);
@@ -104,335 +110,357 @@ class _ReviewInfoState extends ConsumerState<ReviewInfo> {
       userProfilesProvider,
     );
 
+    final bool isLoading =
+        reviewAsync.isLoading ||
+        mediaAsync.isLoading ||
+        userAuthAsync.isLoading;
+    final bool hasError =
+        reviewAsync.hasError || mediaAsync.hasError || userAuthAsync.hasError;
+
+    if (isLoading || _isUpdating) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
+    if (hasError) {
+      final Object? error =
+          reviewAsync.error ?? mediaAsync.error ?? userAuthAsync.error;
+      return Scaffold(body: Center(child: Text('Error: $error')));
+    }
+
+    final Review review = reviewAsync.value!;
+    final MediaWithPoster mediaWithPoster = mediaAsync.value!;
+    final UserProfile userAuth = userAuthAsync.value!;
+    final Media media = mediaWithPoster.media;
+    final bool isReviewCreator = review.userId == userAuth.userId;
+
+    _initializeControllers(review);
+
     return Scaffold(
-      body: _isUpdating
-          ? const Center(child: CircularProgressIndicator())
-          : Column(
+      body: Column(
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(
+              left: 16.0,
+              right: 16.0,
+              top: MediaQuery.of(context).padding.top + 2,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(
-                    left: 16.0,
-                    right: 16.0,
-                    top: MediaQuery.of(context).padding.top + 2,
+                FilledButton(
+                  style: FilledButton.styleFrom(
+                    backgroundColor: Colors.transparent,
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      FilledButton(
-                        style: FilledButton.styleFrom(
-                          backgroundColor: Colors.transparent,
-                        ),
-                        onPressed: () async {
-                          final bool result = _checkValuesOnExit(
-                            rating: _ratingController.text,
-                            review: _reviewController.text,
-                          );
-                          if (result) {
-                            await CustomDialog.show(
-                              context: context,
-                              title: AppLocalizations.of(
-                                context,
-                              )!.exitWithoutSavingDialong,
-                              subtitle: AppLocalizations.of(
-                                context,
-                              )!.sureYouWantToQuit,
-                              function: () async => Navigator.of(context).pop(),
-                            );
-                          } else {
+                  onPressed: () async {
+                    final bool result = _checkValuesOnExit(
+                      rating: _ratingController.text,
+                      review: _reviewController.text,
+                    );
+                    if (result) {
+                      await CustomDialog.show(
+                        context: context,
+                        title: AppLocalizations.of(
+                          context,
+                        )!.exitWithoutSavingDialong,
+                        subtitle: AppLocalizations.of(
+                          context,
+                        )!.sureYouWantToQuit,
+                        function: () async {
+                          if (context.canPop()) {
                             context.pop();
+                          } else {
+                            context.go(ReviewList.path);
                           }
                         },
-                        child: const Icon(
-                          Icons.arrow_back,
-                          fill: 0,
-                          color: CustomColors.black,
-                          size: 24,
+                      );
+                    } else {
+                      if (context.canPop()) {
+                        context.pop();
+                      } else {
+                        context.go(ReviewList.path);
+                      }
+                    }
+                  },
+                  child: const Icon(
+                    Icons.arrow_back,
+                    fill: 0,
+                    color: CustomColors.black,
+                    size: 24,
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Text(
+                      AppLocalizations.of(context)!.reviewInfoPageTitle,
+                      style: CustomTypography.titleM.copyWith(
+                        fontWeight: FontWeight.bold,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ),
+                ),
+                if (!isReviewCreator)
+                  IconButton(
+                    onPressed: () async {
+                      final bool hasLiked =
+                          review.likes?.contains(userAuth.userId) ?? false;
+                      await _updateReview(
+                        filmId: int.parse(review.filmId),
+                        filmName: review.filmName,
+                        newReview: review.description!,
+                        rating: review.rating!,
+                        review: review,
+                        type: review.type.toString(),
+                        userId: review.userId,
+                        likes: hasLiked
+                            ? review.likes!
+                                  .where((String id) => id != userAuth.userId)
+                                  .toList()
+                            : <String>[...?review.likes, userAuth.userId],
+                      );
+                    },
+                    icon: Icon(
+                      (review.likes != null &&
+                              review.likes!.contains(userAuth.userId))
+                          ? Icons.star
+                          : Icons.star_border,
+                      color:
+                          (review.likes != null &&
+                              review.likes!.contains(userAuth.userId))
+                          ? CustomColors.mainYellow
+                          : CustomColors.black,
+                      size: Sizes.iconMedium,
+                    ),
+                  ),
+                IconButton(
+                  onPressed: () async {
+                    final String link =
+                        'cinenight://review/${widget.reviewId}/info';
+                    await Clipboard.setData(ClipboardData(text: link));
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Link copiato"),
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+                    }
+                  },
+                  icon: const Icon(
+                    Icons.share,
+                    color: CustomColors.black,
+                    size: Sizes.iconMedium,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Card(
+                        clipBehavior: Clip.antiAlias,
+                        child: Image.memory(
+                          mediaWithPoster.poster!,
+                          width: 120,
+                          height: 180,
+                          fit: BoxFit.cover,
                         ),
                       ),
+                      const SizedBox(width: 16),
                       Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Text(
-                            AppLocalizations.of(context)!.reviewInfoPageTitle,
-                            style: CustomTypography.titleM.copyWith(
-                              fontWeight: FontWeight.bold,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              MediaConverter.getValue(
+                                media: media,
+                                field: MediaField.title,
+                              ),
+                              style: CustomTypography.titleXL.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                              maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
+                            const SizedBox(height: 8),
+                            Text(
+                              AppLocalizations.of(context)!.releasedLabel(
+                                MediaConverter.getValue(
+                                  media: media,
+                                  field: MediaField.releaseDate,
+                                ),
+                              ),
+                              style: CustomTypography.bodySmall,
+                            ),
+                            const SizedBox(height: 8),
+                            CustomRating(
+                              initialRating: review.rating ?? 0.0,
+                              onRatingChanged: (double rating) {
+                                _ratingController.text = rating.toString();
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 32),
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: CustomColors.white,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: ExpandableText(
+                      text: MediaConverter.getValue(
+                        media: media,
+                        field: MediaField.overview,
+                      ),
+                      maxLines: 2,
+                      style: CustomTypography.body,
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    child: TextField(
+                      controller: _reviewController,
+                      enabled: isReviewCreator,
+                      decoration: InputDecoration(
+                        labelText: AppLocalizations.of(context)!.insertAReview,
+                        border: const OutlineInputBorder(),
+                      ),
+                      maxLines: 3,
+                    ),
+                  ),
+                  const SizedBox(height: 32),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: FilledButton(
+                          style: FilledButton.styleFrom(
+                            backgroundColor: CustomColors.white,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(18),
+                              ),
+                              side: BorderSide(
+                                color: CustomColors.black,
+                                width: 1,
+                              ),
+                            ),
+                          ),
+                          onPressed: !isReviewCreator
+                              ? null
+                              : () async {
+                                  final bool?
+                                  isUpdated = await CustomDialog.show(
+                                    context: context,
+                                    title: AppLocalizations.of(
+                                      context,
+                                    )!.attentionLabel,
+                                    subtitle:
+                                        "Sei sicuro di voler aggiornare la recensione?",
+                                  );
+                                  if (isUpdated == true) {
+                                    setState(() {
+                                      _isUpdating = true;
+                                    });
+                                    _updateReview(
+                                      review: review,
+                                      newReview: _reviewController.text,
+                                      userId: userAuth.userId,
+                                      filmId: MediaConverter.getValue(
+                                        media: media,
+                                        field: MediaField.id,
+                                      ),
+                                      type: MediaConverter.getValue(
+                                        media: media,
+                                        field: MediaField.mediaType,
+                                      ),
+                                      rating: double.parse(
+                                        _ratingController.text,
+                                      ),
+                                      filmName: MediaConverter.getValue(
+                                        media: media,
+                                        field: MediaField.title,
+                                      ),
+                                    );
+                                  }
+                                },
+                          child: Text(
+                            style: CustomTypography.bodySmallBold.copyWith(
+                              color: CustomColors.black,
+                            ),
+                            AppLocalizations.of(context)!.updateButton,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: FilledButton(
+                          style: FilledButton.styleFrom(
+                            backgroundColor: CustomColors.white,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(18),
+                              ),
+                              side: BorderSide(
+                                color: CustomColors.black,
+                                width: 1,
+                              ),
+                            ),
+                          ),
+                          onPressed: !isReviewCreator
+                              ? null
+                              : () async {
+                                  final bool? deleteReview =
+                                      await CustomDialog.show(
+                                        title: AppLocalizations.of(
+                                          context,
+                                        )!.attentionLabel,
+                                        subtitle: AppLocalizations.of(
+                                          context,
+                                        )!.deleteReviewDialog,
+                                        context: context,
+                                      );
+                                  if (deleteReview == true) {
+                                    await _reviewService.deleteReveiwById(
+                                      widget.reviewId,
+                                    );
+                                    ref.invalidate(userReviewProvider);
+                                    if (mounted) {
+                                      context.pop();
+                                    }
+                                  }
+                                },
+                          child: Text(
+                            style: CustomTypography.bodySmallBold.copyWith(
+                              color: CustomColors.black,
+                            ),
+                            AppLocalizations.of(context)!.deleteReviewButton,
                           ),
                         ),
                       ),
                     ],
                   ),
-                ),
-                Expanded(
-                  child: reviewAsync.when(
-                    data: (Review review) {
-                      return mediaAsync.when(
-                        data: (MediaWithPoster mediaWithPoster) {
-                          return userAuthAsync.when(
-                            data: (UserProfile userAuth) {
-                              _initializeControllers(review);
-                              final Media media = mediaWithPoster.media;
-                              return SingleChildScrollView(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Card(
-                                          clipBehavior: Clip.antiAlias,
-                                          child: Image.memory(
-                                            mediaWithPoster.poster!,
-                                            width: 120,
-                                            height: 180,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                        const SizedBox(width: 16),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: <Widget>[
-                                              Text(
-                                                MediaConverter.getValue(
-                                                  media: media,
-                                                  field: MediaField.title,
-                                                ),
-                                                style: CustomTypography.titleXL
-                                                    .copyWith(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                              const SizedBox(height: 8),
-                                              Text(
-                                                AppLocalizations.of(
-                                                  context,
-                                                )!.releasedLabel(
-                                                  MediaConverter.getValue(
-                                                    media: media,
-                                                    field:
-                                                        MediaField.releaseDate,
-                                                  ),
-                                                ),
-                                                style:
-                                                    CustomTypography.bodySmall,
-                                              ),
-                                              const SizedBox(height: 8),
-                                              CustomRating(
-                                                initialRating:
-                                                    review.rating ?? 0.0,
-                                                onRatingChanged:
-                                                    (double rating) {
-                                                      _ratingController.text =
-                                                          rating.toString();
-                                                    },
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 32),
-                                    Container(
-                                      padding: const EdgeInsets.all(16),
-                                      decoration: BoxDecoration(
-                                        color: CustomColors.white,
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: ExpandableText(
-                                        text: MediaConverter.getValue(
-                                          media: media,
-                                          field: MediaField.overview,
-                                        ),
-                                        maxLines: 2,
-                                        style: CustomTypography.body,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 32),
-                                    Container(
-                                      padding: const EdgeInsets.all(16),
-                                      child: TextField(
-                                        onTapOutside: (PointerDownEvent event) {
-                                          FocusManager.instance.primaryFocus
-                                              ?.unfocus();
-                                        },
-                                        controller: _reviewController,
-                                        decoration: InputDecoration(
-                                          fillColor: CustomColors.white,
-                                          filled: true,
-                                          labelText: AppLocalizations.of(
-                                            context,
-                                          )!.insertAReview,
-                                          border: const OutlineInputBorder(),
-                                        ),
-                                        maxLines: 3,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 32),
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.stretch,
-                                      children: <Widget>[
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: FilledButton(
-                                            style: FilledButton.styleFrom(
-                                              backgroundColor:
-                                                  CustomColors.white,
-                                              shape:
-                                                  const RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                          Radius.circular(18),
-                                                        ),
-                                                    side: BorderSide(
-                                                      color: CustomColors.black,
-                                                      width: 1,
-                                                    ),
-                                                  ),
-                                            ),
-                                            onPressed: () async {
-                                              final bool? isUpdated =
-                                                  await CustomDialog.show(
-                                                    context: context,
-                                                    title: AppLocalizations.of(
-                                                      context,
-                                                    )!.attentionLabel,
-                                                    subtitle: AppLocalizations.of(
-                                                      context,
-                                                    )!.reviewInfoUpdateReview,
-                                                  );
-                                              if (isUpdated == true) {
-                                                setState(() {
-                                                  _isUpdating = true;
-                                                });
-                                                _updateReview(
-                                                  newReview:
-                                                      _reviewController.text,
-                                                  userId: userAuth.userId,
-                                                  filmId:
-                                                      MediaConverter.getValue(
-                                                        media: media,
-                                                        field: MediaField.id,
-                                                      ),
-                                                  type: MediaConverter.getValue(
-                                                    media: media,
-                                                    field: MediaField.mediaType,
-                                                  ),
-                                                  rating: double.parse(
-                                                    _ratingController.text,
-                                                  ),
-                                                  filmName:
-                                                      MediaConverter.getValue(
-                                                        media: media,
-                                                        field: MediaField.title,
-                                                      ),
-                                                );
-                                              }
-                                            },
-                                            child: Text(
-                                              style: CustomTypography
-                                                  .bodySmallBold
-                                                  .copyWith(
-                                                    color: CustomColors.black,
-                                                  ),
-                                              AppLocalizations.of(
-                                                context,
-                                              )!.updateButton,
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: FilledButton(
-                                            style: FilledButton.styleFrom(
-                                              backgroundColor:
-                                                  CustomColors.white,
-                                              shape:
-                                                  const RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                          Radius.circular(18),
-                                                        ),
-                                                    side: BorderSide(
-                                                      color: CustomColors.black,
-                                                      width: 1,
-                                                    ),
-                                                  ),
-                                            ),
-                                            onPressed: () async {
-                                              final bool? deleteReview =
-                                                  await CustomDialog.show(
-                                                    title: AppLocalizations.of(
-                                                      context,
-                                                    )!.attentionLabel,
-                                                    subtitle:
-                                                        AppLocalizations.of(
-                                                          context,
-                                                        )!.deleteReviewDialog,
-                                                    context: context,
-                                                  );
-                                              if (deleteReview == true) {
-                                                await _reviewService
-                                                    .deleteReveiwById(
-                                                      widget.reviewId,
-                                                    );
-                                                ref.invalidate(
-                                                  userReviewProvider,
-                                                );
-                                                if (mounted) {
-                                                  context.pop();
-                                                }
-                                              }
-                                            },
-                                            child: Text(
-                                              style: CustomTypography
-                                                  .bodySmallBold
-                                                  .copyWith(
-                                                    color: CustomColors.black,
-                                                  ),
-                                              AppLocalizations.of(
-                                                context,
-                                              )!.deleteReviewButton,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                            loading: () => const Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                            error: (Object error, StackTrace stack) =>
-                                Center(child: Text('Error: $error')),
-                          );
-                        },
-                        loading: () =>
-                            const Center(child: CircularProgressIndicator()),
-                        error: (Object error, StackTrace stack) =>
-                            Center(child: Text('Error: $error')),
-                      );
-                    },
-                    loading: () =>
-                        const Center(child: CircularProgressIndicator()),
-                    error: (Object error, StackTrace stack) =>
-                        Center(child: Text('Error: $error')),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
+          ),
+        ],
+      ),
     );
   }
 }

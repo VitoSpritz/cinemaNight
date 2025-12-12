@@ -22,6 +22,7 @@ abstract class Review with _$Review {
     required String lowercaseName,
     double? rating,
     String? description,
+    List<String>? likes,
   }) = _Review;
 
   factory Review.fromJson(Map<String, dynamic> json) => _$ReviewFromJson(json);
@@ -35,6 +36,7 @@ abstract class Review with _$Review {
     required String lowercaseName,
     double? rating,
     String? description,
+    List<String>? likes,
   }) {
     if (rating != null && (rating < 0 || rating > 10)) {
       throw ArgumentError('Rating must be between 0 and 10, got $rating');
@@ -48,6 +50,7 @@ abstract class Review with _$Review {
       lowercaseName: lowercaseName,
       type: type,
       description: description,
+      likes: likes,
     );
   }
 }

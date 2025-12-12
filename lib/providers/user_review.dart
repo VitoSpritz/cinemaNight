@@ -48,6 +48,7 @@ class UserReview extends _$UserReview {
     required String lowercaseName,
     double? rating,
     String? description,
+    List<String>? likes,
   }) async {
     await service.updateReview(
       reviewId: reviewId,
@@ -58,6 +59,7 @@ class UserReview extends _$UserReview {
       lowercaseName: lowercaseName,
       description: description,
       rating: rating,
+      likes: likes,
     );
 
     ref.invalidateSelf();

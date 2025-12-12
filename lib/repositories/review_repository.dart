@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/widgets.dart';
 
 import '../model/review.dart';
 
@@ -40,12 +41,36 @@ class ReviewRepository {
         .orderBy('rating', descending: true)
         .get();
 
-    return result.docs
+    List<Review> liked = <Review>[];
+    try {
+      final QuerySnapshot<Map<String, dynamic>> likedReviews = await _firestore
+          .collection('reviews')
+          .where('likes', arrayContains: userId)
+          .get();
+
+      liked = likedReviews.docs
+          .map(
+            (QueryDocumentSnapshot<Map<String, dynamic>> doc) =>
+                Review.fromJson(doc.data()),
+          )
+          .toList();
+    } catch (e) {
+      debugPrint("Error fetching liked reviews: $e");
+    }
+
+    final List<Review> userReviews = result.docs
         .map(
           (QueryDocumentSnapshot<Map<String, dynamic>> doc) =>
               Review.fromJson(doc.data()),
         )
         .toList();
+
+    debugPrint("Liked review => $liked");
+
+    final List<Review> reviews = <Review>[...userReviews, ...liked]
+      ..sort((Review a, Review b) => b.rating!.compareTo(a.rating!));
+
+    return reviews;
   }
 
   Future<void> updateReview(String reviewId, Review review) async {

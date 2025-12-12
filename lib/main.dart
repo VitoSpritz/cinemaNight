@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'firebase_options.dart';
 import 'l10n/app_localizations.dart';
 import 'providers/auth_listener.dart';
+import 'providers/deep_link.dart';
 import 'screens/router/router.dart';
 
 Future<void> main() async {
@@ -22,6 +23,7 @@ class MainApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final GoRouter router = ref.watch(routerProvider);
     ref.watch(authListenerProvider);
+    ref.watch(deepLinkListenerProvider);
 
     return MaterialApp.router(
       routerConfig: router,

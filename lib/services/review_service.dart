@@ -58,6 +58,7 @@ class ReviewService {
     required String lowercaseName,
     double? rating,
     String? description,
+    List<String>? likes,
   }) async {
     final Review updateReview = Review(
       reviewId: reviewId,
@@ -68,6 +69,7 @@ class ReviewService {
       lowercaseName: lowercaseName,
       description: description,
       rating: rating,
+      likes: likes,
     );
 
     await _reviewRepository.updateReview(reviewId, updateReview);
