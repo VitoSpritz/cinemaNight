@@ -39,7 +39,26 @@ class _ChatsState extends ConsumerState<Chats> {
           },
         ),
       ),
-      body: ChatList(chatName: _chatName),
+      body: Stack(
+        children: <Widget>[
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                stops: <double>[0, 0.19, 0.41, 1.0],
+                colors: <Color>[
+                  Color(0xFF5264DE),
+                  Color(0xFF212C77),
+                  Color(0xFF050031),
+                  Color(0xFF050031),
+                ],
+              ),
+            ),
+          ),
+          ChatList(chatName: _chatName),
+        ],
+      ),
       floatingActionButton: CustomAddButton(
         onPressed: () {
           CreateChatDialog.show(context: context);

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../consts/custom_colors.dart';
 import '../../consts/custom_typography.dart';
 import '../../l10n/app_localizations.dart';
 import '../../model/chat_item.dart';
@@ -164,8 +165,8 @@ class _ChatListItemState extends ConsumerState<ChatListItem> {
             style:
                 widget.user.savedChats != null &&
                     widget.user.savedChats?.contains(widget.chat.id) == true
-                ? CustomTypography.bodyBold
-                : CustomTypography.body,
+                ? CustomTypography.bodyBold.copyWith(color: CustomColors.white)
+                : CustomTypography.body.copyWith(color: CustomColors.white),
           ),
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
@@ -174,7 +175,9 @@ class _ChatListItemState extends ConsumerState<ChatListItem> {
                       widget.chat.description!.isEmpty == true)
                   ? AppLocalizations.of(context)!.noDescriptionAvailable
                   : widget.chat.description!,
-              style: CustomTypography.caption,
+              style: CustomTypography.caption.copyWith(
+                color: CustomColors.white,
+              ),
               overflow: TextOverflow.ellipsis,
             ),
           ),
@@ -182,13 +185,17 @@ class _ChatListItemState extends ConsumerState<ChatListItem> {
             children: <Widget>[
               Text(
                 AppLocalizations.of(context)!.chatListItemClosesAt,
-                style: CustomTypography.caption,
+                style: CustomTypography.caption.copyWith(
+                  color: CustomColors.white,
+                ),
               ),
               Expanded(
                 child: Text(
                   DateFormat('dd/MM/yyyy HH:mm').format(widget.chat.closesAt),
                   overflow: TextOverflow.ellipsis,
-                  style: CustomTypography.caption,
+                  style: CustomTypography.caption.copyWith(
+                    color: CustomColors.white,
+                  ),
                 ),
               ),
             ],

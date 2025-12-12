@@ -162,7 +162,9 @@ class _ChatListState extends ConsumerState<ChatList> {
                           decoration: TextDecoration.underline,
                           decorationColor: CustomColors.mainYellow,
                         )
-                      : CustomTypography.bodySmall,
+                      : CustomTypography.bodySmall.copyWith(
+                          color: CustomColors.white,
+                        ),
                 ),
               ),
               GestureDetector(
@@ -180,7 +182,9 @@ class _ChatListState extends ConsumerState<ChatList> {
                           decoration: TextDecoration.underline,
                           decorationColor: CustomColors.mainYellow,
                         )
-                      : CustomTypography.bodySmall,
+                      : CustomTypography.bodySmall.copyWith(
+                          color: CustomColors.white,
+                        ),
                 ),
               ),
             ],

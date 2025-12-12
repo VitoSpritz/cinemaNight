@@ -56,129 +56,149 @@ class _ReviewListState extends ConsumerState<ReviewList> {
     );
     final String language = AppLocalizations.of(context)!.requestApiLanguage;
 
-    return Scaffold(
-      appBar: CustomAppBar(
-        title: AppLocalizations.of(context)!.reviews,
-        actionButton: CustomIconButton(
-          icon: Icons.search,
-          onTap: () async {
-            final String? searchValue = await SearchModal.show(
-              title: AppLocalizations.of(context)!.searchAMovie,
-              context: context,
-            );
-            setState(() {
-              searchQuery = searchValue;
-            });
-          },
-          color: CustomColors.text,
+    return Stack(
+      children: <Widget>[
+        Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              stops: <double>[0, 0.19, 0.41, 1.0],
+              colors: <Color>[
+                Color(0xFF5264DE),
+                Color(0xFF212C77),
+                Color(0xFF050031),
+                Color(0xFF050031),
+              ],
+            ),
+          ),
         ),
-      ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          await ref.refresh(userReviewProvider.future);
-        },
-        notificationPredicate: (ScrollNotification notification) {
-          return notification.depth == 0;
-        },
-        child: userReviewListAsync.when(
-          data: (List<Review> reviews) {
-            final List<Review> filteredReviews = _filterReviews(reviews);
-            if (filteredReviews.isEmpty) {
-              return ListView(
-                children: <Widget>[
-                  const SizedBox(height: 200),
-                  Center(
-                    child: Text(
-                      searchQuery != null && searchQuery!.isNotEmpty
-                          ? "No reviews found for '$searchQuery'"
-                          : "There are no reviews",
-                    ),
-                  ),
-                ],
-              );
-            }
-            return Column(
-              children: <Widget>[
-                if (searchQuery != null)
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(12),
-                          ),
-                          border: Border.all(
-                            color: CustomColors.black,
-                            width: 1,
-                          ),
+        Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: CustomAppBar(
+            title: AppLocalizations.of(context)!.reviews,
+            actionButton: CustomIconButton(
+              icon: Icons.search,
+              onTap: () async {
+                final String? searchValue = await SearchModal.show(
+                  title: AppLocalizations.of(context)!.searchAMovie,
+                  context: context,
+                );
+                setState(() {
+                  searchQuery = searchValue;
+                });
+              },
+              color: CustomColors.text,
+            ),
+          ),
+          body: RefreshIndicator(
+            onRefresh: () async {
+              await ref.refresh(userReviewProvider.future);
+            },
+            notificationPredicate: (ScrollNotification notification) {
+              return notification.depth == 0;
+            },
+            child: userReviewListAsync.when(
+              data: (List<Review> reviews) {
+                final List<Review> filteredReviews = _filterReviews(reviews);
+                if (filteredReviews.isEmpty) {
+                  return ListView(
+                    children: <Widget>[
+                      const SizedBox(height: 200),
+                      Center(
+                        child: Text(
+                          searchQuery != null && searchQuery!.isNotEmpty
+                              ? "No reviews found for '$searchQuery'"
+                              : "There are no reviews",
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12.0,
-                            vertical: 6.0,
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.only(right: 4.0),
-                                child: Text(
-                                  searchQuery!,
-                                  style: CustomTypography.caption,
-                                ),
+                      ),
+                    ],
+                  );
+                }
+                return Column(
+                  children: <Widget>[
+                    if (searchQuery != null)
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(12),
                               ),
-                              CustomIconButton(
-                                icon: Icons.cancel,
+                              border: Border.all(
                                 color: CustomColors.black,
-                                iconSize: 14,
-                                padding: 4,
-                                onTap: () => setState(() {
-                                  searchQuery = null;
-                                }),
+                                width: 1,
                               ),
-                            ],
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12.0,
+                                vertical: 6.0,
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 4.0),
+                                    child: Text(
+                                      searchQuery!,
+                                      style: CustomTypography.caption,
+                                    ),
+                                  ),
+                                  CustomIconButton(
+                                    icon: Icons.cancel,
+                                    color: CustomColors.black,
+                                    iconSize: 14,
+                                    padding: 4,
+                                    onTap: () => setState(() {
+                                      searchQuery = null;
+                                    }),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
 
-                Expanded(
-                  child: GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 8.0,
-                          mainAxisSpacing: 8.0,
-                          childAspectRatio: 0.75,
-                        ),
-                    padding: const EdgeInsets.all(8.0),
-                    itemCount: filteredReviews.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return ReviewCard(
-                        review: filteredReviews.elementAt(index),
-                        language: language,
-                      );
-                    },
-                  ),
-                ),
-              ],
-            );
-          },
-          error: (Object error, StackTrace stack) => ListView(
-            children: <Widget>[
-              const SizedBox(height: 200),
-              Center(child: Text("Error: $error")),
-            ],
+                    Expanded(
+                      child: GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 8.0,
+                              mainAxisSpacing: 8.0,
+                              childAspectRatio: 0.75,
+                            ),
+                        padding: const EdgeInsets.all(8.0),
+                        itemCount: filteredReviews.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return ReviewCard(
+                            review: filteredReviews.elementAt(index),
+                            language: language,
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                );
+              },
+              error: (Object error, StackTrace stack) => ListView(
+                children: <Widget>[
+                  const SizedBox(height: 200),
+                  Center(child: Text("Error: $error")),
+                ],
+              ),
+              loading: () => const Center(child: CircularProgressIndicator()),
+            ),
           ),
-          loading: () => const Center(child: CircularProgressIndicator()),
+          floatingActionButton: CustomAddButton(
+            onPressed: () => _showModal(context),
+          ),
         ),
-      ),
-      floatingActionButton: CustomAddButton(
-        onPressed: () => _showModal(context),
-      ),
+      ],
     );
   }
 }

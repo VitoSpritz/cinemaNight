@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../consts/custom_colors.dart';
 import '../consts/custom_typography.dart';
 import '../helpers/media_converter.dart';
 import '../l10n/app_localizations.dart';
@@ -70,6 +71,9 @@ class ReviewCard extends ConsumerWidget {
               MediaConverter.getValue(
                 media: mediaWithPoster.media,
                 field: MediaField.title,
+              ),
+              style: CustomTypography.bodySmall.copyWith(
+                color: CustomColors.white,
               ),
               overflow: TextOverflow.ellipsis,
             ),
