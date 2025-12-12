@@ -15,8 +15,14 @@ import 'custom_rating.dart';
 class ReviewCard extends ConsumerWidget {
   final Review review;
   final String language;
+  final String userId;
 
-  const ReviewCard({super.key, required this.review, required this.language});
+  const ReviewCard({
+    super.key,
+    required this.review,
+    required this.language,
+    required this.userId,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -48,6 +54,36 @@ class ReviewCard extends ConsumerWidget {
                         width: double.infinity,
                         height: double.infinity,
                       ),
+                      if (review.likes != null &&
+                          review.likes!.contains(userId))
+                        Stack(
+                          children: <Widget>[
+                            Positioned(
+                              right: 0,
+                              top: 0,
+                              child: Container(
+                                alignment: AlignmentGeometry.centerLeft,
+                                padding: const EdgeInsets.all(8.0),
+                                child: const Icon(
+                                  Icons.star,
+                                  color: CustomColors.mainYellow,
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              right: 0,
+                              top: 0,
+                              child: Container(
+                                alignment: AlignmentGeometry.centerLeft,
+                                padding: const EdgeInsets.all(8.0),
+                                child: const Icon(
+                                  Icons.star_border,
+                                  color: CustomColors.black,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       Positioned(
                         bottom: 0,
                         left: 0,

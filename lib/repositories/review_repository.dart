@@ -65,8 +65,6 @@ class ReviewRepository {
         )
         .toList();
 
-    debugPrint("Liked review => $liked");
-
     final List<Review> reviews = <Review>[...userReviews, ...liked]
       ..sort((Review a, Review b) => b.rating!.compareTo(a.rating!));
 

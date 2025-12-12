@@ -257,5 +257,15 @@
 
     "chatTextHint" : "Scrivi un messaggio",
 
-    "chatBarDisabledHintText" : "Solo l'amministratore può scrivere"
+    "chatBarDisabledHintText" : "Solo l'amministratore può scrivere",
+
+    "reviewInfoCopiedLink": "Link copiato",
+    "reviewInfoWritteBy": "Scritto da: {name}",
+    "@reviewInfoWritteBy":{
+        "placeholders": {
+            "name":{
+                "type": "String"
+            }
+        }
+    }
 }

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -5,6 +7,8 @@ import '../consts/custom_colors.dart';
 import '../consts/custom_typography.dart';
 import '../l10n/app_localizations.dart';
 import '../model/review.dart';
+import '../model/user_profile.dart';
+import '../providers/user_profiles.dart';
 import '../providers/user_review.dart';
 import '../widget/custom_add_button.dart';
 import '../widget/custom_app_bar.dart';
@@ -53,6 +57,13 @@ class _ReviewListState extends ConsumerState<ReviewList> {
   Widget build(BuildContext context) {
     final AsyncValue<List<Review>> userReviewListAsync = ref.watch(
       userReviewProvider,
+    );
+    final AsyncValue<UserProfile> userAsync = ref.watch(userProfilesProvider);
+
+    final UserProfile? user = userAsync.when(
+      data: (UserProfile data) => data,
+      error: (_, __) => null,
+      loading: () => null,
     );
     final String language = AppLocalizations.of(context)!.requestApiLanguage;
 
@@ -177,6 +188,7 @@ class _ReviewListState extends ConsumerState<ReviewList> {
                         itemBuilder: (BuildContext context, int index) {
                           return ReviewCard(
                             review: filteredReviews.elementAt(index),
+                            userId: user!.userId,
                             language: language,
                           );
                         },

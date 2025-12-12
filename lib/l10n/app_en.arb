@@ -257,5 +257,15 @@
 
 
     "chatTextHint" :"Write a message",
-    "chatBarDisabledHintText" : "Only the admin can write"
+    "chatBarDisabledHintText" : "Only the admin can write",
+
+    "reviewInfoCopiedLink": "Link copied",
+    "reviewInfoWritteBy": "Written by: {name}",
+    "@reviewInfoWritteBy":{
+        "placeholders": {
+            "name":{
+                "type": "String"
+            }
+        }
+    }
 }
