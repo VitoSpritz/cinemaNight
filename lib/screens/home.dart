@@ -20,7 +20,9 @@ class HomeScreen extends ConsumerWidget {
     return userProfileAsync.when(
       data: (UserProfile data) {
         return Scaffold(
-          appBar: CustomAppBar(title: AppLocalizations.of(context)!.info),
+          appBar: CustomAppBar(
+            title: AppLocalizations.of(context)!.informations,
+          ),
           body: CustomScrollView(
             slivers: <Widget>[
               SliverFillRemaining(

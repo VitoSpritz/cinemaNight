@@ -252,5 +252,10 @@
     "accountGenereThriller": "Thriller",
     "accountGenereWestern": "Western",
 
-    "info": "Informazioni"
+    "info": "Info",
+    "informations" : "Informazioni",
+
+    "chatTextHint" : "Scrivi un messaggio",
+
+    "chatBarDisabledHintText" : "Solo l'amministratore può scrivere"
 }

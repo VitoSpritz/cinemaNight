@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import '../consts/custom_colors.dart';
 import '../consts/custom_typography.dart';
+import '../l10n/app_localizations.dart';
 import '../model/chat_item.dart';
 import '../model/chat_message.dart';
 import '../model/user_profile.dart';
@@ -435,8 +436,10 @@ class _GroupChatState extends ConsumerState<GroupChat> {
                     controller: _messageController,
                     decoration: InputDecoration(
                       hintText: isChatCreator
-                          ? "Scrivi un messaggio"
-                          : "Non sei l'amministratore del gruppo",
+                          ? AppLocalizations.of(context)!.chatTextHint
+                          : AppLocalizations.of(
+                              context,
+                            )!.chatBarDisabledHintText,
                       hintStyle: CustomTypography.caption,
                       filled: true,
                       fillColor: CustomColors.white.withValues(alpha: 0.4),
