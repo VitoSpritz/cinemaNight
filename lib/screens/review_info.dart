@@ -407,8 +407,9 @@ class _ReviewInfoState extends ConsumerState<ReviewInfo> {
                                 title: AppLocalizations.of(
                                   context,
                                 )!.attentionLabel,
-                                subtitle:
-                                    "Sei sicuro di voler aggiornare la recensione?",
+                                subtitle: AppLocalizations.of(
+                                  context,
+                                )!.reviewInfoUpdateReview,
                               );
                               if (isUpdated == true) {
                                 setState(() {
