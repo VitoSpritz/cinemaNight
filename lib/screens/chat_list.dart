@@ -155,7 +155,7 @@ class _ChatListState extends ConsumerState<ChatList> {
                   });
                 },
                 child: Text(
-                  "Tutte le chat",
+                  AppLocalizations.of(context)!.allChats,
                   style: _allChats
                       ? CustomTypography.bodySmallBold.copyWith(
                           color: CustomColors.mainYellow,
@@ -175,7 +175,7 @@ class _ChatListState extends ConsumerState<ChatList> {
                   });
                 },
                 child: Text(
-                  "Le mie chat",
+                  AppLocalizations.of(context)!.myChats,
                   style: !_allChats
                       ? CustomTypography.bodySmallBold.copyWith(
                           color: CustomColors.mainYellow,

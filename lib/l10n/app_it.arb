@@ -112,7 +112,7 @@
     "profileUpdated": "Profilo Aggiornato!",
     "unsavedChanges": "Modifiche non salvate",
     "noChatAvailable": "Nessuna chat disponibile",
-    "noDescriptionAvailable": "No description available",
+    "noDescriptionAvailable": "Nessuna descrizione disponibile",
     "openedBadgeLabel": "Aperto",
     "dateSelectionLabel": "Scegliendo una data",
     "filmSelectionLabel": "Scegliendo un film",
@@ -228,5 +228,29 @@
 
     "homeChatInstructionFirst": "Parla con i tuoi amici",
     "homeChatInstructionSecond": "Se invece vuoi vuoi parlare con i tuoi amici e organizzare serate a tema cinema, clicca ",
-    "homeChatInstructionThird": " per poter creare una chat, scegliere da una a cinque possibili date e proponi al massimo un film. I più votati saranno scelti alla chiusura della camera."
+    "homeChatInstructionThird": " per poter creare una chat, scegliere da una a cinque possibili date e proponi al massimo un film. I più votati saranno scelti alla chiusura della camera.",
+
+    "reviewInfoUpdateReview": "Sei sicuro di voler aggiornare la recensione?",
+    "allChats": "Tutte le chat",
+    "myChats": "Le mie chat",
+
+    "accountGenereAction": "Azione",
+    "accountGenereAdventure": "Avventura",
+    "accountGenereAnimation": "Animazione",
+    "accountGenereBiography": "Biografico",
+    "accountGenereComedy": "Commedia",
+    "accountGenereDocumentary": "Documentario",
+    "accountGenereDrama": "Drammatico",
+    "accountGenereScienceFiction": "Fantascienza",
+    "accountGenereFantasy": "Fantasy",
+    "accountGenereWar": "Guerra",
+    "accountGenereHorror": "Horror",
+    "accountGenereMusical": "Musical",
+    "accountGenereNoir": "Noir",
+    "accountGenereRomance": "Romantico",
+    "accountGenereHistorical": "Storico",
+    "accountGenereThriller": "Thriller",
+    "accountGenereWestern": "Western",
+
+    "info": "Informazioni"
 }

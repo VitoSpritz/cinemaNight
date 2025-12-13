@@ -33,26 +33,6 @@ class _AccountState extends ConsumerState<Account> {
   final UserService _userProfileService = UserService();
   File? _selectedImage;
 
-  final List<String> _genres = <String>[
-    'Azione',
-    'Avventura',
-    'Animazione',
-    'Biografico',
-    'Commedia',
-    'Documentario',
-    'Drammatico',
-    'Fantascienza',
-    'Fantasy',
-    'Guerra',
-    'Horror',
-    'Musical',
-    'Noir',
-    'Romantico',
-    'Storico',
-    'Thriller',
-    'Western',
-  ];
-
   bool _hasUnsavedChanges = false;
   String? _originalName;
   String? _originalGenre;
@@ -131,6 +111,25 @@ class _AccountState extends ConsumerState<Account> {
 
   @override
   Widget build(BuildContext context) {
+    final List<String> genres = <String>[
+      AppLocalizations.of(context)!.accountGenereAction,
+      AppLocalizations.of(context)!.accountGenereAdventure,
+      AppLocalizations.of(context)!.accountGenereAnimation,
+      AppLocalizations.of(context)!.accountGenereBiography,
+      AppLocalizations.of(context)!.accountGenereComedy,
+      AppLocalizations.of(context)!.accountGenereDocumentary,
+      AppLocalizations.of(context)!.accountGenereDrama,
+      AppLocalizations.of(context)!.accountGenereScienceFiction,
+      AppLocalizations.of(context)!.accountGenereFantasy,
+      AppLocalizations.of(context)!.accountGenereWar,
+      AppLocalizations.of(context)!.accountGenereHorror,
+      AppLocalizations.of(context)!.accountGenereMusical,
+      AppLocalizations.of(context)!.accountGenereNoir,
+      AppLocalizations.of(context)!.accountGenereRomance,
+      AppLocalizations.of(context)!.accountGenereHistorical,
+      AppLocalizations.of(context)!.accountGenereThriller,
+      AppLocalizations.of(context)!.accountGenereWestern,
+    ];
     final AsyncValue<UserProfile> userProvider = ref.watch(
       userProfilesProvider,
     );
@@ -312,7 +311,7 @@ class _AccountState extends ConsumerState<Account> {
                             onTap: () async {
                               _genreController.text =
                                   (await CustomDropdownMenu.showModal(
-                                    values: _genres,
+                                    values: genres,
                                     onSelectedItem: () {},
                                     context: context,
                                   ))!;

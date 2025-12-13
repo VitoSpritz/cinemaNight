@@ -38,8 +38,8 @@ class CustomBottomBar extends ConsumerWidget {
               children: <Widget>[
                 _buildNavItem(
                   index: 3,
-                  icon: Icons.home,
-                  label: AppLocalizations.of(context)!.home,
+                  icon: Icons.info,
+                  label: AppLocalizations.of(context)!.info,
                 ),
                 _buildNavItem(
                   index: 1,

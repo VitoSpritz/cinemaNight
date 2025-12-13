@@ -301,15 +301,16 @@ class _ReviewInfoState extends ConsumerState<ReviewInfo> {
                                                   ),
                                             ),
                                             onPressed: () async {
-                                              final bool?
-                                              isUpdated = await CustomDialog.show(
-                                                context: context,
-                                                title: AppLocalizations.of(
-                                                  context,
-                                                )!.attentionLabel,
-                                                subtitle:
-                                                    "Sei sicuro di voler aggiornare la recensione?",
-                                              );
+                                              final bool? isUpdated =
+                                                  await CustomDialog.show(
+                                                    context: context,
+                                                    title: AppLocalizations.of(
+                                                      context,
+                                                    )!.attentionLabel,
+                                                    subtitle: AppLocalizations.of(
+                                                      context,
+                                                    )!.reviewInfoUpdateReview,
+                                                  );
                                               if (isUpdated == true) {
                                                 setState(() {
                                                   _isUpdating = true;

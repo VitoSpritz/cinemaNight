@@ -112,7 +112,7 @@
     "profileUpdated": "Profile Updated!",
     "unsavedChanges": "Unsaved Changes!",
     "noChatAvailable": "No chat available",
-    "noDescriptionAvailable": "Nessuna descrizione",
+    "noDescriptionAvailable": "No description available",
     "openedBadgeLabel": "Opened",
     "dateSelectionLabel": "Selecting a date",
     "filmSelectionLabel": "Selecting a film",
@@ -221,12 +221,36 @@
     },
 
 
-    "homeReviewInstructionFirst": "GEt started with CineChat, leave a review or create a group!",
+    "homeReviewInstructionFirst": "Get started with CineChat, leave a review or create a group!",
     "homeReviewInstructionSecond": "Create a review",
     "homeReviewInstructionThird": "By clicking the button ",
     "homeReviewInstructionFourth": " you can write a review of a film, rate it and share your own review with your friends",
 
     "homeChatInstructionFirst": "Chat with your friends",
-    "homeChatInstructionSecond": "If you want to chat and organizae a chat night, click ",
-    "homeChatInstructionThird": " in order to create a chat, choose up to five possible dates and then suggest up to a film for each. The most liked one will be chosen at the end of the time limit."
+    "homeChatInstructionSecond": "If you want to chat and organize a chat night, click ",
+    "homeChatInstructionThird": " in order to create a chat, choose up to five possible dates and then suggest up to a film for each. The most liked one will be chosen at the end of the time limit.",
+
+    "reviewInfoUpdateReview": "Are you sure tou want to update the review?",
+    "allChats": "All chats",
+    "myChats" : "My chats",
+
+    "accountGenereAction": "Action",
+    "accountGenereAdventure": "Adventure",
+    "accountGenereAnimation": "Animation",
+    "accountGenereBiography": "Biography",
+    "accountGenereComedy": "Comedy",
+    "accountGenereDocumentary": "Documentary",
+    "accountGenereDrama": "Drama",
+    "accountGenereScienceFiction": "Science Fiction",
+    "accountGenereFantasy": "Fantasy",
+    "accountGenereWar": "War",
+    "accountGenereHorror": "Horror",
+    "accountGenereMusical": "Musical",
+    "accountGenereNoir": "Noir",
+    "accountGenereRomance": "Romance",
+    "accountGenereHistorical": "Historical",
+    "accountGenereThriller": "Thriller",
+    "accountGenereWestern": "Western",
+
+    "info": "Informations"
 }
