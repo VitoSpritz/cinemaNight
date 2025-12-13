@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../consts/custom_colors.dart';
 import '../consts/custom_typography.dart';
+import '../helpers/app_palette.dart';
 import '../helpers/media_converter.dart';
 import '../l10n/app_localizations.dart';
 import '../model/media.dart';
@@ -109,7 +110,7 @@ class ReviewCard extends ConsumerWidget {
                 field: MediaField.title,
               ),
               style: CustomTypography.bodySmall.copyWith(
-                color: CustomColors.white,
+                color: AppPalette.of(context).textColors.defaultColor,
               ),
               overflow: TextOverflow.ellipsis,
             ),

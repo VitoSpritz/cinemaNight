@@ -10,4 +10,5 @@ abstract class CustomColors {
   static const Color inputFill = Color(0xFF8E8E8E);
   static const Color gray = Color(0xFF808080);
   static const Color purple = Color(0xFF6B4FA9);
+  static const Color lightYellow = Color(0xFFFFE645);
 }

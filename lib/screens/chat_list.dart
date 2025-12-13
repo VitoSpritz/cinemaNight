@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../consts/custom_colors.dart';
 import '../consts/custom_typography.dart';
+import '../helpers/app_palette.dart';
 import '../l10n/app_localizations.dart';
 import '../model/chat_item.dart';
 import '../model/user_profile.dart';
@@ -163,7 +164,7 @@ class _ChatListState extends ConsumerState<ChatList> {
                           decorationColor: CustomColors.mainYellow,
                         )
                       : CustomTypography.bodySmall.copyWith(
-                          color: CustomColors.white,
+                          color: AppPalette.of(context).textColors.defaultColor,
                         ),
                 ),
               ),
@@ -183,7 +184,7 @@ class _ChatListState extends ConsumerState<ChatList> {
                           decorationColor: CustomColors.mainYellow,
                         )
                       : CustomTypography.bodySmall.copyWith(
-                          color: CustomColors.white,
+                          color: AppPalette.of(context).textColors.defaultColor,
                         ),
                 ),
               ),

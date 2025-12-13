@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
-import '../../consts/custom_colors.dart';
 import '../../consts/custom_typography.dart';
+import '../../helpers/app_palette.dart';
 import '../../l10n/app_localizations.dart';
 import '../../model/chat_item.dart';
 import '../../model/date_model.dart';
@@ -165,8 +165,12 @@ class _ChatListItemState extends ConsumerState<ChatListItem> {
             style:
                 widget.user.savedChats != null &&
                     widget.user.savedChats?.contains(widget.chat.id) == true
-                ? CustomTypography.bodyBold.copyWith(color: CustomColors.white)
-                : CustomTypography.body.copyWith(color: CustomColors.white),
+                ? CustomTypography.bodyBold.copyWith(
+                    color: AppPalette.of(context).textColors.defaultColor,
+                  )
+                : CustomTypography.body.copyWith(
+                    color: AppPalette.of(context).textColors.defaultColor,
+                  ),
           ),
           Padding(
             padding: const EdgeInsets.only(right: 16.0),
@@ -176,7 +180,7 @@ class _ChatListItemState extends ConsumerState<ChatListItem> {
                   ? AppLocalizations.of(context)!.noDescriptionAvailable
                   : widget.chat.description!,
               style: CustomTypography.caption.copyWith(
-                color: CustomColors.white,
+                color: AppPalette.of(context).textColors.defaultColor,
               ),
               overflow: TextOverflow.ellipsis,
             ),
@@ -186,7 +190,7 @@ class _ChatListItemState extends ConsumerState<ChatListItem> {
               Text(
                 AppLocalizations.of(context)!.chatListItemClosesAt,
                 style: CustomTypography.caption.copyWith(
-                  color: CustomColors.white,
+                  color: AppPalette.of(context).textColors.defaultColor,
                 ),
               ),
               Expanded(
@@ -194,7 +198,7 @@ class _ChatListItemState extends ConsumerState<ChatListItem> {
                   DateFormat('dd/MM/yyyy HH:mm').format(widget.chat.closesAt),
                   overflow: TextOverflow.ellipsis,
                   style: CustomTypography.caption.copyWith(
-                    color: CustomColors.white,
+                    color: AppPalette.of(context).textColors.defaultColor,
                   ),
                 ),
               ),

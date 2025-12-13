@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../helpers/app_palette.dart';
 import '../l10n/app_localizations.dart';
 import '../widget/create_chat_dialog.dart';
 import '../widget/custom_add_button.dart';
@@ -42,18 +43,8 @@ class _ChatsState extends ConsumerState<Chats> {
       body: Stack(
         children: <Widget>[
           Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                stops: <double>[0, 0.19, 0.41, 1.0],
-                colors: <Color>[
-                  Color(0xFF5264DE),
-                  Color(0xFF212C77),
-                  Color(0xFF050031),
-                  Color(0xFF050031),
-                ],
-              ),
+            decoration: BoxDecoration(
+              gradient: AppPalette.of(context).backgroudColor.defaultColor,
             ),
           ),
           ChatList(chatName: _chatName),

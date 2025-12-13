@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../consts/custom_colors.dart';
 import '../consts/custom_typography.dart';
+import '../helpers/app_palette.dart';
 import '../l10n/app_localizations.dart';
 
 class StateBadge extends ConsumerStatefulWidget {
@@ -25,11 +26,11 @@ class _StateBadgeState extends ConsumerState<StateBadge> {
         _badgeText = AppLocalizations.of(context)!.openedBadgeLabel;
         return;
       case "dateSelection":
-        _badgeColor = Colors.yellow;
+        _badgeColor = AppPalette.of(context).badgeColor.defaultColor;
         _badgeText = AppLocalizations.of(context)!.dateSelectionLabel;
         return;
       case "filmSelection":
-        _badgeColor = Colors.yellow;
+        _badgeColor = AppPalette.of(context).badgeColor.defaultColor;
         _badgeText = AppLocalizations.of(context)!.filmSelectionLabel;
         return;
       case "closed":

@@ -71,7 +71,7 @@ class CustomMessage extends ConsumerWidget {
                     color: CustomColors.white.withValues(alpha: 0.4),
                     width: 1,
                   ),
-                  color: CustomColors.gray.withValues(alpha: 0.2),
+                  color: CustomColors.gray.withValues(alpha: 0.9),
                   borderRadius: isUserMessage
                       ? const BorderRadius.only(
                           topLeft: Radius.circular(16),

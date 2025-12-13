@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../consts/custom_colors.dart';
+import '../helpers/app_palette.dart';
 import '../helpers/image_converter.dart';
 import '../l10n/app_localizations.dart';
 import '../model/user_profile.dart';
@@ -209,18 +210,8 @@ class _AccountState extends ConsumerState<Account> {
               }
 
               return Container(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    stops: <double>[0, 0.19, 0.41, 1.0],
-                    colors: <Color>[
-                      Color(0xFF5264DE),
-                      Color(0xFF212C77),
-                      Color(0xFF050031),
-                      Color(0xFF050031),
-                    ],
-                  ),
+                decoration: BoxDecoration(
+                  gradient: AppPalette.of(context).backgroudColor.defaultColor,
                 ),
                 child: CustomScrollView(
                   slivers: <Widget>[
@@ -269,8 +260,10 @@ class _AccountState extends ConsumerState<Account> {
                           const SizedBox(height: 16),
                           Text(
                             AppLocalizations.of(context)!.firstAndLastName,
-                            style: const TextStyle(
-                              color: Colors.white,
+                            style: TextStyle(
+                              color: AppPalette.of(
+                                context,
+                              ).textColors.defaultColor,
                               fontSize: 16,
                             ),
                           ),
@@ -293,8 +286,10 @@ class _AccountState extends ConsumerState<Account> {
                           const SizedBox(height: 16),
                           Text(
                             AppLocalizations.of(context)!.favouriteGenre,
-                            style: const TextStyle(
-                              color: Colors.white,
+                            style: TextStyle(
+                              color: AppPalette.of(
+                                context,
+                              ).textColors.defaultColor,
                               fontSize: 16,
                             ),
                           ),
@@ -332,8 +327,10 @@ class _AccountState extends ConsumerState<Account> {
                           const SizedBox(height: 16),
                           Text(
                             AppLocalizations.of(context)!.favouriteMovie,
-                            style: const TextStyle(
-                              color: Colors.white,
+                            style: TextStyle(
+                              color: AppPalette.of(
+                                context,
+                              ).textColors.defaultColor,
                               fontSize: 16,
                             ),
                           ),
