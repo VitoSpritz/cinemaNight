@@ -359,7 +359,7 @@ class _FilmPickerState extends ConsumerState<FilmPickerModal> {
                               context,
                             )!.filmPickerModalReviewAlreadyExisting,
                             style: CustomTypography.caption.copyWith(
-                              color: CustomColors.errorMessage,
+                              color: CustomColors.red,
                             ),
                           )
                         : SizedBox(

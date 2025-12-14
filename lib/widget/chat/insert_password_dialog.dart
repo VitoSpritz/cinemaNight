@@ -145,7 +145,7 @@ class _InsertPasswordDialogState extends ConsumerState<InsertPasswordDialog> {
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide(
                     color: _errorMessage != null
-                        ? CustomColors.errorMessage
+                        ? CustomColors.red
                         : CustomColors.black,
                     width: 1,
                   ),
@@ -154,7 +154,7 @@ class _InsertPasswordDialogState extends ConsumerState<InsertPasswordDialog> {
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide(
                     color: _errorMessage != null
-                        ? CustomColors.errorMessage
+                        ? CustomColors.red
                         : CustomColors.black,
                     width: 1,
                   ),
@@ -163,7 +163,7 @@ class _InsertPasswordDialogState extends ConsumerState<InsertPasswordDialog> {
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide(
                     color: _errorMessage != null
-                        ? CustomColors.errorMessage
+                        ? CustomColors.red
                         : CustomColors.lightBlue,
                     width: 2,
                   ),
@@ -191,7 +191,7 @@ class _InsertPasswordDialogState extends ConsumerState<InsertPasswordDialog> {
                 child: Text(
                   _errorMessage!,
                   style: CustomTypography.bodySmall.copyWith(
-                    color: CustomColors.errorMessage,
+                    color: CustomColors.red,
                   ),
                 ),
               ),

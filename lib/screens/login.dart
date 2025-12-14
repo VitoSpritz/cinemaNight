@@ -87,7 +87,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(errorMessage),
-            backgroundColor: CustomColors.errorMessage,
+            backgroundColor: CustomColors.red,
           ),
         );
       }
@@ -96,7 +96,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(AppLocalizations.of(context)!.error(e.toString())),
-            backgroundColor: CustomColors.errorMessage,
+            backgroundColor: CustomColors.red,
           ),
         );
       }

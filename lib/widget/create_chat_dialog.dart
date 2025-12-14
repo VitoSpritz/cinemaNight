@@ -345,7 +345,7 @@ class _CreateChatDialogState extends ConsumerState<CreateChatDialog> {
                                     ),
                                     border: Border.all(
                                       color: _dateError != null
-                                          ? CustomColors.errorMessage
+                                          ? CustomColors.red
                                           : CustomColors.black,
                                       width: 1,
                                     ),
@@ -411,7 +411,7 @@ class _CreateChatDialogState extends ConsumerState<CreateChatDialog> {
                                     ),
                                     border: Border.all(
                                       color: _dateError != null
-                                          ? CustomColors.errorMessage
+                                          ? CustomColors.red
                                           : CustomColors.black,
                                       width: 1,
                                     ),
@@ -459,7 +459,7 @@ class _CreateChatDialogState extends ConsumerState<CreateChatDialog> {
                         child: Text(
                           _dateError!,
                           style: CustomTypography.caption.copyWith(
-                            color: CustomColors.errorMessage,
+                            color: CustomColors.red,
                           ),
                         ),
                       ),

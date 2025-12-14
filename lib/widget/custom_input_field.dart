@@ -45,7 +45,7 @@ class CustomInputField extends ConsumerWidget {
               borderSide: BorderSide(
                 width: 1,
                 color: errorMessage != null
-                    ? CustomColors.errorMessage
+                    ? CustomColors.red
                     : CustomColors.black,
               ),
             ),
@@ -54,7 +54,7 @@ class CustomInputField extends ConsumerWidget {
               borderSide: BorderSide(
                 width: 1,
                 color: errorMessage != null
-                    ? CustomColors.errorMessage
+                    ? CustomColors.red
                     : CustomColors.black,
               ),
             ),
@@ -63,7 +63,7 @@ class CustomInputField extends ConsumerWidget {
               borderSide: BorderSide(
                 width: 1,
                 color: errorMessage != null
-                    ? CustomColors.errorMessage
+                    ? CustomColors.red
                     : CustomColors.black,
               ),
             ),
@@ -80,9 +80,7 @@ class CustomInputField extends ConsumerWidget {
             ),
             child: Text(
               errorMessage!,
-              style: CustomTypography.caption.copyWith(
-                color: CustomColors.errorMessage,
-              ),
+              style: CustomTypography.caption.copyWith(color: CustomColors.red),
             ),
           ),
       ],
