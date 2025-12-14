@@ -66,12 +66,21 @@ class LikeDislikeBottomMessageView extends ConsumerWidget {
             padding: const EdgeInsets.only(top: 4.0),
             child: Row(
               children: <Widget>[
-                Icon(
-                  Icons.thumb_up,
-                  size: Sizes.iconSmall,
-                  color: hasLiked
-                      ? CustomColors.mainYellow
-                      : CustomColors.inputFill,
+                Stack(
+                  children: <Widget>[
+                    Icon(
+                      Icons.thumb_up,
+                      size: Sizes.iconSmall,
+                      color: hasLiked
+                          ? CustomColors.mainYellow
+                          : CustomColors.inputFill,
+                    ),
+                    const Icon(
+                      Icons.thumb_up_outlined,
+                      size: Sizes.iconSmall,
+                      color: CustomColors.black,
+                    ),
+                  ],
                 ),
                 const SizedBox(width: 4),
                 Text(

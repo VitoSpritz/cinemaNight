@@ -119,13 +119,21 @@ class _ChatListState extends ConsumerState<ChatList> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Chat eliminata con successo')),
+          SnackBar(
+            content: Text(
+              AppLocalizations.of(context)!.chatListSnackBarMessage,
+            ),
+          ),
         );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Errore nell\'eliminazione: $e')),
+          SnackBar(
+            content: Text(
+              AppLocalizations.of(context)!.chatListSnackBarError(e.toString()),
+            ),
+          ),
         );
       }
     }

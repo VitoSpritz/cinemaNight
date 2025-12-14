@@ -53,6 +53,7 @@ class CustomDialog extends ConsumerWidget {
               title,
               style: CustomTypography.titleXL.copyWith(
                 fontWeight: FontWeight.bold,
+                color: CustomColors.black,
               ),
             ),
           ),
@@ -66,7 +67,10 @@ class CustomDialog extends ConsumerWidget {
           ),
         ],
       ),
-      content: Text(subtitle, style: CustomTypography.bodySmall),
+      content: Text(
+        subtitle,
+        style: CustomTypography.bodySmall.copyWith(color: CustomColors.black),
+      ),
       actions: <Widget>[
         Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,

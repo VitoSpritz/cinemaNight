@@ -267,5 +267,43 @@
                 "type": "String"
             }
         }
-    }
+    },
+
+    "preferredTheme": "Preferred Theme",
+    "themeAuto": "Auto",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+
+    "groupChatSnackBarError": "Error in sending the message: {name}",
+    "@groupChatSnackBarError":{
+        "placeholders": {
+            "name":{
+                "type": "String"
+            }
+        }
+    },
+
+    "groupChatUserModalTitle": "Subscribed users",
+    "groupChatMainTitle": "Group Chat",
+    "groupChatNoMessageAvailable": "No messages available",
+
+    "chatListSnackBarMessage": "Chat deleted successfully",
+    "chatListSnackBarError": "Error in sending the message: {name}",
+    "@chatListSnackBarError":{
+        "placeholders": {
+            "name":{
+                "type": "String"
+            }
+        }
+    },
+
+    "chatListNoChatFound": "No chat found for the {name}",
+    "@chatListNoChatFound": {
+        "placeholders": {
+            "name":{
+                "type": "String"
+            }
+        }
+    },
+    "chatListCancelSearch": "Remove search"
 }

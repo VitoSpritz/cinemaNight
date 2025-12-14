@@ -7,6 +7,7 @@ import 'firebase_options.dart';
 import 'l10n/app_localizations.dart';
 import 'providers/auth_listener.dart';
 import 'providers/deep_link.dart';
+import 'providers/theme_settings.dart';
 import 'screens/router/router.dart';
 
 Future<void> main() async {
@@ -22,12 +23,13 @@ class MainApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final GoRouter router = ref.watch(routerProvider);
+    final ThemeMode themeMode = ref.watch(themeSettingsProvider);
     ref.watch(authListenerProvider);
     ref.watch(deepLinkListenerProvider);
 
     return MaterialApp.router(
       routerConfig: router,
-      themeMode: ThemeMode.system,
+      themeMode: themeMode,
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
       localizationsDelegates: AppLocalizations.localizationsDelegates,

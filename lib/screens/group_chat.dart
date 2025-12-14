@@ -110,9 +110,15 @@ class _GroupChatState extends ConsumerState<GroupChat> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Errore nell\'invio: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              AppLocalizations.of(
+                context,
+              )!.groupChatSnackBarError(e.toString()),
+            ),
+          ),
+        );
       }
     }
   }
@@ -194,9 +200,15 @@ class _GroupChatState extends ConsumerState<GroupChat> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Errore nell\'invio: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              AppLocalizations.of(
+                context,
+              )!.groupChatSnackBarError(e.toString()),
+            ),
+          ),
+        );
       }
     }
   }
@@ -222,7 +234,7 @@ class _GroupChatState extends ConsumerState<GroupChat> {
     );
 
     await UserListModal.show(
-      title: "Utenti iscritti",
+      title: AppLocalizations.of(context)!.groupChatUserModalTitle,
       userList: userList,
       context: context,
     );
@@ -262,6 +274,10 @@ class _GroupChatState extends ConsumerState<GroupChat> {
         ) ??
         true;
 
+    final String chatName = chatAsync.value != null
+        ? chatAsync.value!.name
+        : AppLocalizations.of(context)!.groupChatMainTitle;
+
     return Stack(
       children: <Widget>[
         Container(
@@ -272,7 +288,7 @@ class _GroupChatState extends ConsumerState<GroupChat> {
         Scaffold(
           backgroundColor: Colors.transparent,
           appBar: CustomAppBar(
-            title: 'Group Chat',
+            title: chatName,
             rightIcon: Icons.info,
             onRightIconTap: () => _showUserListModal(chatId: widget.chatId),
           ),
@@ -292,14 +308,16 @@ class _GroupChatState extends ConsumerState<GroupChat> {
                               reverse: true,
                               slivers: <Widget>[
                                 displayMessages.isEmpty
-                                    ? const SliverToBoxAdapter(
+                                    ? SliverToBoxAdapter(
                                         child: Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: <Widget>[
                                             Center(
                                               child: Text(
-                                                "Non ci sono ancora messaggi",
+                                                AppLocalizations.of(
+                                                  context,
+                                                )!.groupChatNoMessageAvailable,
                                               ),
                                             ),
                                           ],

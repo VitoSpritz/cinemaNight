@@ -7,12 +7,13 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../consts/custom_colors.dart';
+import '../consts/custom_typography.dart';
 import '../helpers/app_palette.dart';
 import '../helpers/image_converter.dart';
 import '../l10n/app_localizations.dart';
 import '../model/user_profile.dart';
+import '../providers/theme_settings.dart';
 import '../providers/user_profiles.dart';
-import '../services/user_service.dart';
 import '../widget/custom_app_bar.dart';
 import '../widget/custom_dropdown_menu.dart';
 import '../widget/custom_icon_button.dart';
@@ -31,7 +32,6 @@ class _AccountState extends ConsumerState<Account> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _genreController = TextEditingController();
   final TextEditingController _movieController = TextEditingController();
-  final UserService _userProfileService = UserService();
   File? _selectedImage;
 
   bool _hasUnsavedChanges = false;
@@ -135,6 +135,8 @@ class _AccountState extends ConsumerState<Account> {
       userProfilesProvider,
     );
 
+    final ThemeMode selectedTheme = ref.watch(themeSettingsProvider);
+
     return Stack(
       children: <Widget>[
         Container(
@@ -231,15 +233,17 @@ class _AccountState extends ConsumerState<Account> {
                                       image: displayImage,
                                       fit: BoxFit.cover,
                                     ),
-                                    color: Colors.grey[400],
+                                    color: CustomColors.gray.withValues(
+                                      alpha: 0.7,
+                                    ),
                                   ),
                                 ),
                                 const SizedBox(height: 16),
                                 FilledButton(
                                   onPressed: _pickImage,
                                   style: FilledButton.styleFrom(
-                                    backgroundColor: Colors.red,
-                                    foregroundColor: Colors.white,
+                                    backgroundColor: CustomColors.red,
+                                    foregroundColor: CustomColors.white,
                                     shape: const CircleBorder(),
                                     padding: const EdgeInsets.all(16),
                                   ),
@@ -354,7 +358,63 @@ class _AccountState extends ConsumerState<Account> {
                             ),
                           ),
                           const SizedBox(height: 8),
-
+                          Text(
+                            AppLocalizations.of(context)!.preferredTheme,
+                            style: TextStyle(
+                              color: AppPalette.of(
+                                context,
+                              ).textColors.defaultColor,
+                              fontSize: 16,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          SegmentedButton<ThemeMode>(
+                            segments: <ButtonSegment<ThemeMode>>[
+                              ButtonSegment<ThemeMode>(
+                                value: ThemeMode.system,
+                                label: Text(
+                                  AppLocalizations.of(context)!.themeAuto,
+                                  style: CustomTypography.caption.copyWith(
+                                    color: AppPalette.of(
+                                      context,
+                                    ).textColors.defaultColor,
+                                  ),
+                                ),
+                                icon: const Icon(Icons.brightness_auto),
+                              ),
+                              ButtonSegment<ThemeMode>(
+                                value: ThemeMode.light,
+                                label: Text(
+                                  AppLocalizations.of(context)!.themeLight,
+                                  style: CustomTypography.caption.copyWith(
+                                    color: AppPalette.of(
+                                      context,
+                                    ).textColors.defaultColor,
+                                  ),
+                                ),
+                                icon: const Icon(Icons.light_mode),
+                              ),
+                              ButtonSegment<ThemeMode>(
+                                value: ThemeMode.dark,
+                                label: Text(
+                                  AppLocalizations.of(context)!.themeDark,
+                                  style: CustomTypography.caption.copyWith(
+                                    color: AppPalette.of(
+                                      context,
+                                    ).textColors.defaultColor,
+                                  ),
+                                ),
+                                icon: const Icon(Icons.dark_mode),
+                              ),
+                            ],
+                            selected: <ThemeMode>{selectedTheme},
+                            onSelectionChanged: (Set<ThemeMode> newSelection) {
+                              ref
+                                  .read(themeSettingsProvider.notifier)
+                                  .setThemeMode(newSelection.first);
+                            },
+                          ),
+                          const SizedBox(height: 8),
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 16),
                             child: Column(
