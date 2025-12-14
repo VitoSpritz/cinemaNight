@@ -35,6 +35,7 @@ class _TextColors {
 
   Color get defaultColor =>
       isDarkMode ? CustomColors.white : CustomColors.black;
+  Color get simpleText => CustomColors.black;
 }
 
 class _BackgroudColor {

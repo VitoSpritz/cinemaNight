@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../consts/custom_colors.dart';
 import '../consts/custom_typography.dart';
+import '../helpers/app_palette.dart';
 
 class CustomInputField extends ConsumerWidget {
   final TextEditingController controller;
@@ -29,14 +30,21 @@ class CustomInputField extends ConsumerWidget {
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4),
-          child: Text(fieldName, style: CustomTypography.bodySmall),
+          child: Text(
+            fieldName,
+            style: CustomTypography.bodySmall.copyWith(
+              color: AppPalette.of(context).textColors.simpleText,
+            ),
+          ),
         ),
         TextField(
           controller: controller,
           keyboardType: textType,
           obscureText: hidden,
           decoration: InputDecoration(
-            hintStyle: CustomTypography.bodySmall,
+            hintStyle: CustomTypography.bodySmall.copyWith(
+              color: AppPalette.of(context).textColors.simpleText,
+            ),
             filled: true,
             fillColor: CustomColors.white.withValues(alpha: 0.7),
             hintText: hintText ?? fieldName,

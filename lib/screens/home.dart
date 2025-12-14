@@ -35,6 +35,7 @@ class HomeScreen extends ConsumerWidget {
               body: CustomScrollView(
                 slivers: <Widget>[
                   SliverFillRemaining(
+                    hasScrollBody: false,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                         vertical: 24.0,

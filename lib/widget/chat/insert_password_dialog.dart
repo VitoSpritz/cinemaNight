@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../consts/custom_colors.dart';
 import '../../consts/custom_typography.dart';
+import '../../helpers/app_palette.dart';
 import '../../l10n/app_localizations.dart';
 
 class InsertPasswordDialog extends ConsumerStatefulWidget {
@@ -108,14 +109,19 @@ class _InsertPasswordDialogState extends ConsumerState<InsertPasswordDialog> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Expanded(
-                child: Text(widget.mainTitle, style: CustomTypography.titleXL),
+                child: Text(
+                  widget.mainTitle,
+                  style: CustomTypography.titleXL.copyWith(
+                    color: CustomColors.black,
+                  ),
+                ),
               ),
               GestureDetector(
                 behavior: HitTestBehavior.translucent,
                 onTap: () => context.pop(),
                 child: const Padding(
                   padding: EdgeInsets.all(8.0),
-                  child: Icon(Icons.close),
+                  child: Icon(Icons.close, color: CustomColors.black),
                 ),
               ),
             ],
@@ -134,11 +140,20 @@ class _InsertPasswordDialogState extends ConsumerState<InsertPasswordDialog> {
               controller: _passwordController,
               obscureText: _isObscured,
               enabled: !_isLoading,
+              style: TextStyle(
+                color: AppPalette.of(context).textColors.simpleText,
+              ),
               decoration: InputDecoration(
-                labelText: "Password",
+                labelText: AppLocalizations.of(context)!.password,
                 hintText: AppLocalizations.of(
                   context,
                 )!.insetPasswordDialogInsertPassword,
+                labelStyle: TextStyle(
+                  color: AppPalette.of(context).textColors.simpleText,
+                ),
+                hintStyle: TextStyle(
+                  color: AppPalette.of(context).textColors.simpleText,
+                ),
                 filled: true,
                 fillColor: CustomColors.white.withValues(alpha: 0.7),
                 border: OutlineInputBorder(
@@ -206,7 +221,7 @@ class _InsertPasswordDialogState extends ConsumerState<InsertPasswordDialog> {
                   shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(18)),
                   ),
-                  backgroundColor: CustomColors.black,
+                  backgroundColor: CustomColors.mainYellow,
                 ),
                 onPressed: _isLoading ? null : _handleConfirm,
                 child: _isLoading

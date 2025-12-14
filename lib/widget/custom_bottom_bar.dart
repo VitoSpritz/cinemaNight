@@ -32,7 +32,7 @@ class CustomBottomBar extends ConsumerWidget {
         color: CustomColors.mainYellow,
         child: SafeArea(
           child: SizedBox(
-            height: 56.0,
+            height: 60.0,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[

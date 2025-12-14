@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import '../consts/custom_colors.dart';
 import '../consts/custom_typography.dart';
 import '../consts/regex.dart';
+import '../helpers/app_palette.dart';
 import '../l10n/app_localizations.dart';
 import '../model/chat_item.dart';
 import '../model/user_profile.dart';
@@ -219,9 +220,10 @@ class _CreateChatDialogState extends ConsumerState<CreateChatDialog> {
             children: <Widget>[
               Expanded(
                 child: Text(
-                  AppLocalizations.of(context)!.cerateChatDialogCreateGroup,
+                  AppLocalizations.of(context)!.createChatDialogCreateGroup,
                   style: CustomTypography.titleXL.copyWith(
                     fontWeight: FontWeight.bold,
+                    color: AppPalette.of(context).textColors.simpleText,
                   ),
                 ),
               ),
@@ -249,7 +251,7 @@ class _CreateChatDialogState extends ConsumerState<CreateChatDialog> {
                     CustomInputField(
                       fieldName: AppLocalizations.of(
                         context,
-                      )!.cerateChatDialogCreateNome,
+                      )!.createChatDialogCreateNome,
                       controller: _nameController,
                       errorMessage: _nameError,
                       textType: TextInputType.text,
@@ -258,7 +260,7 @@ class _CreateChatDialogState extends ConsumerState<CreateChatDialog> {
                     CustomInputField(
                       fieldName: AppLocalizations.of(
                         context,
-                      )!.cerateChatDialogCreatePassword,
+                      )!.createChatDialogCreatePassword,
                       controller: _passwordController,
                       hidden: true,
                       textType: TextInputType.visiblePassword,
@@ -270,8 +272,10 @@ class _CreateChatDialogState extends ConsumerState<CreateChatDialog> {
                       child: Text(
                         AppLocalizations.of(
                           context,
-                        )!.cerateChatDialogCreateDescriptionOptional,
-                        style: CustomTypography.bodySmall,
+                        )!.createChatDialogCreateDescriptionOptional,
+                        style: CustomTypography.bodySmall.copyWith(
+                          color: AppPalette.of(context).textColors.simpleText,
+                        ),
                       ),
                     ),
                     SizedBox(
@@ -283,12 +287,14 @@ class _CreateChatDialogState extends ConsumerState<CreateChatDialog> {
                         expands: true,
                         textAlignVertical: TextAlignVertical.top,
                         decoration: InputDecoration(
-                          hintStyle: CustomTypography.bodySmall,
+                          hintStyle: CustomTypography.bodySmall.copyWith(
+                            color: AppPalette.of(context).textColors.simpleText,
+                          ),
                           filled: true,
                           fillColor: CustomColors.white.withValues(alpha: 0.7),
                           hintText: AppLocalizations.of(
                             context,
-                          )!.cerateChatDialogCreateDescription,
+                          )!.createChatDialogCreateDescription,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20),
                             borderSide: const BorderSide(
@@ -328,8 +334,12 @@ class _CreateChatDialogState extends ConsumerState<CreateChatDialog> {
                                 child: Text(
                                   AppLocalizations.of(
                                     context,
-                                  )!.cerateChatDialogClosingDate,
-                                  style: CustomTypography.bodySmall,
+                                  )!.createChatDialogClosingDate,
+                                  style: CustomTypography.bodySmall.copyWith(
+                                    color: AppPalette.of(
+                                      context,
+                                    ).textColors.simpleText,
+                                  ),
                                 ),
                               ),
                               GestureDetector(
@@ -363,7 +373,7 @@ class _CreateChatDialogState extends ConsumerState<CreateChatDialog> {
                                                 ).format(_selectedDate!)
                                               : AppLocalizations.of(
                                                   context,
-                                                )!.cerateChatDialogDate,
+                                                )!.createChatDialogDate,
                                           style: CustomTypography.bodySmall
                                               .copyWith(
                                                 color: _selectedDate != null
@@ -394,7 +404,7 @@ class _CreateChatDialogState extends ConsumerState<CreateChatDialog> {
                                 child: Text(
                                   AppLocalizations.of(
                                     context,
-                                  )!.cerateChatDialogHour,
+                                  )!.createChatDialogHour,
                                   style: CustomTypography.bodySmall,
                                 ),
                               ),
@@ -427,7 +437,7 @@ class _CreateChatDialogState extends ConsumerState<CreateChatDialog> {
                                               ? _formatTime(_selectedTime!)
                                               : AppLocalizations.of(
                                                   context,
-                                                )!.cerateChatDialogHour,
+                                                )!.createChatDialogHour,
                                           style: CustomTypography.bodySmall
                                               .copyWith(
                                                 color: _selectedTime != null
@@ -489,7 +499,7 @@ class _CreateChatDialogState extends ConsumerState<CreateChatDialog> {
                   ),
                 ),
                 child: Text(
-                  'Crea gruppo',
+                  AppLocalizations.of(context)!.createChatDialogCreateGroup,
                   style: CustomTypography.bodySmall.copyWith(
                     fontWeight: FontWeight.w600,
                     color: CustomColors.white,

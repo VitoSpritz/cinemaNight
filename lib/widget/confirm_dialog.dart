@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../consts/custom_colors.dart';
 import '../consts/custom_typography.dart';
+import '../helpers/app_palette.dart';
 import '../l10n/app_localizations.dart';
 
 class ConfirmDialog extends ConsumerWidget {
@@ -52,20 +53,32 @@ class ConfirmDialog extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Expanded(child: Text(title, style: CustomTypography.titleXL)),
+          Expanded(
+            child: Text(
+              title,
+              style: CustomTypography.titleXL.copyWith(
+                color: AppPalette.of(context).textColors.simpleText,
+              ),
+            ),
+          ),
           GestureDetector(
             behavior: HitTestBehavior.translucent,
             onTap: () => context.pop(),
-            child: const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Icon(Icons.close),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(
+                Icons.close,
+                color: AppPalette.of(context).textColors.simpleText,
+              ),
             ),
           ),
         ],
       ),
       content: Text(
         subtitle,
-        style: CustomTypography.titleM.copyWith(color: CustomColors.gray),
+        style: CustomTypography.titleM.copyWith(
+          color: AppPalette.of(context).textColors.simpleText,
+        ),
       ),
       actions: <Widget>[
         Column(
@@ -76,7 +89,7 @@ class ConfirmDialog extends ConsumerWidget {
                 shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(18)),
                 ),
-                backgroundColor: CustomColors.black,
+                backgroundColor: CustomColors.mainYellow,
               ),
               onPressed: () async {
                 if (confirmFunction != null) {

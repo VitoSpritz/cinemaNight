@@ -35,6 +35,22 @@ class _ChatListItemState extends ConsumerState<ChatListItem> {
   bool _isClosed = false;
   bool _isFilmSelection = false;
 
+  @override
+  void initState() {
+    super.initState();
+    _checkAndUpdateChatState();
+  }
+
+  @override
+  void didUpdateWidget(covariant ChatListItem oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.chat.id != widget.chat.id) {
+      _isClosed = false;
+      _isFilmSelection = false;
+      _checkAndUpdateChatState();
+    }
+  }
+
   Future<void> _checkUserForChat({
     required UserProfile user,
     required ChatItem chat,
@@ -98,33 +114,44 @@ class _ChatListItemState extends ConsumerState<ChatListItem> {
   }
 
   void _checkAndUpdateChatState() {
-    if (!_isClosed && widget.chat.closesAt.isBefore(DateTime.now())) {
+    final ChatItem chat = widget.chat;
+
+    // Skip if already in a terminal state
+    if (chat.state == ChatItemState.closed.name) {
+      return;
+    }
+
+    // Check closed first (higher priority)
+    if (!_isClosed && chat.closesAt.isBefore(DateTime.now())) {
       _isClosed = true;
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         if (mounted) {
-          final ChatItem toUpdate = widget.chat.copyWith(
-            state: ChatItemState.closed.name,
-          );
-
           await ref
               .read(chatListProvider.notifier)
-              .updateChat(chatId: widget.chat.id, updatedChat: toUpdate);
+              .updateChat(
+                chatId: chat.id,
+                updatedChat: chat.copyWith(state: ChatItemState.closed.name),
+              );
         }
       });
+      return; // Don't check filmSelection if closing
     }
+
+    // Then check film selection
     if (!_isFilmSelection &&
-        widget.chat.endDateSelection != null &&
-        widget.chat.endDateSelection!.isBefore(DateTime.now())) {
+        chat.state != ChatItemState.filmSelection.name &&
+        chat.endDateSelection?.isBefore(DateTime.now()) == true) {
       _isFilmSelection = true;
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         if (mounted) {
-          final ChatItem toUpdate = widget.chat.copyWith(
-            state: ChatItemState.filmSelection.name,
-          );
-
           await ref
               .read(chatListProvider.notifier)
-              .updateChat(chatId: widget.chat.id, updatedChat: toUpdate);
+              .updateChat(
+                chatId: chat.id,
+                updatedChat: chat.copyWith(
+                  state: ChatItemState.filmSelection.name,
+                ),
+              );
         }
       });
     }
@@ -132,7 +159,6 @@ class _ChatListItemState extends ConsumerState<ChatListItem> {
 
   @override
   Widget build(BuildContext context) {
-    _checkAndUpdateChatState();
     return ListTile(
       onLongPress: () {
         if (widget.user.userId == widget.chat.createdBy) {
@@ -150,7 +176,7 @@ class _ChatListItemState extends ConsumerState<ChatListItem> {
         }
       },
       onTap: () async {
-        _checkUserForChat(
+        await _checkUserForChat(
           chat: widget.chat,
           context: context,
           user: widget.user,

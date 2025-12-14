@@ -107,7 +107,7 @@
     "summary": "Riassunto",
 
     "userData": "Dati Utente",
-    "favouriteGenre": "Genere Preferito:",
+    "favouriteGenre": "Genere Preferito",
     "favouriteMovie": "Film Preferito",
     "profileUpdated": "Profilo Aggiornato!",
     "unsavedChanges": "Modifiche non salvate",
@@ -151,14 +151,14 @@
     "createChatDialogNameError":"Inserire un nome valido",
     "createChatDialogDateError":"Inserire una data valida",
     "createChatDialogPasswordError": "La password non rispecchia i canoni minimi",
-    "cerateChatDialogCreateGroup": "Crea un gruppo",
-    "cerateChatDialogCreateNome": "Nome",
-    "cerateChatDialogCreatePassword": "Password",
-    "cerateChatDialogCreateDescriptionOptional": "Descrizione (opzionale)",
-    "cerateChatDialogCreateDescription": "Descrizione",
-    "cerateChatDialogClosingDate": "Data di chiusura",
-    "cerateChatDialogDate": "Data",
-    "cerateChatDialogHour": "Ora",
+    "createChatDialogCreateGroup": "Crea un gruppo",
+    "createChatDialogCreateNome": "Nome",
+    "createChatDialogCreatePassword": "Password",
+    "createChatDialogCreateDescriptionOptional": "Descrizione (opzionale)",
+    "createChatDialogCreateDescription": "Descrizione",
+    "createChatDialogClosingDate": "Data di chiusura",
+    "createChatDialogDate": "Data",
+    "createChatDialogHour": "Ora",
 
     "selectEndDateSelectDate": "La data e ora devono essere entro 48 ore da ora",
     "selectEndDateSelctTime": "Seleziona prima una data",
@@ -192,7 +192,7 @@
     "chatListItemMainTitle": "Accesso riservato",
     "chatListItemSubtitle": "Inserire la password per entrare",
     "chatListItemWrongPassword": "Password errata. Riprova.",
-    "chatListItemDeleteChatMessage": "Sei dicuro di voler eliminare questa chat {data}?",
+    "chatListItemDeleteChatMessage": "Sei sicuro di voler eliminare questa chat {data}?",
     "@chatListItemDeleteChatMessage": {
         "placeholders": {
             "data":{
