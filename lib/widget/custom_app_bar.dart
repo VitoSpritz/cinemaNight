@@ -10,6 +10,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Future<void> Function()? onRightIconTap;
   final Widget? actionButton;
   final Function(String?)? onSearch;
+  final bool hideMainIcon;
 
   const CustomAppBar({
     super.key,
@@ -18,6 +19,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.actionButton,
     this.onRightIconTap,
     this.rightIcon,
+    this.hideMainIcon = false,
   });
 
   @override
@@ -34,10 +36,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         padding: const EdgeInsets.only(bottom: 8.0),
         child: Row(
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Image.asset('assets/images/namelesslogo.png', width: 24),
-            ),
+            if (!hideMainIcon)
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Image.asset('assets/images/namelesslogo.png', width: 24),
+              ),
             Expanded(
               child: Center(
                 child: Text(
@@ -52,7 +55,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             actionButton ?? const SizedBox(width: 40),
             if (rightIcon != null)
               Padding(
-                padding: const EdgeInsets.only(right: 42.0),
+                padding: const EdgeInsets.only(right: 38.0),
                 child: GestureDetector(
                   behavior: HitTestBehavior.translucent,
                   onTap: onRightIconTap,

@@ -13,6 +13,8 @@ class AppPalette {
     textColors = _TextColors(isDarkMode);
     backgroudColor = _BackgroudColor(isDarkMode);
     badgeColor = _BadgeColor(isDarkMode);
+    messageBackgroundColor = _MessageBackground(isDarkMode);
+    pickerTheme = _PickerTheme(isDarkMode);
   }
 
   static AppPalette of(BuildContext context) {
@@ -26,6 +28,8 @@ class AppPalette {
   late final _TextColors textColors;
   late final _BackgroudColor backgroudColor;
   late final _BadgeColor badgeColor;
+  late final _MessageBackground messageBackgroundColor;
+  late final _PickerTheme pickerTheme;
 }
 
 class _TextColors {
@@ -69,4 +73,32 @@ class _BadgeColor {
 
   Color get defaultColor =>
       isDarkMode ? CustomColors.lightYellow : CustomColors.lightBlue;
+}
+
+class _MessageBackground {
+  _MessageBackground(this.isDarkMode);
+
+  final bool isDarkMode;
+
+  Color get chatMessageBackground => isDarkMode
+      ? CustomColors.inputFill.withValues(alpha: 0.8)
+      : CustomColors.white.withValues(alpha: 0.8);
+}
+
+class _PickerTheme {
+  _PickerTheme(this.isDarkMode);
+
+  final bool isDarkMode;
+
+  ColorScheme get colorScheme => isDarkMode
+      ? const ColorScheme.dark(
+          primary: CustomColors.lightBlue,
+          onPrimary: CustomColors.white,
+          onSurface: CustomColors.white,
+        )
+      : const ColorScheme.light(
+          primary: CustomColors.lightBlue,
+          onPrimary: CustomColors.white,
+          onSurface: CustomColors.black,
+        );
 }

@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../consts/custom_colors.dart';
 import '../../consts/custom_typography.dart';
+import '../../helpers/app_palette.dart';
 import '../../l10n/app_localizations.dart';
 
 class SelectEndDate extends StatefulWidget {
@@ -27,12 +28,8 @@ class _SelectEndDateState extends State<SelectEndDate> {
       locale: const Locale('it', 'IT'),
       builder: (BuildContext context, Widget? child) {
         return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(
-              primary: CustomColors.lightBlue,
-              onPrimary: CustomColors.white,
-              onSurface: CustomColors.black,
-            ),
+          data: ThemeData(
+            colorScheme: AppPalette.of(context).pickerTheme.colorScheme,
           ),
           child: child!,
         );
@@ -50,12 +47,8 @@ class _SelectEndDateState extends State<SelectEndDate> {
           initialTime: initialTime,
           builder: (BuildContext context, Widget? child) {
             return Theme(
-              data: Theme.of(context).copyWith(
-                colorScheme: const ColorScheme.light(
-                  primary: CustomColors.lightBlue,
-                  onPrimary: CustomColors.white,
-                  onSurface: CustomColors.black,
-                ),
+              data: ThemeData(
+                colorScheme: AppPalette.of(context).pickerTheme.colorScheme,
               ),
               child: child!,
             );
@@ -107,12 +100,8 @@ class _SelectEndDateState extends State<SelectEndDate> {
       initialTime: TimeOfDay.fromDateTime(_selectedDateTime!),
       builder: (BuildContext context, Widget? child) {
         return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(
-              primary: CustomColors.lightBlue,
-              onPrimary: CustomColors.white,
-              onSurface: CustomColors.black,
-            ),
+          data: ThemeData(
+            colorScheme: AppPalette.of(context).pickerTheme.colorScheme,
           ),
           child: child!,
         );

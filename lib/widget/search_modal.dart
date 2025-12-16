@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../consts/custom_colors.dart';
 import '../consts/custom_typography.dart';
+import '../helpers/app_palette.dart';
 
 class SearchModal extends ConsumerWidget {
   final String title;
@@ -45,6 +46,7 @@ class SearchModal extends ConsumerWidget {
                     title,
                     style: CustomTypography.titleXL.copyWith(
                       fontWeight: FontWeight.bold,
+                      color: AppPalette.of(context).textColors.simpleText,
                     ),
                   ),
                 ),
@@ -72,6 +74,9 @@ class SearchModal extends ConsumerWidget {
                     decoration: const InputDecoration(
                       icon: Icon(Icons.search, color: CustomColors.lightBlue),
                       border: InputBorder.none,
+                    ),
+                    style: CustomTypography.body.copyWith(
+                      color: AppPalette.of(context).textColors.simpleText,
                     ),
                     onTapOutside: (PointerDownEvent event) {
                       if (searchController.text.isNotEmpty &&

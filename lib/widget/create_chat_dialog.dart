@@ -65,12 +65,8 @@ class _CreateChatDialogState extends ConsumerState<CreateChatDialog> {
       locale: const Locale('it', 'IT'),
       builder: (BuildContext context, Widget? child) {
         return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(
-              primary: CustomColors.lightBlue,
-              onPrimary: CustomColors.white,
-              onSurface: CustomColors.black,
-            ),
+          data: ThemeData(
+            colorScheme: AppPalette.of(context).pickerTheme.colorScheme,
           ),
           child: child!,
         );
@@ -91,12 +87,8 @@ class _CreateChatDialogState extends ConsumerState<CreateChatDialog> {
 
       builder: (BuildContext context, Widget? child) {
         return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(
-              primary: CustomColors.lightBlue,
-              onPrimary: CustomColors.white,
-              onSurface: CustomColors.black,
-            ),
+          data: ThemeData(
+            colorScheme: AppPalette.of(context).pickerTheme.colorScheme,
           ),
           child: child!,
         );

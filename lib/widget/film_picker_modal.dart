@@ -229,7 +229,16 @@ class _FilmPickerState extends ConsumerState<FilmPickerModal> {
                 ),
                 const SizedBox(height: 16),
                 Center(
-                  child: ElevatedButton(
+                  child: FilledButton(
+                    style: FilledButton.styleFrom(
+                      backgroundColor: CustomColors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                      textStyle: CustomTypography.body.copyWith(
+                        color: CustomColors.purple,
+                      ),
+                    ),
                     onPressed: _searchMedia,
                     child: Text(AppLocalizations.of(context)!.search),
                   ),

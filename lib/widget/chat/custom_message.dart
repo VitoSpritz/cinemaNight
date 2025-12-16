@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 
 import '../../consts/custom_colors.dart';
 import '../../consts/custom_typography.dart';
+import '../../helpers/app_palette.dart';
 import '../../l10n/app_localizations.dart';
 import '../../model/chat_item.dart';
 import '../../model/chat_message.dart';
@@ -71,7 +72,9 @@ class CustomMessage extends ConsumerWidget {
                     color: CustomColors.white.withValues(alpha: 0.4),
                     width: 1,
                   ),
-                  color: CustomColors.inputFill.withValues(alpha: 0.8),
+                  color: AppPalette.of(
+                    context,
+                  ).messageBackgroundColor.chatMessageBackground,
                   borderRadius: isUserMessage
                       ? const BorderRadius.only(
                           topLeft: Radius.circular(16),
