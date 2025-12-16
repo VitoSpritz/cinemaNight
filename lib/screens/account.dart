@@ -277,8 +277,20 @@ class _AccountState extends ConsumerState<Account> {
                               FocusManager.instance.primaryFocus?.unfocus();
                             },
                             controller: _nameController,
-                            style: const TextStyle(color: Colors.black),
+                            style: TextStyle(
+                              color: AppPalette.of(
+                                context,
+                              ).textColors.simpleText,
+                            ),
                             decoration: InputDecoration(
+                              hintText: AppLocalizations.of(
+                                context,
+                              )!.firstAndLastName,
+                              hintStyle: CustomTypography.body.copyWith(
+                                color: AppPalette.of(
+                                  context,
+                                ).textColors.simpleText,
+                              ),
                               filled: true,
                               fillColor: Colors.grey[300],
                               border: OutlineInputBorder(
@@ -290,11 +302,10 @@ class _AccountState extends ConsumerState<Account> {
                           const SizedBox(height: 16),
                           Text(
                             AppLocalizations.of(context)!.favouriteGenre,
-                            style: TextStyle(
+                            style: CustomTypography.body.copyWith(
                               color: AppPalette.of(
                                 context,
                               ).textColors.defaultColor,
-                              fontSize: 16,
                             ),
                           ),
                           const SizedBox(height: 8),
@@ -304,9 +315,12 @@ class _AccountState extends ConsumerState<Account> {
                               FocusManager.instance.primaryFocus?.unfocus();
                             },
                             controller: _genreController,
-                            style: const TextStyle(color: Colors.black),
+                            style: TextStyle(
+                              color: AppPalette.of(
+                                context,
+                              ).textColors.simpleText,
+                            ),
                             readOnly: true,
-
                             onTap: () async {
                               _genreController.text =
                                   (await CustomDropdownMenu.showModal(
@@ -319,6 +333,11 @@ class _AccountState extends ConsumerState<Account> {
                               hintText: AppLocalizations.of(
                                 context,
                               )!.favouriteGenre,
+                              hintStyle: TextStyle(
+                                color: AppPalette.of(
+                                  context,
+                                ).textColors.simpleText,
+                              ),
                               filled: true,
                               fillColor: Colors.grey[300],
                               border: OutlineInputBorder(
@@ -344,7 +363,11 @@ class _AccountState extends ConsumerState<Account> {
                               FocusManager.instance.primaryFocus?.unfocus();
                             },
                             controller: _movieController,
-                            style: const TextStyle(color: Colors.black),
+                            style: TextStyle(
+                              color: AppPalette.of(
+                                context,
+                              ).textColors.simpleText,
+                            ),
                             decoration: InputDecoration(
                               hintText: AppLocalizations.of(
                                 context,
@@ -354,6 +377,11 @@ class _AccountState extends ConsumerState<Account> {
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8),
                                 borderSide: BorderSide.none,
+                              ),
+                              hintStyle: TextStyle(
+                                color: AppPalette.of(
+                                  context,
+                                ).textColors.simpleText,
                               ),
                             ),
                           ),

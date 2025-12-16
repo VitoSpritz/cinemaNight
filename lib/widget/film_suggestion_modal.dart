@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../consts/custom_colors.dart';
 import '../consts/custom_typography.dart';
 import '../consts/sizes.dart';
 import '../helpers/media_converter.dart';
@@ -183,7 +184,13 @@ class _FilmSuggestionModalState extends State<FilmSuggestionModal> {
               ),
               const SizedBox(height: 16),
               Center(
-                child: ElevatedButton(
+                child: FilledButton(
+                  style: FilledButton.styleFrom(
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(18)),
+                    ),
+                    backgroundColor: CustomColors.white,
+                  ),
                   onPressed: _searchMedia,
                   child: Text(AppLocalizations.of(context)!.search),
                 ),
@@ -264,20 +271,35 @@ class _FilmSuggestionModalState extends State<FilmSuggestionModal> {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    TextButton(
-                      onPressed: () {
-                        setState(() {
-                          _selectedMedia = null;
-                          _searchResults = <MultiWithPoster>[];
-                          _titleController.clear();
-                        });
-                      },
-                      child: Text(AppLocalizations.of(context)!.changeMovie),
+                    SizedBox(
+                      width: double.infinity,
+                      child: FilledButton(
+                        style: FilledButton.styleFrom(
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(18)),
+                          ),
+                          backgroundColor: CustomColors.white,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _selectedMedia = null;
+                            _searchResults = <MultiWithPoster>[];
+                            _titleController.clear();
+                          });
+                        },
+                        child: Text(AppLocalizations.of(context)!.changeMovie),
+                      ),
                     ),
                     const SizedBox(height: 16),
                     SizedBox(
                       width: double.infinity,
-                      child: ElevatedButton(
+                      child: FilledButton(
+                        style: FilledButton.styleFrom(
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(18)),
+                          ),
+                          backgroundColor: CustomColors.mainYellow,
+                        ),
                         onPressed: _confirmSelection,
                         child: Text(AppLocalizations.of(context)!.confirmLabel),
                       ),

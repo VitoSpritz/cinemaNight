@@ -285,6 +285,9 @@ class _CreateChatDialogState extends ConsumerState<CreateChatDialog> {
                         keyboardType: TextInputType.multiline,
                         maxLines: null,
                         expands: true,
+                        style: TextStyle(
+                          color: AppPalette.of(context).textColors.simpleText,
+                        ),
                         textAlignVertical: TextAlignVertical.top,
                         decoration: InputDecoration(
                           hintStyle: CustomTypography.bodySmall.copyWith(
@@ -405,7 +408,11 @@ class _CreateChatDialogState extends ConsumerState<CreateChatDialog> {
                                   AppLocalizations.of(
                                     context,
                                   )!.createChatDialogHour,
-                                  style: CustomTypography.bodySmall,
+                                  style: CustomTypography.bodySmall.copyWith(
+                                    color: AppPalette.of(
+                                      context,
+                                    ).textColors.simpleText,
+                                  ),
                                 ),
                               ),
                               GestureDetector(

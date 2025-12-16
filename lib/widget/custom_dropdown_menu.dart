@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../consts/custom_colors.dart';
+import '../consts/custom_typography.dart';
+import '../helpers/app_palette.dart';
 import '../l10n/app_localizations.dart';
 
 class CustomDropdownMenu extends ConsumerWidget {
@@ -46,8 +48,9 @@ class CustomDropdownMenu extends ConsumerWidget {
                     AppLocalizations.of(
                       context,
                     )!.customDropdownMenuSelectAGenre,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
+                    style: CustomTypography.titleM.copyWith(
+                      color: AppPalette.of(context).textColors.simpleText,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),
@@ -83,7 +86,9 @@ class CustomDropdownMenu extends ConsumerWidget {
                         ),
                         child: Text(
                           values[index],
-                          style: Theme.of(context).textTheme.bodyLarge,
+                          style: CustomTypography.body.copyWith(
+                            color: AppPalette.of(context).textColors.simpleText,
+                          ),
                         ),
                       ),
                     );

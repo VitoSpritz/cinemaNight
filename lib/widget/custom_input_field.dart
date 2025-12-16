@@ -41,6 +41,7 @@ class CustomInputField extends ConsumerWidget {
           controller: controller,
           keyboardType: textType,
           obscureText: hidden,
+          style: TextStyle(color: AppPalette.of(context).textColors.simpleText),
           decoration: InputDecoration(
             hintStyle: CustomTypography.bodySmall.copyWith(
               color: AppPalette.of(context).textColors.simpleText,
