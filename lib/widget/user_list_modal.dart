@@ -3,24 +3,33 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../consts/custom_colors.dart';
 import '../consts/custom_typography.dart';
+import '../helpers/app_palette.dart';
 import '../l10n/app_localizations.dart';
 import '../model/user_profile.dart';
 
 class UserListModal extends ConsumerWidget {
   final String title;
   final List<UserProfile> userList;
-  const UserListModal({super.key, required this.title, required this.userList});
+  final String userId;
+
+  const UserListModal({
+    super.key,
+    required this.title,
+    required this.userList,
+    required this.userId,
+  });
 
   static Future<String?> show({
     required BuildContext context,
     required String title,
     required List<UserProfile> userList,
+    required String userId,
     Future<void> Function()? function,
   }) {
     return showDialog<String>(
       context: context,
       builder: (BuildContext context) {
-        return UserListModal(title: title, userList: userList);
+        return UserListModal(title: title, userList: userList, userId: userId);
       },
     );
   }
@@ -47,6 +56,7 @@ class UserListModal extends ConsumerWidget {
                     title,
                     style: CustomTypography.titleXL.copyWith(
                       fontWeight: FontWeight.bold,
+                      color: AppPalette.of(context).textColors.simpleText,
                     ),
                   ),
                 ),
@@ -56,15 +66,25 @@ class UserListModal extends ConsumerWidget {
             if (userList.isEmpty)
               Text(
                 AppLocalizations.of(context)!.userListModalNoUserSubscribed,
-                style: CustomTypography.bodySmall,
+                style: CustomTypography.bodySmall.copyWith(
+                  color: AppPalette.of(context).textColors.simpleText,
+                ),
               )
             else
               ...userList.map(
                 (UserProfile user) => Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4),
-                  child: Text(
-                    user.firstLastName ?? '',
-                    style: CustomTypography.bodySmall,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        user.firstLastName ?? '',
+                        style: CustomTypography.bodySmall.copyWith(
+                          color: AppPalette.of(context).textColors.simpleText,
+                        ),
+                      ),
+                      if (user.userId == userId) const Text(" 👑"),
+                    ],
                   ),
                 ),
               ),

@@ -233,10 +233,15 @@ class _GroupChatState extends ConsumerState<GroupChat> {
       getUsersByChatProvider(chatId: chatId).future,
     );
 
+    final ChatItem actualChat = await ref.read(
+      getChatItemByIdProvider(chatId).future,
+    );
+
     await UserListModal.show(
       title: AppLocalizations.of(context)!.groupChatUserModalTitle,
       userList: userList,
       context: context,
+      userId: actualChat.createdBy,
     );
   }
 
@@ -290,6 +295,7 @@ class _GroupChatState extends ConsumerState<GroupChat> {
           appBar: CustomAppBar(
             title: chatName,
             rightIcon: Icons.info,
+            hideMainIcon: true,
             onRightIconTap: () => _showUserListModal(chatId: widget.chatId),
           ),
           body: Column(
@@ -301,11 +307,12 @@ class _GroupChatState extends ConsumerState<GroupChat> {
                       data: (ChatItem chat) {
                         return messageAsync.when(
                           data: (PaginatedChatMessage data) {
-                            final List<ChatMessage> displayMessages =
-                                data.chatMessages;
+                            final List<ChatMessage> displayMessages = data
+                                .chatMessages
+                                .reversed
+                                .toList();
                             return CustomScrollView(
                               controller: _scrollController,
-                              reverse: true,
                               slivers: <Widget>[
                                 displayMessages.isEmpty
                                     ? SliverToBoxAdapter(
