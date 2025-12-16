@@ -106,10 +106,41 @@ class _ReviewListState extends ConsumerState<ReviewList> {
                     children: <Widget>[
                       const SizedBox(height: 200),
                       Center(
-                        child: Text(
-                          searchQuery != null && searchQuery!.isNotEmpty
-                              ? "No reviews found for '$searchQuery'"
-                              : "There are no reviews",
+                        child: Column(
+                          children: <Widget>[
+                            Text(
+                              searchQuery != null && searchQuery!.isNotEmpty
+                                  ? AppLocalizations.of(
+                                      context,
+                                    )!.reviewListNoReviewsFound(searchQuery!)
+                                  : AppLocalizations.of(
+                                      context,
+                                    )!.reviewListNoReviewAvailable,
+                              style: CustomTypography.body.copyWith(
+                                color: AppPalette.of(
+                                  context,
+                                ).textColors.defaultColor,
+                              ),
+                            ),
+                            if (searchQuery != null) ...<Widget>[
+                              const SizedBox(height: 16),
+                              FilledButton(
+                                style: FilledButton.styleFrom(
+                                  backgroundColor: AppPalette.of(
+                                    context,
+                                  ).textColors.defaultColor,
+                                ),
+                                onPressed: () => setState(() {
+                                  searchQuery = null;
+                                }),
+                                child: Text(
+                                  AppLocalizations.of(
+                                    context,
+                                  )!.chatListDeleteSearch,
+                                ),
+                              ),
+                            ],
+                          ],
                         ),
                       ),
                     ],

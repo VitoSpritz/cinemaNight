@@ -272,7 +272,6 @@ class _ReviewInfoState extends ConsumerState<ReviewInfo> {
                                   color: CustomColors.white,
                                 ),
                               ),
-
                               duration: const Duration(seconds: 2),
                             ),
                           );

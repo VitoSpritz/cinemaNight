@@ -297,7 +297,7 @@
         }
     },
 
-    "chatListNoChatFound": "No chat found for the {name}",
+    "chatListNoChatFound": "No chat found with name \"{name}\"",
     "@chatListNoChatFound": {
         "placeholders": {
             "name":{
@@ -305,5 +305,24 @@
             }
         }
     },
-    "chatListCancelSearch": "Remove search"
+    "chatListDeleteSearch": "Remove search",
+    "chatListTryAgain": "Try again",
+    "chatListSearchError": "Search error on {value}",
+    "@chatListSearchError": {
+        "placeholders": {
+            "value":{
+                "type": "String"
+            }
+        }
+    },
+
+     "reviewListNoReviewsFound": "No review found for \"{query}\"",
+    "@reviewListNoReviewsFound":  {
+        "placeholders": {
+            "query":{
+                "type": "String"
+            }
+        }
+    },
+    "reviewListNoReviewAvailable": "There are no reviews"
 }

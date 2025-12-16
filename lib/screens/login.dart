@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import '../consts/custom_colors.dart';
 import '../consts/custom_typography.dart';
+import '../helpers/app_palette.dart';
 import '../l10n/app_localizations.dart';
 import 'logic/validators.dart';
 import 'sign_up.dart';
@@ -115,18 +116,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.transparent,
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            stops: <double>[0, 0.19, 0.41, 1.0],
-            colors: <Color>[
-              Color(0xFF5264DE),
-              Color(0xFF212C77),
-              Color(0xFF050031),
-              Color(0xFF050031),
-            ],
-          ),
+        decoration: BoxDecoration(
+          gradient: AppPalette.of(context).backgroudColor.defaultColor,
         ),
         child: CustomScrollView(
           slivers: <Widget>[

@@ -257,23 +257,28 @@ class _ChatListState extends ConsumerState<ChatList> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
-                                const Icon(
-                                  Icons.search_off,
-                                  size: 64,
-                                  color: Colors.grey,
-                                ),
-                                const SizedBox(height: 16),
                                 Text(
-                                  'Nessuna chat trovata per "$searchQuery"',
+                                  AppLocalizations.of(
+                                    context,
+                                  )!.chatListNoChatFound(searchQuery),
                                   style: CustomTypography.body,
                                   textAlign: TextAlign.center,
                                 ),
                                 const SizedBox(height: 16),
-                                ElevatedButton(
+                                FilledButton(
+                                  style: FilledButton.styleFrom(
+                                    backgroundColor: AppPalette.of(
+                                      context,
+                                    ).textColors.defaultColor,
+                                  ),
                                   onPressed: () => setState(() {
                                     _activeSearchQuery = null;
                                   }),
-                                  child: const Text('Cancella ricerca'),
+                                  child: Text(
+                                    AppLocalizations.of(
+                                      context,
+                                    )!.chatListDeleteSearch,
+                                  ),
                                 ),
                               ],
                             ),
@@ -301,13 +306,21 @@ class _ChatListState extends ConsumerState<ChatList> {
                               color: Colors.red,
                             ),
                             const SizedBox(height: 16),
-                            Text('Errore nella ricerca: $error'),
+                            Text(
+                              AppLocalizations.of(
+                                context,
+                              )!.chatListSearchError(error.toString()),
+                            ),
                             const SizedBox(height: 16),
                             ElevatedButton(
                               onPressed: () => setState(() {
                                 _activeSearchQuery = null;
                               }),
-                              child: const Text('Cancella ricerca'),
+                              child: Text(
+                                AppLocalizations.of(
+                                  context,
+                                )!.chatListDeleteSearch,
+                              ),
                             ),
                           ],
                         ),
@@ -342,7 +355,9 @@ class _ChatListState extends ConsumerState<ChatList> {
                           onPressed: () {
                             ref.invalidate(chatListProvider);
                           },
-                          child: const Text("Riprova"),
+                          child: Text(
+                            AppLocalizations.of(context)!.chatListTryAgain,
+                          ),
                         ),
                       ],
                     ),

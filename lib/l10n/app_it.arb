@@ -296,12 +296,33 @@
             }
         }
     },
-    "chatListNoChatFound": "Nessuna chat trovata per: {name}",
+    "chatListNoChatFound": "Nessuna chat trovata per \"{name}\"",
     "@chatListNoChatFound": {
         "placeholders": {
             "name":{
                 "type": "String"
             }
         }
-    }
+    },
+    "chatListDeleteSearch": "Cancella ricerca",
+    "chatListTryAgain": "Riprova",
+    "chatListSearchError": "Errore nela ricerca di {value}",
+    "@chatListSearchError": {
+        "placeholders": {
+            "value":{
+                "type": "String"
+            }
+        }
+    },
+
+
+    "reviewListNoReviewsFound": "Nessuna recensione trovata per \"{query}\"",
+    "@reviewListNoReviewsFound":  {
+        "placeholders": {
+            "query":{
+                "type": "String"
+            }
+        }
+    },
+    "reviewListNoReviewAvailable": "Non ci sono recensioni"    
 }
