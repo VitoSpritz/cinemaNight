@@ -417,7 +417,7 @@ class _ReviewInfoState extends ConsumerState<ReviewInfo> {
                               padding: const EdgeInsets.all(8.0),
                               child: FilledButton(
                                 style: FilledButton.styleFrom(
-                                  backgroundColor: CustomColors.white,
+                                  backgroundColor: CustomColors.mainYellow,
                                   shape: const RoundedRectangleBorder(
                                     borderRadius: BorderRadius.all(
                                       Radius.circular(18),

@@ -190,207 +190,222 @@ class _FilmPickerState extends ConsumerState<FilmPickerModal> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom + 16,
-        left: 16,
-        right: 16,
-        top: 16,
-      ),
-      child: SizedBox(
-        height: MediaQuery.of(context).size.height * 0.7,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              AppLocalizations.of(context)!.addReview,
-              style: CustomTypography.titleM.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 16),
-
-            if (_selectedMedia == null) ...<Widget>[
-              TextField(
-                controller: _titleController,
-                decoration: InputDecoration(
-                  labelText: AppLocalizations.of(context)!.title,
-                  border: const OutlineInputBorder(),
-                  suffixIcon: const Icon(Icons.search, size: Sizes.iconMedium),
-                ),
-                onSubmitted: (_) => _searchMedia(),
-                onTapOutside: (PointerDownEvent event) {
-                  FocusManager.instance.primaryFocus?.unfocus();
-                },
-              ),
-              const SizedBox(height: 16),
-              Center(
-                child: ElevatedButton(
-                  onPressed: _searchMedia,
-                  child: Text(AppLocalizations.of(context)!.search),
+    return SingleChildScrollView(
+      child: Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom + 16,
+          left: 16,
+          right: 16,
+          top: 16,
+        ),
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height * 0.7,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                AppLocalizations.of(context)!.addReview,
+                style: CustomTypography.titleM.copyWith(
+                  fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(height: 16),
-            ],
 
-            if (_isLoading)
-              const Expanded(child: Center(child: CircularProgressIndicator()))
-            else if (_selectedMedia == null && _searchResults.isNotEmpty)
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      AppLocalizations.of(context)!.results,
-                      style: CustomTypography.bodyBold,
+              if (_selectedMedia == null) ...<Widget>[
+                TextField(
+                  controller: _titleController,
+                  decoration: InputDecoration(
+                    labelText: AppLocalizations.of(context)!.title,
+                    border: const OutlineInputBorder(),
+                    suffixIcon: const Icon(
+                      Icons.search,
+                      size: Sizes.iconMedium,
                     ),
-                    const SizedBox(height: 8),
-                    Expanded(
-                      child: ListView.builder(
-                        controller: _scrollController,
-                        itemCount:
-                            _searchResults.length + (_isLoadingMore ? 1 : 0),
-                        itemBuilder: (BuildContext context, int index) {
-                          if (index == _searchResults.length) {
-                            return const Padding(
-                              padding: EdgeInsets.symmetric(vertical: 16.0),
-                              child: Center(child: CircularProgressIndicator()),
-                            );
-                          }
-                          final MultiWithPoster item = _searchResults[index];
-                          return GestureDetector(
-                            onTap: () {
-                              setState(
-                                () => (
-                                  _selectedMedia = item,
-                                  _reviewAlreadyExist = false,
+                  ),
+                  onSubmitted: (_) => _searchMedia(),
+                  onTapOutside: (PointerDownEvent event) {
+                    FocusManager.instance.primaryFocus?.unfocus();
+                  },
+                ),
+                const SizedBox(height: 16),
+                Center(
+                  child: ElevatedButton(
+                    onPressed: _searchMedia,
+                    child: Text(AppLocalizations.of(context)!.search),
+                  ),
+                ),
+                const SizedBox(height: 16),
+              ],
+
+              if (_isLoading)
+                const Expanded(
+                  child: Center(child: CircularProgressIndicator()),
+                )
+              else if (_selectedMedia == null && _searchResults.isNotEmpty)
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        AppLocalizations.of(context)!.results,
+                        style: CustomTypography.bodyBold,
+                      ),
+                      const SizedBox(height: 8),
+                      Expanded(
+                        child: ListView.builder(
+                          controller: _scrollController,
+                          itemCount:
+                              _searchResults.length + (_isLoadingMore ? 1 : 0),
+                          itemBuilder: (BuildContext context, int index) {
+                            if (index == _searchResults.length) {
+                              return const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 16.0),
+                                child: Center(
+                                  child: CircularProgressIndicator(),
                                 ),
                               );
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.only(bottom: 8.0),
-                              child: CustomMovieDisplay(
-                                imageUrl: item.posterBytes,
-                                movieTitle: MediaConverter.getValue(
-                                  media: item.media,
-                                  field: MediaField.title,
-                                ),
-                                rating: MediaConverter.getValue(
-                                  media: item.media,
-                                  field: MediaField.rating,
+                            }
+                            final MultiWithPoster item = _searchResults[index];
+                            return GestureDetector(
+                              onTap: () {
+                                setState(
+                                  () => (
+                                    _selectedMedia = item,
+                                    _reviewAlreadyExist = false,
+                                  ),
+                                );
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.only(bottom: 8.0),
+                                child: CustomMovieDisplay(
+                                  imageUrl: item.posterBytes,
+                                  movieTitle: MediaConverter.getValue(
+                                    media: item.media,
+                                    field: MediaField.title,
+                                  ),
+                                  rating: MediaConverter.getValue(
+                                    media: item.media,
+                                    field: MediaField.rating,
+                                  ),
                                 ),
                               ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            else if (_selectedMedia == null)
-              Expanded(
-                child: Center(
-                  child: Text(AppLocalizations.of(context)!.searchAMovie),
-                ),
-              )
-            else
-              Padding(
-                padding: const EdgeInsets.only(bottom: 16.0),
-                child: Column(
-                  children: <Widget>[
-                    CustomMovieDisplay(
-                      imageUrl: _selectedMedia!.posterBytes,
-                      movieTitle: MediaConverter.getValue(
-                        media: _selectedMedia!.media,
-                        field: MediaField.title,
-                      ),
-                      rating: MediaConverter.getValue(
-                        media: _selectedMedia!.media,
-                        field: MediaField.rating,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    TextButton(
-                      onPressed: () {
-                        setState(() {
-                          _selectedMedia = null;
-                          _searchResults = <MultiWithPoster>[];
-                          _titleController.clear();
-                        });
-                      },
-                      child: Text(AppLocalizations.of(context)!.changeMovie),
-                    ),
-                    Row(
-                      children: <Widget>[
-                        Text(
-                          AppLocalizations.of(
-                            context,
-                          )!.filmPickerModalYourGrade,
-                        ),
-                        CustomRating(
-                          onRatingChanged: (double rating) {
-                            _ratingController.text = rating.toString();
+                            );
                           },
                         ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    TextField(
-                      controller: _reviewController,
-                      decoration: InputDecoration(
-                        labelText: AppLocalizations.of(context)!.review,
-                        border: const OutlineInputBorder(),
                       ),
-                      onTapOutside: (PointerDownEvent event) {
-                        FocusManager.instance.primaryFocus?.unfocus();
-                      },
-                      maxLines: 3,
-                    ),
-                    const SizedBox(height: 16),
-                    _isCreatingReview
-                        ? const SizedBox(
-                            height: 48,
-                            child: Center(child: CircularProgressIndicator()),
-                          )
-                        : _reviewAlreadyExist == true
-                        ? Text(
+                    ],
+                  ),
+                )
+              else if (_selectedMedia == null)
+                Expanded(
+                  child: Center(
+                    child: Text(AppLocalizations.of(context)!.searchAMovie),
+                  ),
+                )
+              else
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 16.0),
+                  child: Column(
+                    children: <Widget>[
+                      CustomMovieDisplay(
+                        imageUrl: _selectedMedia!.posterBytes,
+                        movieTitle: MediaConverter.getValue(
+                          media: _selectedMedia!.media,
+                          field: MediaField.title,
+                        ),
+                        rating: MediaConverter.getValue(
+                          media: _selectedMedia!.media,
+                          field: MediaField.rating,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      FilledButton(
+                        style: FilledButton.styleFrom(
+                          backgroundColor: CustomColors.mainYellow,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _selectedMedia = null;
+                            _searchResults = <MultiWithPoster>[];
+                            _titleController.clear();
+                          });
+                        },
+                        child: Text(AppLocalizations.of(context)!.changeMovie),
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Text(
                             AppLocalizations.of(
                               context,
-                            )!.filmPickerModalReviewAlreadyExisting,
-                            style: CustomTypography.caption.copyWith(
-                              color: CustomColors.red,
-                            ),
-                          )
-                        : SizedBox(
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              onPressed: () async => await _createReview(
-                                filmId: MediaConverter.getValue(
-                                  media: _selectedMedia!.media,
-                                  field: MediaField.id,
-                                ),
-                                type: MediaConverter.getValue(
-                                  media: _selectedMedia!.media,
-                                  field: MediaField.mediaType,
-                                ),
-                                review: _reviewController.text,
-                                rating:
-                                    double.tryParse(_ratingController.text) ??
-                                    0.0,
-                                filmName: MediaConverter.getValue(
-                                  media: _selectedMedia!.media,
-                                  field: MediaField.title,
-                                ),
-                              ),
-                              child: Text(AppLocalizations.of(context)!.save),
-                            ),
+                            )!.filmPickerModalYourGrade,
                           ),
-                  ],
+                          CustomRating(
+                            onRatingChanged: (double rating) {
+                              _ratingController.text = rating.toString();
+                            },
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      TextField(
+                        controller: _reviewController,
+                        decoration: InputDecoration(
+                          labelText: AppLocalizations.of(context)!.review,
+                          border: const OutlineInputBorder(),
+                        ),
+                        onTapOutside: (PointerDownEvent event) {
+                          FocusManager.instance.primaryFocus?.unfocus();
+                        },
+                        maxLines: 3,
+                      ),
+                      const SizedBox(height: 16),
+                      _isCreatingReview
+                          ? const SizedBox(
+                              height: 48,
+                              child: Center(child: CircularProgressIndicator()),
+                            )
+                          : _reviewAlreadyExist == true
+                          ? Text(
+                              AppLocalizations.of(
+                                context,
+                              )!.filmPickerModalReviewAlreadyExisting,
+                              style: CustomTypography.caption.copyWith(
+                                color: CustomColors.red,
+                              ),
+                            )
+                          : SizedBox(
+                              width: double.infinity,
+                              child: FilledButton(
+                                style: FilledButton.styleFrom(
+                                  backgroundColor: CustomColors.mainYellow,
+                                ),
+                                onPressed: () async => await _createReview(
+                                  filmId: MediaConverter.getValue(
+                                    media: _selectedMedia!.media,
+                                    field: MediaField.id,
+                                  ),
+                                  type: MediaConverter.getValue(
+                                    media: _selectedMedia!.media,
+                                    field: MediaField.mediaType,
+                                  ),
+                                  review: _reviewController.text,
+                                  rating:
+                                      double.tryParse(_ratingController.text) ??
+                                      0.0,
+                                  filmName: MediaConverter.getValue(
+                                    media: _selectedMedia!.media,
+                                    field: MediaField.title,
+                                  ),
+                                ),
+                                child: Text(AppLocalizations.of(context)!.save),
+                              ),
+                            ),
+                    ],
+                  ),
                 ),
-              ),
-            const SizedBox(height: 16),
-          ],
+              const SizedBox(height: 16),
+            ],
+          ),
         ),
       ),
     );
