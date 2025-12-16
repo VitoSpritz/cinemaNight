@@ -49,6 +49,8 @@ void main() {
         filmId: "1234",
         description: "Description for test review",
         rating: 4,
+        filmName: "Mock film name",
+        lowercaseName: "mock film name",
       );
 
       await reviewRepository.createReview(newReveiw);
@@ -85,6 +87,8 @@ void main() {
         type: ReviewItemType.movie,
         description: "Description for test review",
         rating: 4,
+        filmName: "Mock film name",
+        lowercaseName: "mock film name",
       );
 
       await reviewRepository.createReview(newReveiw);
@@ -98,6 +102,8 @@ void main() {
         type: ReviewItemType.movie,
         description: "Description for test review 2",
         rating: 7,
+        filmName: "Mock film name",
+        lowercaseName: "mock film name",
       );
 
       await reviewRepository.createReview(newReveiw2);
@@ -137,6 +143,8 @@ void main() {
         type: ReviewItemType.movie,
         description: "Description for test review",
         rating: 4,
+        filmName: "Mock film name",
+        lowercaseName: "mock film name",
       );
 
       await reviewRepository.createReview(newReveiw);

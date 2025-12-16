@@ -116,12 +116,10 @@ class _ChatListItemState extends ConsumerState<ChatListItem> {
   void _checkAndUpdateChatState() {
     final ChatItem chat = widget.chat;
 
-    // Skip if already in a terminal state
     if (chat.state == ChatItemState.closed.name) {
       return;
     }
 
-    // Check closed first (higher priority)
     if (!_isClosed && chat.closesAt.isBefore(DateTime.now())) {
       _isClosed = true;
       WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -134,10 +132,9 @@ class _ChatListItemState extends ConsumerState<ChatListItem> {
               );
         }
       });
-      return; // Don't check filmSelection if closing
+      return;
     }
 
-    // Then check film selection
     if (!_isFilmSelection &&
         chat.state != ChatItemState.filmSelection.name &&
         chat.endDateSelection?.isBefore(DateTime.now()) == true) {

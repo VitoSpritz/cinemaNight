@@ -78,7 +78,7 @@ void main() {
       expect(paginatedMessages.chatMessages.first.userId, userId);
 
       await userProfileRepository.deleteUserProfile(userId);
-      // await chatRepository.deleteChat(chatId: chatId, userId: userId);
+      await chatRepository.deleteChat(chatId: chatId, userId: userId);
     });
   });
 }
