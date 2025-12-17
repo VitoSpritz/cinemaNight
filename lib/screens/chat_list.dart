@@ -151,53 +151,50 @@ class _ChatListState extends ConsumerState<ChatList> {
 
     return Column(
       children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              GestureDetector(
-                behavior: HitTestBehavior.translucent,
-                onTap: () {
-                  setState(() {
-                    _allChats = true;
-                  });
-                },
-                child: Text(
-                  AppLocalizations.of(context)!.allChats,
-                  style: _allChats
-                      ? CustomTypography.bodySmallBold.copyWith(
-                          color: CustomColors.mainYellow,
-                          decoration: TextDecoration.underline,
-                          decorationColor: CustomColors.mainYellow,
-                        )
-                      : CustomTypography.bodySmall.copyWith(
-                          color: AppPalette.of(context).textColors.defaultColor,
-                        ),
-                ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onTap: () {
+                setState(() {
+                  _allChats = true;
+                });
+              },
+              child: Text(
+                AppLocalizations.of(context)!.allChats,
+                style: _allChats
+                    ? CustomTypography.bodySmallBold.copyWith(
+                        color: CustomColors.mainYellow,
+                        decoration: TextDecoration.underline,
+                        decorationColor: CustomColors.mainYellow,
+                      )
+                    : CustomTypography.bodySmall.copyWith(
+                        color: AppPalette.of(context).textColors.defaultColor,
+                      ),
               ),
-              GestureDetector(
-                behavior: HitTestBehavior.translucent,
-                onTap: () {
-                  setState(() {
-                    _allChats = false;
-                  });
-                },
-                child: Text(
-                  AppLocalizations.of(context)!.myChats,
-                  style: !_allChats
-                      ? CustomTypography.bodySmallBold.copyWith(
-                          color: CustomColors.mainYellow,
-                          decoration: TextDecoration.underline,
-                          decorationColor: CustomColors.mainYellow,
-                        )
-                      : CustomTypography.bodySmall.copyWith(
-                          color: AppPalette.of(context).textColors.defaultColor,
-                        ),
-                ),
+            ),
+            GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onTap: () {
+                setState(() {
+                  _allChats = false;
+                });
+              },
+              child: Text(
+                AppLocalizations.of(context)!.myChats,
+                style: !_allChats
+                    ? CustomTypography.bodySmallBold.copyWith(
+                        color: CustomColors.mainYellow,
+                        decoration: TextDecoration.underline,
+                        decorationColor: CustomColors.mainYellow,
+                      )
+                    : CustomTypography.bodySmall.copyWith(
+                        color: AppPalette.of(context).textColors.defaultColor,
+                      ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
         if (searchQuery != null && searchQuery.isNotEmpty)
           Padding(

@@ -6,8 +6,7 @@ import '../l10n/app_localizations.dart';
 import '../widget/create_chat_dialog.dart';
 import '../widget/custom_add_button.dart';
 import '../widget/custom_app_bar.dart';
-import '../widget/custom_icon_button.dart';
-import '../widget/search_modal.dart';
+import '../widget/custom_search_bar.dart';
 import 'chat_list.dart';
 
 class Chats extends ConsumerStatefulWidget {
@@ -21,25 +20,12 @@ class Chats extends ConsumerStatefulWidget {
 
 class _ChatsState extends ConsumerState<Chats> {
   String? _chatName;
+  final TextEditingController searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
-        title: AppLocalizations.of(context)!.chats,
-        actionButton: CustomIconButton(
-          icon: Icons.search,
-          onTap: () async {
-            final String? searchValue = await SearchModal.show(
-              title: AppLocalizations.of(context)!.searchAChat,
-              context: context,
-            );
-            setState(() {
-              _chatName = searchValue;
-            });
-          },
-        ),
-      ),
+      appBar: CustomAppBar(title: AppLocalizations.of(context)!.chats),
       body: Stack(
         children: <Widget>[
           Container(
@@ -47,7 +33,23 @@ class _ChatsState extends ConsumerState<Chats> {
               gradient: AppPalette.of(context).backgroudColor.defaultColor,
             ),
           ),
-          ChatList(chatName: _chatName),
+          Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 16.0,
+                  horizontal: 8.0,
+                ),
+                child: CustomSearchBar(
+                  searchController: searchController,
+                  funzione: () => setState(() {
+                    _chatName = searchController.text;
+                  }),
+                ),
+              ),
+              Expanded(child: ChatList(chatName: _chatName)),
+            ],
+          ),
         ],
       ),
       floatingActionButton: CustomAddButton(

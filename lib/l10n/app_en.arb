@@ -324,5 +324,6 @@
             }
         }
     },
-    "reviewListNoReviewAvailable": "There are no reviews"
+    "reviewListNoReviewAvailable": "There are no reviews",
+    "reviewListSearchHintText": "Search a review"
 }

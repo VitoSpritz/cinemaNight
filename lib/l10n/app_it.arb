@@ -324,5 +324,7 @@
             }
         }
     },
-    "reviewListNoReviewAvailable": "Non ci sono recensioni"    
+    "reviewListNoReviewAvailable": "Non ci sono recensioni",
+
+    "reviewListSearchHintText" : "Cerca una recensione"
 }

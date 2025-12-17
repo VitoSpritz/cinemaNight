@@ -12,6 +12,7 @@ import '../providers/user_review.dart';
 import '../widget/custom_add_button.dart';
 import '../widget/custom_app_bar.dart';
 import '../widget/custom_icon_button.dart';
+import '../widget/custom_search_bar.dart';
 import '../widget/film_picker_modal.dart';
 import '../widget/review_card.dart';
 import '../widget/search_modal.dart';
@@ -26,6 +27,8 @@ class ReviewList extends ConsumerStatefulWidget {
 
 class _ReviewListState extends ConsumerState<ReviewList> {
   String? searchQuery;
+
+  final TextEditingController searchController = TextEditingController();
 
   void _showModal(BuildContext context) {
     showModalBottomSheet(
@@ -148,6 +151,21 @@ class _ReviewListState extends ConsumerState<ReviewList> {
                 }
                 return Column(
                   children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 16.0,
+                        horizontal: 8.0,
+                      ),
+                      child: CustomSearchBar(
+                        searchController: searchController,
+                        funzione: () {
+                          setState(() {
+                            searchQuery = searchController.text;
+                            searchController.text = "";
+                          });
+                        },
+                      ),
+                    ),
                     if (searchQuery != null)
                       Padding(
                         padding: const EdgeInsets.all(8.0),
