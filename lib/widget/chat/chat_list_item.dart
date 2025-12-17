@@ -57,7 +57,7 @@ class _ChatListItemState extends ConsumerState<ChatListItem> {
     required BuildContext context,
   }) async {
     if ((chat.createdBy == user.userId) ||
-        (user.savedChats!.contains(chat.id))) {
+        (user.savedChats?.contains(chat.id) ?? false)) {
       context.pushNamed(
         'groupChat',
         queryParameters: <String, String>{

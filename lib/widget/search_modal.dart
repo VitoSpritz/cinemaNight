@@ -39,59 +39,68 @@ class SearchModal extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                Expanded(
-                  child: Text(
-                    title,
-                    style: CustomTypography.titleXL.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: AppPalette.of(context).textColors.simpleText,
-                    ),
-                  ),
-                ),
                 GestureDetector(
                   behavior: HitTestBehavior.translucent,
                   onTap: () => context.pop(searchController.text),
-                  child: const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Icon(Icons.close, fill: 0),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Icon(
+                      Icons.close,
+                      fill: 0,
+                      color: AppPalette.of(context).textColors.simpleText,
+                    ),
                   ),
                 ),
               ],
             ),
+            Flexible(
+              child: Text(
+                title,
+                style: CustomTypography.titleM.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: AppPalette.of(context).textColors.simpleText,
+                ),
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.only(top: 16.0),
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  border: Border.all(style: BorderStyle.solid),
-                  borderRadius: const BorderRadius.all(Radius.circular(24)),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: TextField(
-                    controller: searchController,
-                    decoration: const InputDecoration(
-                      icon: Icon(Icons.search, color: CustomColors.lightBlue),
-                      border: InputBorder.none,
-                    ),
-                    style: CustomTypography.body.copyWith(
-                      color: AppPalette.of(context).textColors.simpleText,
-                    ),
-                    onTapOutside: (PointerDownEvent event) {
-                      if (searchController.text.isNotEmpty &&
-                          searchController.text.trim().isNotEmpty) {
-                        context.pop(searchController.text);
-                      }
-                    },
-                    onSubmitted: (String value) {
-                      if (searchController.text.isNotEmpty &&
-                          searchController.text.trim().isNotEmpty) {
-                        context.pop(searchController.text);
-                      }
-                    },
+              child: TextField(
+                controller: searchController,
+                decoration: InputDecoration(
+                  prefixIcon: const Icon(
+                    Icons.search,
+                    color: CustomColors.lightBlue,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(24),
+                    borderSide: const BorderSide(),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(24),
+                    borderSide: const BorderSide(),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(24),
+                    borderSide: const BorderSide(),
                   ),
                 ),
+                style: CustomTypography.body.copyWith(
+                  color: AppPalette.of(context).textColors.simpleText,
+                ),
+                onTapOutside: (PointerDownEvent event) {
+                  if (searchController.text.isNotEmpty &&
+                      searchController.text.trim().isNotEmpty) {
+                    context.pop(searchController.text);
+                  }
+                },
+                onSubmitted: (String value) {
+                  if (searchController.text.isNotEmpty &&
+                      searchController.text.trim().isNotEmpty) {
+                    context.pop(searchController.text);
+                  }
+                },
               ),
             ),
           ],

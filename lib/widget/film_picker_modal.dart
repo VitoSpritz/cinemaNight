@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../consts/custom_colors.dart';
 import '../consts/custom_typography.dart';
 import '../consts/sizes.dart';
+import '../helpers/app_palette.dart';
 import '../helpers/media_converter.dart';
 import '../l10n/app_localizations.dart';
 import '../model/media.dart';
@@ -201,10 +202,10 @@ class _FilmPickerState extends ConsumerState<FilmPickerModal> {
         child: SizedBox(
           height: MediaQuery.of(context).size.height * 0.7,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
                 AppLocalizations.of(context)!.addReview,
+                textAlign: TextAlign.center,
                 style: CustomTypography.titleM.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -328,19 +329,6 @@ class _FilmPickerState extends ConsumerState<FilmPickerModal> {
                         ),
                       ),
                       const SizedBox(height: 8),
-                      FilledButton(
-                        style: FilledButton.styleFrom(
-                          backgroundColor: CustomColors.mainYellow,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _selectedMedia = null;
-                            _searchResults = <MultiWithPoster>[];
-                            _titleController.clear();
-                          });
-                        },
-                        child: Text(AppLocalizations.of(context)!.changeMovie),
-                      ),
                       Row(
                         children: <Widget>[
                           Text(
@@ -386,7 +374,9 @@ class _FilmPickerState extends ConsumerState<FilmPickerModal> {
                               width: double.infinity,
                               child: FilledButton(
                                 style: FilledButton.styleFrom(
-                                  backgroundColor: CustomColors.mainYellow,
+                                  backgroundColor: AppPalette.of(
+                                    context,
+                                  ).textColors.defaultColor,
                                 ),
                                 onPressed: () async => await _createReview(
                                   filmId: MediaConverter.getValue(
@@ -409,6 +399,26 @@ class _FilmPickerState extends ConsumerState<FilmPickerModal> {
                                 child: Text(AppLocalizations.of(context)!.save),
                               ),
                             ),
+                      SizedBox(
+                        width: double.infinity,
+                        child: FilledButton(
+                          style: FilledButton.styleFrom(
+                            backgroundColor: AppPalette.of(
+                              context,
+                            ).textColors.defaultColor,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _selectedMedia = null;
+                              _searchResults = <MultiWithPoster>[];
+                              _titleController.clear();
+                            });
+                          },
+                          child: Text(
+                            AppLocalizations.of(context)!.changeMovie,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),

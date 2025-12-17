@@ -64,6 +64,8 @@ class _BackgroudColor {
           end: Alignment.bottomCenter,
           colors: <Color>[Color(0xFFFFFFFF), Color(0xFF90CAF9)],
         );
+
+  get simpleBackground => CustomColors.white;
 }
 
 class _BadgeColor {
