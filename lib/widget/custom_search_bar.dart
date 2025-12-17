@@ -7,12 +7,12 @@ import '../l10n/app_localizations.dart';
 
 class CustomSearchBar extends StatelessWidget {
   final TextEditingController searchController;
-  final Function()? funzione;
+  final Function()? onSubmitFunction;
 
   const CustomSearchBar({
     super.key,
     required this.searchController,
-    required this.funzione,
+    required this.onSubmitFunction,
   });
 
   @override
@@ -50,7 +50,7 @@ class CustomSearchBar extends StatelessWidget {
       onSubmitted: (String value) {
         if (searchController.text.isNotEmpty &&
             searchController.text.trim().isNotEmpty) {
-          funzione?.call();
+          onSubmitFunction?.call();
         }
       },
     );

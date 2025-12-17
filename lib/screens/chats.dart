@@ -42,7 +42,7 @@ class _ChatsState extends ConsumerState<Chats> {
                 ),
                 child: CustomSearchBar(
                   searchController: searchController,
-                  funzione: () => setState(() {
+                  onSubmitFunction: () => setState(() {
                     _chatName = searchController.text;
                   }),
                 ),

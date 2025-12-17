@@ -158,7 +158,7 @@ class _ReviewListState extends ConsumerState<ReviewList> {
                       ),
                       child: CustomSearchBar(
                         searchController: searchController,
-                        funzione: () {
+                        onSubmitFunction: () {
                           setState(() {
                             searchQuery = searchController.text;
                             searchController.text = "";
