@@ -325,5 +325,9 @@
         }
     },
     "reviewListNoReviewAvailable": "There are no reviews",
+
+    "pasteALink": "Paste a shared review",
+    "reviewNotFound": "Review not found",
+    
     "reviewListSearchHintText": "Search a review"
 }

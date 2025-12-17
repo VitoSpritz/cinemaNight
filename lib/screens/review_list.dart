@@ -7,6 +7,7 @@ import '../helpers/app_palette.dart';
 import '../l10n/app_localizations.dart';
 import '../model/review.dart';
 import '../model/user_profile.dart';
+import '../providers/deep_link.dart';
 import '../providers/user_profiles.dart';
 import '../providers/user_review.dart';
 import '../widget/custom_add_button.dart';
@@ -81,14 +82,14 @@ class _ReviewListState extends ConsumerState<ReviewList> {
           appBar: CustomAppBar(
             title: AppLocalizations.of(context)!.reviews,
             actionButton: CustomIconButton(
-              icon: Icons.search,
+              icon: Icons.ios_share,
               onTap: () async {
                 final String? searchValue = await SearchModal.show(
-                  title: AppLocalizations.of(context)!.searchAMovie,
+                  title: AppLocalizations.of(context)!.pasteALink,
                   context: context,
                 );
                 setState(() {
-                  searchQuery = searchValue;
+                  handleDeepLink(Uri.parse(searchValue!));
                 });
               },
               color: CustomColors.text,

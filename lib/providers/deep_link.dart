@@ -20,17 +20,17 @@ Stream<void> deepLinkListener(Ref ref) async* {
 
   final Uri? initialUri = await appLinks.getInitialLink();
   if (initialUri != null && initialUri.host.isNotEmpty) {
-    _handleDeepLink(initialUri);
+    handleDeepLink(initialUri);
   }
 
   appLinks.uriLinkStream.listen((Uri uri) {
     if (uri.host.isNotEmpty) {
-      _handleDeepLink(uri);
+      handleDeepLink(uri);
     }
   });
 }
 
-void _handleDeepLink(Uri uri) {
+void handleDeepLink(Uri uri) {
   final BuildContext? context = GlobalState.navigatorKey.currentContext;
   if (context == null) {
     return;

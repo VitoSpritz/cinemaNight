@@ -326,5 +326,8 @@
     },
     "reviewListNoReviewAvailable": "Non ci sono recensioni",
 
-    "reviewListSearchHintText" : "Cerca una recensione"
+    "pasteALink": "Incolla il link di una recensione",
+    
+    "reviewListSearchHintText" : "Cerca una recensione",
+    "reviewNotFound": "Recensione non trovata"
 }

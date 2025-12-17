@@ -156,9 +156,25 @@ class _ReviewInfoState extends ConsumerState<ReviewInfo> {
     }
 
     if (hasError) {
-      final Object? error =
-          reviewAsync.error ?? mediaAsync.error ?? userAuthAsync.error;
-      return Scaffold(body: Center(child: Text('Error: $error')));
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              backgroundColor:
+                  AppPalette.of(context).backgroudColor.simpleBackground,
+              content: Text(
+                AppLocalizations.of(context)!.reviewNotFound,
+                style: CustomTypography.bodySmall.copyWith(
+                  color: AppPalette.of(context).textColors.simpleText,
+                ),
+              ),
+              duration: const Duration(seconds: 3),
+            ),
+          );
+          context.go(ReviewList.path);
+        }
+      });
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     final Review review = reviewAsync.value!;
@@ -264,12 +280,17 @@ class _ReviewInfoState extends ConsumerState<ReviewInfo> {
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
+                              backgroundColor: AppPalette.of(
+                                context,
+                              ).backgroudColor.simpleBackground,
                               content: Text(
                                 AppLocalizations.of(
                                   context,
                                 )!.reviewInfoCopiedLink,
                                 style: CustomTypography.bodySmall.copyWith(
-                                  color: CustomColors.white,
+                                  color: AppPalette.of(
+                                    context,
+                                  ).textColors.simpleText,
                                 ),
                               ),
                               duration: const Duration(seconds: 2),
