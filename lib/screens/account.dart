@@ -282,7 +282,9 @@ class _AccountState extends ConsumerState<Account> {
                                 ).textColors.simpleText,
                               ),
                               filled: true,
-                              fillColor: Colors.grey[300],
+                              fillColor: AppPalette.of(
+                                context,
+                              ).backgroudColor.textFieldFillColor,
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8),
                                 borderSide: BorderSide.none,
@@ -329,7 +331,9 @@ class _AccountState extends ConsumerState<Account> {
                                 ).textColors.simpleText,
                               ),
                               filled: true,
-                              fillColor: Colors.grey[300],
+                              fillColor: AppPalette.of(
+                                context,
+                              ).backgroudColor.textFieldFillColor,
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8),
                                 borderSide: BorderSide.none,
@@ -363,7 +367,9 @@ class _AccountState extends ConsumerState<Account> {
                                 context,
                               )!.favouriteMovie,
                               filled: true,
-                              fillColor: Colors.grey[300],
+                              fillColor: AppPalette.of(
+                                context,
+                              ).backgroudColor.textFieldFillColor,
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8),
                                 borderSide: BorderSide.none,

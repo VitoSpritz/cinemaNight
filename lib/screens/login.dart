@@ -148,7 +148,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       controller: _emailController,
                       decoration: InputDecoration(
                         filled: true,
-                        fillColor: CustomColors.inputFill,
+                        fillColor: AppPalette.of(
+                          context,
+                        ).backgroudColor.textFieldFillColor,
                         border: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10.0)),
                         ),
@@ -169,7 +171,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       obscureText: true,
                       decoration: InputDecoration(
                         filled: true,
-                        fillColor: CustomColors.inputFill,
+                        fillColor: AppPalette.of(
+                          context,
+                        ).backgroudColor.textFieldFillColor,
                         border: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(10.0)),
                         ),

@@ -185,7 +185,9 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                       controller: _nameController,
                       decoration: InputDecoration(
                         filled: true,
-                        fillColor: CustomColors.inputFill,
+                        fillColor: AppPalette.of(
+                          context,
+                        ).backgroudColor.textFieldFillColor,
                         errorText: _nameError,
                         hintText: AppLocalizations.of(
                           context,
@@ -207,7 +209,9 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                       ],
                       decoration: InputDecoration(
                         filled: true,
-                        fillColor: CustomColors.inputFill,
+                        fillColor: AppPalette.of(
+                          context,
+                        ).backgroudColor.textFieldFillColor,
                         errorText: _ageError,
                         hintText: AppLocalizations.of(context)!.age,
                         hintStyle: CustomTypography.bodyBold,
@@ -226,7 +230,9 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                       obscureText: false,
                       decoration: InputDecoration(
                         filled: true,
-                        fillColor: CustomColors.inputFill,
+                        fillColor: AppPalette.of(
+                          context,
+                        ).backgroudColor.textFieldFillColor,
                         errorText: _emailError,
                         hintStyle: CustomTypography.bodyBold,
                         hintText: AppLocalizations.of(context)!.email,
@@ -245,7 +251,9 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                       obscureText: true,
                       decoration: InputDecoration(
                         filled: true,
-                        fillColor: CustomColors.inputFill,
+                        fillColor: AppPalette.of(
+                          context,
+                        ).backgroudColor.textFieldFillColor,
                         errorText: _passwordError,
                         hintText: AppLocalizations.of(context)!.password,
                         hintStyle: CustomTypography.bodyBold,

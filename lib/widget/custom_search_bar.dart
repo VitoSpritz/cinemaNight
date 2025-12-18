@@ -3,16 +3,17 @@ import 'package:flutter/material.dart';
 import '../consts/custom_colors.dart';
 import '../consts/custom_typography.dart';
 import '../helpers/app_palette.dart';
-import '../l10n/app_localizations.dart';
 
 class CustomSearchBar extends StatelessWidget {
   final TextEditingController searchController;
   final Function()? onSubmitFunction;
+  final String hintText;
 
   const CustomSearchBar({
     super.key,
     required this.searchController,
     required this.onSubmitFunction,
+    required this.hintText,
   });
 
   @override
@@ -20,7 +21,7 @@ class CustomSearchBar extends StatelessWidget {
     return TextField(
       controller: searchController,
       decoration: InputDecoration(
-        hintText: AppLocalizations.of(context)!.reviewListSearchHintText,
+        hintText: hintText,
         hintStyle: CustomTypography.body.copyWith(
           color: AppPalette.of(context).textColors.simpleText,
         ),

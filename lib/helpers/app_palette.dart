@@ -66,6 +66,9 @@ class _BackgroudColor {
         );
 
   get simpleBackground => CustomColors.white;
+
+  get textFieldFillColor =>
+      isDarkMode ? CustomColors.inputFill : CustomColors.white;
 }
 
 class _BadgeColor {

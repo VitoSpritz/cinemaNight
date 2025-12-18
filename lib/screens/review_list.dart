@@ -159,6 +159,9 @@ class _ReviewListState extends ConsumerState<ReviewList> {
                       ),
                       child: CustomSearchBar(
                         searchController: searchController,
+                        hintText: AppLocalizations.of(
+                          context,
+                        )!.reviewListSearchHintText,
                         onSubmitFunction: () {
                           setState(() {
                             searchQuery = searchController.text;

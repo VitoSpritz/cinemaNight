@@ -42,6 +42,7 @@ class _ChatsState extends ConsumerState<Chats> {
                 ),
                 child: CustomSearchBar(
                   searchController: searchController,
+                  hintText: AppLocalizations.of(context)!.chatListSearchBar,
                   onSubmitFunction: () => setState(() {
                     _chatName = searchController.text;
                   }),

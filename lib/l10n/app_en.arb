@@ -329,5 +329,7 @@
     "pasteALink": "Paste a shared review",
     "reviewNotFound": "Review not found",
     
-    "reviewListSearchHintText": "Search a review"
+    "reviewListSearchHintText": "Search a review",
+
+    "chatListSearchBar": "Search a group"
 }
