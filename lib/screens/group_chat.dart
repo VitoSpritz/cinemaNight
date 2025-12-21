@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import '../consts/custom_colors.dart';
 import '../consts/custom_typography.dart';
@@ -19,11 +18,9 @@ import '../providers/user_profiles.dart';
 import '../widget/chat/chat_recap.dart';
 import '../widget/chat/custom_message.dart';
 import '../widget/chat/select_dates_dialog.dart';
-import '../widget/chat/select_end_date.dart';
 import '../widget/custom_app_bar.dart';
 import '../widget/film_suggestion_modal.dart';
 import '../widget/user_list_modal.dart';
-import 'chats.dart';
 
 class GroupChat extends ConsumerStatefulWidget {
   static String path = "/group";
@@ -138,41 +135,30 @@ class _GroupChatState extends ConsumerState<GroupChat> {
     );
 
     if (selectedDates != null) {
-      final DateTime? endDate = await showDialog<DateTime>(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return const SelectEndDate();
-        },
+      final ChatItem currentChat = await ref.read(
+        getChatItemByIdProvider(widget.chatId).future,
       );
-      if (endDate != null) {
-        final ChatItem currentChat = await ref.read(
-          getChatItemByIdProvider(widget.chatId).future,
-        );
 
-        final ChatItem toUpdate = currentChat.copyWith(
-          state: ChatItemState.dateSelection.name,
-          endDateSelection: endDate,
-        );
+      final ChatItem toUpdate = currentChat.copyWith(
+        state: ChatItemState.dateSelection.name,
+        endDateSelection: DateTime.now().add(const Duration(hours: 48)),
+      );
+      await ref
+          .read(chatListProvider.notifier)
+          .updateChat(chatId: widget.chatId, updatedChat: toUpdate);
+
+      ref.invalidate(getChatItemByIdProvider(widget.chatId));
+
+      for (DateTime? date in selectedDates) {
+        final ChatContent content = ChatContent.date(proposedDate: date!);
         await ref
-            .read(chatListProvider.notifier)
-            .updateChat(chatId: widget.chatId, updatedChat: toUpdate);
-
-        ref.invalidate(getChatItemByIdProvider(widget.chatId));
-
-        for (DateTime? date in selectedDates) {
-          final ChatContent content = ChatContent.date(proposedDate: date!);
-          await ref
-              .read(messagesProvider(widget.chatId).notifier)
-              .createMessage(
-                chatId: widget.chatId,
-                sentBy: user.value!.userId,
-                sentAt: DateTime.now(),
-                content: content,
-              );
-        }
-      } else {
-        context.go(Chats.path);
+            .read(messagesProvider(widget.chatId).notifier)
+            .createMessage(
+              chatId: widget.chatId,
+              sentBy: user.value!.userId,
+              sentAt: DateTime.now(),
+              content: content,
+            );
       }
     }
   }
@@ -313,6 +299,7 @@ class _GroupChatState extends ConsumerState<GroupChat> {
                                 .toList();
                             return CustomScrollView(
                               controller: _scrollController,
+                              reverse: true,
                               slivers: <Widget>[
                                 displayMessages.isEmpty
                                     ? SliverToBoxAdapter(

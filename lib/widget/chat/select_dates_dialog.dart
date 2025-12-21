@@ -65,16 +65,21 @@ class _SelectDatesDialogState extends State<SelectDatesDialog> {
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(8)),
         ),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        title: Column(
           children: <Widget>[
-            Expanded(
-              child: Text(
-                "Seleziona una data",
-                style: CustomTypography.titleXL.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+            Text(
+              AppLocalizations.of(context)!.selectDatesDialogTitle,
+              style: CustomTypography.titleXL.copyWith(
+                fontWeight: FontWeight.bold,
+                color: AppPalette.of(context).textColors.simpleText,
+              ),
+            ),
+            const SizedBox(height: 8.0),
+            Text(
+              textAlign: TextAlign.center,
+              AppLocalizations.of(context)!.selectDatesDialogInstruction,
+              style: CustomTypography.body.copyWith(
+                color: AppPalette.of(context).textColors.simpleText,
               ),
             ),
           ],
@@ -87,7 +92,14 @@ class _SelectDatesDialogState extends State<SelectDatesDialog> {
             children: <Widget>[
               Row(
                 children: <Widget>[
-                  Text("Aggiungi più date", style: CustomTypography.caption),
+                  Text(
+                    AppLocalizations.of(
+                      context,
+                    )!.selectDatesDialogAddDatesCheck,
+                    style: CustomTypography.caption.copyWith(
+                      color: AppPalette.of(context).textColors.simpleText,
+                    ),
+                  ),
                   Checkbox(
                     value: _checkBoxState,
                     onChanged: (bool? newValue) {
@@ -129,7 +141,9 @@ class _SelectDatesDialogState extends State<SelectDatesDialog> {
                             _selectedDates.isNotEmpty &&
                                     _selectedDates[0] != null
                                 ? _formatDate(_selectedDates[0]!)
-                                : 'Seleziona data',
+                                : AppLocalizations.of(
+                                    context,
+                                  )!.selectDatesDialogHintText,
                             style: CustomTypography.bodySmall.copyWith(
                               color:
                                   _selectedDates.isNotEmpty &&
@@ -189,7 +203,11 @@ class _SelectDatesDialogState extends State<SelectDatesDialog> {
                                                   ? _formatDate(
                                                       _selectedDates[i]!,
                                                     )
-                                                  : 'Data ${i + 1}',
+                                                  : AppLocalizations.of(
+                                                      context,
+                                                    )!.selectDatesDialogMultipleHintText(
+                                                      i + 1,
+                                                    ),
                                               style: CustomTypography.bodySmall
                                                   .copyWith(
                                                     color:
@@ -259,7 +277,9 @@ class _SelectDatesDialogState extends State<SelectDatesDialog> {
                                   ),
                                   const SizedBox(width: 8),
                                   Text(
-                                    'Aggiungi una data',
+                                    AppLocalizations.of(
+                                      context,
+                                    )!.selectDatesDialogAddADate,
                                     style: CustomTypography.bodySmall.copyWith(
                                       color: CustomColors.lightBlue,
                                     ),
@@ -288,8 +308,18 @@ class _SelectDatesDialogState extends State<SelectDatesDialog> {
                   if (_selectedDates.isEmpty ||
                       _selectedDates.any((DateTime? date) => date == null)) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Seleziona almeno una data'),
+                      SnackBar(
+                        backgroundColor: AppPalette.of(
+                          context,
+                        ).textColors.defaultColor,
+                        content: Text(
+                          AppLocalizations.of(
+                            context,
+                          )!.selectDatesSelectAtLeastOne,
+                          style: CustomTypography.body.copyWith(
+                            color: AppPalette.of(context).textColors.simpleText,
+                          ),
+                        ),
                       ),
                     );
                     return;
@@ -313,7 +343,10 @@ class _SelectDatesDialogState extends State<SelectDatesDialog> {
                     side: BorderSide(color: CustomColors.black, width: 1),
                   ),
                 ),
-                onPressed: () => context.pop(null),
+                onPressed: () {
+                  context.pop(null);
+                  context.pop(null);
+                },
                 child: Text(
                   AppLocalizations.of(context)!.cancelLabel,
                   style: CustomTypography.bodySmall.copyWith(

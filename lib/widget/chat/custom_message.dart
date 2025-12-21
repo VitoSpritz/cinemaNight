@@ -107,7 +107,9 @@ class CustomMessage extends ConsumerWidget {
                         },
                         date: (DateTime proposedDate, List<String> likes) {
                           return Text(
-                            DateFormat('dd/MM/yyyy').format(proposedDate),
+                            AppLocalizations.of(
+                              context,
+                            )!.groupChatSuggestDateMessage(proposedDate),
                             style: CustomTypography.bodySmall,
                           );
                         },

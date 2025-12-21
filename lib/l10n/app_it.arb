@@ -160,13 +160,6 @@
     "createChatDialogDate": "Data",
     "createChatDialogHour": "Ora",
 
-    "selectEndDateSelectDate": "La data e ora devono essere entro 48 ore da ora",
-    "selectEndDateSelctTime": "Seleziona prima una data",
-    "selectEndDateSelectaDateTime": "Seleziona data e ora",
-    "selectEndDateSelectLimitDate": "Inserire una data limite per poter selezionare una data valida",
-    "selectEndDateSelectaDate": "Seleziona data",
-    "selectEndDateTime": "Ora",
-
     "insetPasswordDialogInsertPassword": "Inserisci una password",
     "insetPasswordDialogWrongPassword": "Password errata",
     "insetPasswordDialogPassword": "Password",
@@ -282,14 +275,22 @@
             }
         }
     },
-
     "groupChatUserModalTitle": "Utenti iscritti",
     "groupChatMainTitle": "Chat di gruppo",
     "groupChatNoMessageAvailable": "Non ci sono ancora messaggi",
+    "groupChatSuggestDateMessage": "Data suggerita: {date}",
+    "@groupChatSuggestDateMessage": {
+        "placeholders": {
+            "date":{
+                "type": "DateTime",
+                "format": "yMd"
+            }
+        }
+    },
 
     "chatListSnackBarMessage": "Chat eliminata con successo",
     "chatListSnackBarError": "Errore nell'invio: {name}",
-    "@chatListSnackBarError":{
+    "@chatListSnackBarError": {
         "placeholders": {
             "name":{
                 "type": "String"
@@ -331,5 +332,20 @@
     "reviewListSearchHintText" : "Cerca una recensione",
     "reviewNotFound": "Recensione non trovata",
 
-    "chatListSearchBar": "Cerca un gruppo"
+    "chatListSearchBar": "Cerca un gruppo",
+
+    "selectDatesDialogTitle": "Seleziona una data",
+    "selectDatesDialogInstruction": "Seleziona una o più date da proporre nel gruppo. Avrete solo 48 ore di tempo per votare.",
+    "selectDatesDialogAddDatesCheck": "Aggiungi più date",
+    "selectDatesDialogHintText": "Seleziona data",
+    "selectDatesDialogMultipleHintText": "Data {number}",
+    "@selectDatesDialogMultipleHintText": {
+        "placeholders": {
+            "number":{
+                "type": "int"
+            }
+        }
+    },
+    "selectDatesDialogAddADate": "Aggiungi una data",
+    "selectDatesSelectAtLeastOne": "Seleziona almeno una data"
 }

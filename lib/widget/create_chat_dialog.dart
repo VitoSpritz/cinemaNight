@@ -177,6 +177,7 @@ class _CreateChatDialogState extends ConsumerState<CreateChatDialog> {
 
       if (mounted) {
         ref.invalidate(chatListProvider);
+        ref.invalidate(userChatListProvider(userId));
         ref.invalidate(userProfilesProvider);
         context.pop();
         return chat;

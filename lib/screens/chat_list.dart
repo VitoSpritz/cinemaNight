@@ -64,8 +64,13 @@ class _ChatListState extends ConsumerState<ChatList> {
   Widget _buildChatList(PaginatedChatItem data, UserProfile user) {
     return RefreshIndicator(
       onRefresh: () async {
-        ref.invalidate(chatListProvider);
-        await ref.read(chatListProvider.future);
+        if (_allChats) {
+          ref.invalidate(chatListProvider);
+          await ref.read(chatListProvider.future);
+        } else {
+          ref.invalidate(userChatListProvider(user.userId));
+          await ref.read(userChatListProvider(user.userId).future);
+        }
       },
       child: CustomScrollView(
         controller: _scrollController,
@@ -116,6 +121,7 @@ class _ChatListState extends ConsumerState<ChatList> {
       await service.deleteChat(userId: userId, chatId: chatId);
 
       ref.invalidate(chatListProvider);
+      ref.invalidate(userChatListProvider(userId));
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

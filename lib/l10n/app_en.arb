@@ -160,13 +160,6 @@
     "createChatDialogDate": "Date",
     "createChatDialogHour": "Time",
 
-    "selectEndDateSelectDate": "Date and time must be between 48 hours from now",
-    "selectEndDateSelctTime": "First select a date",
-    "selectEndDateSelectaDateTime": "Select date and time",
-    "selectEndDateSelectLimitDate": "Select a finish date to select a valid date",
-    "selectEndDateSelectaDate": "Select date",
-    "selectEndDateTime": "Hour",
-
     "insetPasswordDialogInsertPassword": "Insert a passowrd",
     "insetPasswordDialogWrongPassword": "Wrong password",
     "insetPasswordDialogPassword": "Password",
@@ -282,10 +275,18 @@
             }
         }
     },
-
     "groupChatUserModalTitle": "Subscribed users",
     "groupChatMainTitle": "Group Chat",
     "groupChatNoMessageAvailable": "No messages available",
+    "groupChatSuggestDateMessage": "Suggested date: {date}",
+    "@groupChatSuggestDateMessage": {
+        "placeholders": {
+            "date":{
+                "type": "DateTime",
+                "format": "yMd"
+            }
+        }
+    },
 
     "chatListSnackBarMessage": "Chat deleted successfully",
     "chatListSnackBarError": "Error in sending the message: {name}",
@@ -331,5 +332,20 @@
     
     "reviewListSearchHintText": "Search a review",
 
-    "chatListSearchBar": "Search a group"
+    "chatListSearchBar": "Search a group",
+
+    "selectDatesDialogTitle": "Select a adate",
+    "selectDatesDialogInstruction": "Select one or more dates to suggest. Once chosen, you'll have only 48 hours to vote.",
+    "selectDatesDialogAddDatesCheck": "Add more dates",
+    "selectDatesDialogHintText": "Sleect date",
+    "selectDatesDialogMultipleHintText": "Date {number}",
+    "@selectDatesDialogMultipleHintText": {
+        "placeholders": {
+            "number":{
+                "type": "int"
+            }
+        }
+    },
+    "selectDatesDialogAddADate": "Add a date",
+    "selectDatesSelectAtLeastOne": "Select at least a date"
 }
