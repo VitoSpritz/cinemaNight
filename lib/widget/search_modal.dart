@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -6,7 +7,7 @@ import '../consts/custom_colors.dart';
 import '../consts/custom_typography.dart';
 import '../helpers/app_palette.dart';
 
-class SearchModal extends ConsumerWidget {
+class SearchModal extends ConsumerStatefulWidget {
   final String title;
   const SearchModal({super.key, required this.title});
 
@@ -24,8 +25,20 @@ class SearchModal extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final TextEditingController searchController = TextEditingController();
+  ConsumerState<SearchModal> createState() => _SearchModalState();
+}
+
+class _SearchModalState extends ConsumerState<SearchModal> {
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return AlertDialog(
       alignment: Alignment.topCenter,
       scrollable: true,
@@ -43,7 +56,7 @@ class SearchModal extends ConsumerWidget {
               children: <Widget>[
                 GestureDetector(
                   behavior: HitTestBehavior.translucent,
-                  onTap: () => context.pop(searchController.text),
+                  onTap: () => context.pop(),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: Icon(
@@ -57,7 +70,7 @@ class SearchModal extends ConsumerWidget {
             ),
             Flexible(
               child: Text(
-                title,
+                widget.title,
                 style: CustomTypography.titleM.copyWith(
                   fontWeight: FontWeight.bold,
                   color: AppPalette.of(context).textColors.simpleText,
@@ -67,7 +80,7 @@ class SearchModal extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.only(top: 16.0),
               child: TextField(
-                controller: searchController,
+                controller: _searchController,
                 decoration: InputDecoration(
                   prefixIcon: const Icon(
                     Icons.search,
@@ -89,16 +102,26 @@ class SearchModal extends ConsumerWidget {
                 style: CustomTypography.body.copyWith(
                   color: AppPalette.of(context).textColors.simpleText,
                 ),
+                onTap: () async {
+                  if (_searchController.text.isEmpty) {
+                    final ClipboardData? copiedText = await Clipboard.getData(
+                      'text/plain',
+                    );
+                    if (copiedText?.text != null) {
+                      _searchController.text = copiedText!.text!;
+                    }
+                  }
+                },
                 onTapOutside: (PointerDownEvent event) {
-                  if (searchController.text.isNotEmpty &&
-                      searchController.text.trim().isNotEmpty) {
-                    context.pop(searchController.text);
+                  if (_searchController.text.isNotEmpty &&
+                      _searchController.text.trim().isNotEmpty) {
+                    context.pop(_searchController.text);
                   }
                 },
                 onSubmitted: (String value) {
-                  if (searchController.text.isNotEmpty &&
-                      searchController.text.trim().isNotEmpty) {
-                    context.pop(searchController.text);
+                  if (_searchController.text.isNotEmpty &&
+                      _searchController.text.trim().isNotEmpty) {
+                    context.pop(_searchController.text);
                   }
                 },
               ),

@@ -74,9 +74,6 @@ class _AccountState extends ConsumerState<Account> {
     _nameController.dispose();
     _genreController.dispose();
     _movieController.dispose();
-    _nameController.dispose();
-    _genreController.dispose();
-    _movieController.dispose();
     super.dispose();
   }
 

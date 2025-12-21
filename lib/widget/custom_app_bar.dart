@@ -45,6 +45,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               child: Center(
                 child: Text(
                   title,
+                  textAlign: TextAlign.center,
                   style: CustomTypography.mainTitle.copyWith(
                     color: CustomColors.text,
                     fontWeight: FontWeight.bold,
@@ -55,7 +56,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             actionButton ?? const SizedBox(width: 40),
             if (rightIcon != null)
               Padding(
-                padding: const EdgeInsets.only(right: 38.0),
+                padding: const EdgeInsets.only(right: 16.0),
                 child: GestureDetector(
                   behavior: HitTestBehavior.translucent,
                   onTap: onRightIconTap,

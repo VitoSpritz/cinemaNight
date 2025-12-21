@@ -224,7 +224,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 context,
                               )!.notRegisteredPress,
                               style: CustomTypography.titleM.copyWith(
-                                color: CustomColors.white,
+                                color: AppPalette.of(
+                                  context,
+                                ).textColors.defaultColor,
                               ),
                             ),
                             TextSpan(

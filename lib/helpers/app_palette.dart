@@ -67,6 +67,9 @@ class _BackgroudColor {
 
   get simpleBackground => CustomColors.white;
 
+  get colorfulBackground =>
+      isDarkMode ? CustomColors.white : CustomColors.mainYellow;
+
   get textFieldFillColor =>
       isDarkMode ? CustomColors.inputFill : CustomColors.white;
 }

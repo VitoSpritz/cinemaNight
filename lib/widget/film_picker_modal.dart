@@ -236,12 +236,14 @@ class _FilmPickerState extends ConsumerState<FilmPickerModal> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(24),
                       ),
-                      textStyle: CustomTypography.body.copyWith(
-                        color: CustomColors.purple,
-                      ),
                     ),
                     onPressed: _searchMedia,
-                    child: Text(AppLocalizations.of(context)!.search),
+                    child: Text(
+                      AppLocalizations.of(context)!.search,
+                      style: CustomTypography.body.copyWith(
+                        color: AppPalette.of(context).textColors.simpleText,
+                      ),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -376,7 +378,7 @@ class _FilmPickerState extends ConsumerState<FilmPickerModal> {
                                 style: FilledButton.styleFrom(
                                   backgroundColor: AppPalette.of(
                                     context,
-                                  ).textColors.defaultColor,
+                                  ).backgroudColor.colorfulBackground,
                                 ),
                                 onPressed: () async => await _createReview(
                                   filmId: MediaConverter.getValue(
@@ -405,7 +407,7 @@ class _FilmPickerState extends ConsumerState<FilmPickerModal> {
                           style: FilledButton.styleFrom(
                             backgroundColor: AppPalette.of(
                               context,
-                            ).textColors.defaultColor,
+                            ).backgroudColor.colorfulBackground,
                           ),
                           onPressed: () {
                             setState(() {

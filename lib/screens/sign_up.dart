@@ -300,7 +300,9 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                               context,
                             )!.alreadyHaveAnAccountPress,
                             style: CustomTypography.titleM.copyWith(
-                              color: CustomColors.white,
+                              color: AppPalette.of(
+                                context,
+                              ).textColors.defaultColor,
                             ),
                           ),
                           TextSpan(

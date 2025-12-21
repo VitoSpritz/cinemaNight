@@ -25,7 +25,7 @@ class CustomSearchBar extends StatelessWidget {
         hintStyle: CustomTypography.body.copyWith(
           color: AppPalette.of(context).textColors.simpleText,
         ),
-        fillColor: CustomColors.white,
+        fillColor: CustomColors.white.withValues(alpha: .9),
         filled: true,
         prefixIcon: const Icon(Icons.search, color: CustomColors.lightBlue),
 

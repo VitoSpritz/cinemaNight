@@ -161,7 +161,7 @@ class _ChatListItemState extends ConsumerState<ChatListItem> {
         if (widget.user.userId == widget.chat.createdBy) {
           ConfirmDialog.show(
             context: context,
-            title: "Attenzione!",
+            title: AppLocalizations.of(context)!.attentionLabel,
             subtitle: AppLocalizations.of(
               context,
             )!.chatListItemDeleteChatMessage(widget.chat.name),
