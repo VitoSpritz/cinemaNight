@@ -27,8 +27,10 @@ class ChatRecap extends ConsumerWidget {
           (({ChatMessage? topDateMessage, ChatMessage? topFilmMessage}) data) {
             final String? chosenDate = data.topDateMessage?.content.when(
               text: (String text) => null,
-              date: (DateTime date, List<String> likes) =>
-                  DateFormat('dd MMMM yyyy').format(date),
+              date: (DateTime date, List<String> likes) => DateFormat(
+                'dd MMMM yyyy',
+                AppLocalizations.of(context)!.localeName,
+              ).format(date),
               film: (String film, List<String> dislikes, List<String> likes) =>
                   null,
             );
@@ -120,6 +122,7 @@ class ChatRecap extends ConsumerWidget {
                               ),
                             ],
                           ),
+                          const SizedBox(height: 16.0),
                           if (filmData != null)
                             SizedBox(
                               width: 200,
