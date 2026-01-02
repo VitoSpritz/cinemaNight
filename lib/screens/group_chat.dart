@@ -27,11 +27,7 @@ class GroupChat extends ConsumerStatefulWidget {
   final String chatId;
   final DateTime maxDate;
 
-  const GroupChat({
-    super.key,
-    required this.chatId,
-    required this.maxDate,
-  });
+  const GroupChat({super.key, required this.chatId, required this.maxDate});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _GroupChatState();
@@ -55,22 +51,14 @@ class _GroupChatState extends ConsumerState<GroupChat> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final AsyncValue<ChatItem> chatAsync = ref.watch(
-        getChatItemByIdProvider(widget.chatId),
+      final ChatItem chat = await ref.read(
+        getChatItemByIdProvider(widget.chatId).future,
       );
 
-      final AsyncValue<UserProfile> userAsync = ref.watch(userProfilesProvider);
+      final UserProfile user = await ref.read(userProfilesProvider.future);
 
-      final ChatItemState? currentState =
-          chatAsync.value?.state.toChatItemState();
-
-      final bool isChatCreator =
-          chatAsync.whenOrNull(
-            data: (ChatItem chat) => userAsync.whenOrNull(
-              data: (UserProfile user) => chat.createdBy == user.userId,
-            ),
-          ) ??
-          false;
+      final ChatItemState? currentState = chat.state.toChatItemState();
+      final bool isChatCreator = chat.createdBy == user.userId;
 
       if (currentState == ChatItemState.opened && isChatCreator) {
         await _showInitialStateDialog(context);
@@ -261,8 +249,8 @@ class _GroupChatState extends ConsumerState<GroupChat> {
       getChatItemByIdProvider(widget.chatId),
     );
 
-    final ChatItemState? currentChatState =
-        chatAsync.value?.state.toChatItemState();
+    final ChatItemState? currentChatState = chatAsync.value?.state
+        .toChatItemState();
 
     final bool isChatCreator =
         chatAsync.whenOrNull(
@@ -481,6 +469,7 @@ class _GroupChatState extends ConsumerState<GroupChat> {
                   children: <Widget>[
                     Expanded(
                       child: TextField(
+                        enabled: isChatCreator,
                         controller: _messageController,
                         decoration: InputDecoration(
                           hintText: isChatCreator
