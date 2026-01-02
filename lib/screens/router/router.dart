@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../consts/global_state.dart';
-import '../../model/chat_item.dart';
 import '../../model/date_model.dart';
 import '../../providers/auth.dart';
 import '../../widget/custom_bottom_bar.dart';
@@ -134,10 +133,6 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((Ref ref) {
         path: GroupChat.path,
         name: 'groupChat',
         builder: (BuildContext context, GoRouterState state) {
-          final ChatItemState? chatState = state
-              .uri
-              .queryParameters['chatState']
-              ?.toChatItemState();
           final String? chatId = state.uri.queryParameters['chatId'];
           final DateTime maxDate = state.uri.queryParameters['maxDate'] != null
               ? const DateTimeSerializer().fromJson(
@@ -147,7 +142,6 @@ final Provider<GoRouter> routerProvider = Provider<GoRouter>((Ref ref) {
 
           return GroupChat(
             chatId: chatId!,
-            chatState: chatState!,
             maxDate: maxDate,
           );
         },

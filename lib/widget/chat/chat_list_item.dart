@@ -62,7 +62,6 @@ class _ChatListItemState extends ConsumerState<ChatListItem> {
         'groupChat',
         queryParameters: <String, String>{
           'chatId': chat.id,
-          'chatState': chat.state,
           'maxDate': const DateTimeSerializer().toJson(chat.closesAt),
         },
       );
@@ -93,7 +92,6 @@ class _ChatListItemState extends ConsumerState<ChatListItem> {
           'groupChat',
           queryParameters: <String, String>{
             'chatId': chat.id,
-            'chatState': chat.state,
             'maxDate': const DateTimeSerializer().toJson(chat.closesAt),
           },
         );

@@ -67,10 +67,12 @@ class UserListModal extends ConsumerWidget {
               children: <Widget>[
                 Flexible(
                   child: Text(
-                    chat.description ??
-                        AppLocalizations.of(
-                          context,
-                        )!.userListModalNoDescriptionAvailable,
+                    chat.description!.isEmpty == true ||
+                            chat.description == null
+                        ? AppLocalizations.of(
+                            context,
+                          )!.userListModalNoDescriptionAvailable
+                        : chat.description!,
                     textAlign: TextAlign.center,
                     style: CustomTypography.titleM.copyWith(
                       color: AppPalette.of(context).textColors.simpleText,

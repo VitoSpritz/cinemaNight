@@ -25,13 +25,11 @@ import '../widget/user_list_modal.dart';
 class GroupChat extends ConsumerStatefulWidget {
   static String path = "/group";
   final String chatId;
-  final ChatItemState chatState;
   final DateTime maxDate;
 
   const GroupChat({
     super.key,
     required this.chatId,
-    required this.chatState,
     required this.maxDate,
   });
 
@@ -57,11 +55,28 @@ class _GroupChatState extends ConsumerState<GroupChat> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (widget.chatState == ChatItemState.opened) {
+      final AsyncValue<ChatItem> chatAsync = ref.watch(
+        getChatItemByIdProvider(widget.chatId),
+      );
+
+      final AsyncValue<UserProfile> userAsync = ref.watch(userProfilesProvider);
+
+      final ChatItemState? currentState =
+          chatAsync.value?.state.toChatItemState();
+
+      final bool isChatCreator =
+          chatAsync.whenOrNull(
+            data: (ChatItem chat) => userAsync.whenOrNull(
+              data: (UserProfile user) => chat.createdBy == user.userId,
+            ),
+          ) ??
+          false;
+
+      if (currentState == ChatItemState.opened && isChatCreator) {
         await _showInitialStateDialog(context);
       }
 
-      if (widget.chatState == ChatItemState.closed) {
+      if (currentState == ChatItemState.closed) {
         await showCustomBottomModal();
       }
     });
@@ -148,6 +163,7 @@ class _GroupChatState extends ConsumerState<GroupChat> {
           .updateChat(chatId: widget.chatId, updatedChat: toUpdate);
 
       ref.invalidate(getChatItemByIdProvider(widget.chatId));
+      ref.invalidate(userChatListProvider(user.value!.userId));
 
       for (DateTime? date in selectedDates) {
         final ChatContent content = ChatContent.date(proposedDate: date!);
@@ -244,6 +260,9 @@ class _GroupChatState extends ConsumerState<GroupChat> {
     final AsyncValue<ChatItem> chatAsync = ref.watch(
       getChatItemByIdProvider(widget.chatId),
     );
+
+    final ChatItemState? currentChatState =
+        chatAsync.value?.state.toChatItemState();
 
     final bool isChatCreator =
         chatAsync.whenOrNull(
@@ -462,7 +481,6 @@ class _GroupChatState extends ConsumerState<GroupChat> {
                   children: <Widget>[
                     Expanded(
                       child: TextField(
-                        enabled: isChatCreator,
                         controller: _messageController,
                         decoration: InputDecoration(
                           hintText: isChatCreator
@@ -512,7 +530,7 @@ class _GroupChatState extends ConsumerState<GroupChat> {
                       behavior: HitTestBehavior.translucent,
                       onTap:
                           (canAddFilm &&
-                              widget.chatState == ChatItemState.filmSelection)
+                              currentChatState == ChatItemState.filmSelection)
                           ? () async {
                               _suggestedFilmName = await _showModal();
                               if (_suggestedFilmName != null) {
@@ -535,7 +553,7 @@ class _GroupChatState extends ConsumerState<GroupChat> {
                         decoration: BoxDecoration(
                           color:
                               canAddFilm &&
-                                  widget.chatState ==
+                                  currentChatState ==
                                       ChatItemState.filmSelection
                               ? CustomColors.purple
                               : CustomColors.purple.withValues(alpha: 0.2),
