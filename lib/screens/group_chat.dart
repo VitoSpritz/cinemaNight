@@ -223,12 +223,14 @@ class _GroupChatState extends ConsumerState<GroupChat> {
       getChatItemByIdProvider(chatId).future,
     );
 
-    await UserListModal.show(
-      title: AppLocalizations.of(context)!.groupChatUserModalTitle,
-      userList: userList,
-      context: context,
-      userId: actualChat.createdBy,
-    );
+    if (mounted) {
+      await UserListModal.show(
+        title: AppLocalizations.of(context)!.groupChatUserModalTitle,
+        userList: userList,
+        context: context,
+        chat: actualChat,
+      );
+    }
   }
 
   @override
@@ -295,7 +297,6 @@ class _GroupChatState extends ConsumerState<GroupChat> {
                           data: (PaginatedChatMessage data) {
                             final List<ChatMessage> displayMessages = data
                                 .chatMessages
-                                .reversed
                                 .toList();
                             return CustomScrollView(
                               controller: _scrollController,

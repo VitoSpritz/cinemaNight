@@ -6,6 +6,7 @@ import '../consts/custom_colors.dart';
 import '../consts/custom_typography.dart';
 import '../consts/sizes.dart';
 import '../l10n/app_localizations.dart';
+import '../providers/chat_list.dart';
 
 class CustomBottomBar extends ConsumerWidget {
   final String? activePage;
@@ -17,7 +18,10 @@ class CustomBottomBar extends ConsumerWidget {
 
   final StatefulNavigationShell navigationShell;
 
-  void _goBranch(int index) {
+  void _goBranch(int index, WidgetRef ref) {
+    if (index == 2) {
+      ref.invalidate(chatListProvider);
+    }
     navigationShell.goBranch(
       index,
       initialLocation: index == navigationShell.currentIndex,
@@ -40,21 +44,25 @@ class CustomBottomBar extends ConsumerWidget {
                   index: 3,
                   icon: Icons.info,
                   label: AppLocalizations.of(context)!.info,
+                  ref: ref,
                 ),
                 _buildNavItem(
                   index: 1,
                   icon: Icons.list,
                   label: AppLocalizations.of(context)!.reviews,
+                  ref: ref,
                 ),
                 _buildNavItem(
                   index: 2,
                   icon: Icons.chat,
                   label: AppLocalizations.of(context)!.chats,
+                  ref: ref,
                 ),
                 _buildNavItem(
                   index: 0,
                   icon: Icons.account_box_rounded,
                   label: AppLocalizations.of(context)!.account,
+                  ref: ref,
                 ),
               ],
             ),
@@ -68,11 +76,12 @@ class CustomBottomBar extends ConsumerWidget {
     required int index,
     required IconData icon,
     required String label,
+    required WidgetRef ref,
   }) {
     final bool isActive = navigationShell.currentIndex == index;
 
     return GestureDetector(
-      onTap: () => _goBranch(index),
+      onTap: () => _goBranch(index, ref),
       behavior: HitTestBehavior.translucent,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

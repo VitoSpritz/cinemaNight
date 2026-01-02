@@ -123,6 +123,7 @@
     "proposeAFilm": "Proponi un film",
 
     "userListModalNoUserSubscribed": "Nessun utente iscritto",
+    "userListModalNoDescriptionAvailable": "Nessuna descrizione",
 
     "reviewCardLoadingError": "Errore nel caricamento {name}",
     "@reviewCardLoadingError":{

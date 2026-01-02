@@ -332,9 +332,30 @@ class _ChatListState extends ConsumerState<ChatList> {
                   }
 
                   if (data.chatItems.isEmpty) {
-                    return Center(
-                      child: Text(
-                        AppLocalizations.of(context)!.noChatAvailable,
+                    return RefreshIndicator(
+                      onRefresh: () async {
+                        if (_allChats) {
+                          ref.invalidate(chatListProvider);
+                          await ref.read(chatListProvider.future);
+                        } else {
+                          ref.invalidate(userChatListProvider(user.userId));
+                          await ref.read(
+                            userChatListProvider(user.userId).future,
+                          );
+                        }
+                      },
+                      child: CustomScrollView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        slivers: <Widget>[
+                          SliverFillRemaining(
+                            hasScrollBody: false,
+                            child: Center(
+                              child: Text(
+                                AppLocalizations.of(context)!.noChatAvailable,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     );
                   }
